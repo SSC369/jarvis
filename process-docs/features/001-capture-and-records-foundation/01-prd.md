@@ -1,0 +1,206 @@
+---
+doc: prd
+feature: 001-capture-and-records-foundation
+title: Capture and Records Foundation
+stage: 1
+status: in-review
+owner: user
+created: 2026-09-08
+updated: 2026-09-08
+approved_on: null
+supersedes: null
+---
+
+# Epic PRD — Capture and Records Foundation
+
+Context: [Intake](./00-context.md) · [Product brief](../../product/product-brief.md) · [V1 epic map](../../product/v1-epic-map.md)
+
+## 1. Problem
+
+A person's life is scattered across a to-do app, a calendar, a notes app, a
+spreadsheet and a chat window. Every time something worth keeping shows up, the
+user first has to decide where it goes, and that decision is friction paid on
+every single capture. The things that lose the coin toss never get recorded at
+all.
+
+Assistants that accept anything solve the capture problem and create a worse
+one. What the user told them is invisible. The only way to find out what the
+system holds is to ask it and hope the answer is complete.
+
+This epic is the product's foundation: one place to say the thing, and a
+structured record afterwards that the user can see, search and change.
+
+## 2. Users and jobs
+
+| User | Job to be done | Today's workaround |
+|---|---|---|
+| The fragmented individual | Record a task or a reminder in under five seconds without choosing an app first | Whichever app is already open, or a note to themselves they never revisit |
+| The system-averse | Capture now, organise never | Abandoned productivity systems, then paper |
+| Any user, days later | Confirm what the system actually holds, and correct it | Scrolling chat history, or re-asking the assistant |
+
+Jobs served, from the brief: J1 what do I need to do, J5 what have I recorded.
+
+## 3. Goals
+
+| # | Goal | Metric | Baseline | Target | Source |
+|---|---|---|---|---|---|
+| G1 | Capture is faster than the app it replaces | Median seconds from first keystroke to confirmed record | None, new product | Under 8 s | proposed, needs Q7 |
+| G2 | The user trusts what was recorded | Share of created records where the user does not immediately edit or delete | None | Over 90% | proposed, needs Q7 |
+| G3 | The user inspects their data rather than only asking | Share of weekly active users who open a records view in a week | None | Over 60% | proposed, needs Q7 |
+| G4 | Understanding is good enough to rely on | Share of captures where every extracted field is correct without user correction | None | Over 90% | proposed, needs Q7 |
+
+> Assumption: the source sets no numeric targets. Every target above is proposed
+> and needs confirmation before this PRD is approved. See Q7.
+
+## 4. Non-goals
+
+- Any record type beyond tasks and reminders. Expenses, memories, events, goals,
+  projects and notes are epics 002 and 004 to 007.
+- Persistent memory and contextual retrieval. Epic 002 and 003.
+- Search across record types. Epic 003. This epic searches records by text only.
+- Today and Upcoming views, and the home dashboard. Epic 008.
+- Proactive suggestions. Epic 009.
+- Linking a task to a project or a goal. Those entities do not exist yet.
+- Multi-user, sharing or collaboration of any kind.
+- Voice input, offline capture, and importing from other apps.
+
+## 5. User stories
+
+- **US-1.** As a user, I type a command and my task exists, so that capture costs one line.
+- **US-2.** As a user, I type `/` and see what Jarvis can do, so that I do not have to memorise commands.
+- **US-3.** As a user, I write the arguments the way I speak, so that I do not have to learn a syntax.
+- **US-4.** As a user, I say something in plain language and Jarvis records the right kind of thing, so that I can capture without prefixing a command.
+- **US-5.** As a user, I see what Jarvis extracted right after it creates the record, so that I catch a wrong date immediately.
+- **US-6.** As a user, I open a list of everything Jarvis has recorded, so that I never have to ask the AI what it holds.
+- **US-7.** As a user, I correct or delete anything Jarvis recorded, so that a mistake is not permanent.
+- **US-8.** As a user, I get told about a reminder at the time I set, so that setting it was worth doing.
+
+## 6. Functional requirements
+
+### Capture
+
+| id | Requirement | Priority | Story |
+|---|---|---|---|
+| FR-1 | The user can submit input as either a slash command or plain language, in the same input, with no mode switch. | must | US-1, US-4 |
+| FR-2 | Typing `/` presents the list of available commands, each with a one-line description. | must | US-2 |
+| FR-3 | Typing further characters after `/` filters the list to commands whose name contains the typed text. `/add` yields every add command. | must | US-2 |
+| FR-4 | A command accepts natural-language arguments and Jarvis extracts the structured fields for that record type from them. | must | US-3 |
+| FR-5 | Relative dates and times in input resolve against the user's current date, time and timezone. "tomorrow at 7pm" and "yesterday" resolve to absolute values. | must | US-3 |
+| FR-6 | When every required field for the record type is present, Jarvis creates the record without asking anything further. | must | US-1 |
+| FR-7 | After creation, Jarvis shows the created record with every extracted field visible, in the same place the user typed. | must | US-5 |
+| FR-8 | When a required field cannot be extracted, Jarvis asks exactly one question naming the missing field, and creates the record on the answer. | must | US-5 |
+| FR-9 | Plain-language input with no command is classified into a record type. The chosen type is shown with the created record. | must | US-4 |
+| FR-10 | The user can change the record type of a just-created record without retyping the content. | must | US-4, US-7 |
+| FR-11 | Input that is a question rather than a capture is answered rather than recorded. | must | US-4 |
+| FR-12 | An unrecognised command name tells the user so and offers the closest matches, and creates nothing. | should | US-2 |
+
+### Records
+
+| id | Requirement | Priority | Story |
+|---|---|---|---|
+| FR-13 | Every record created by any input path is visible in the records view without the user reloading or waiting. | must | US-6 |
+| FR-14 | The records view lists all records with type, title, date and status. | must | US-6 |
+| FR-15 | The user can filter records by type. | must | US-6 |
+| FR-16 | The user can text-search records by title and description. | must | US-6 |
+| FR-17 | The user can sort records by created date and by due date. | should | US-6 |
+| FR-18 | Opening a record shows every stored field, its creation time, and its origin: command, conversation, or a later edit. | must | US-6 |
+| FR-19 | The user can edit any field they supplied, from the record detail. | must | US-7 |
+| FR-20 | The user can delete a record, and deletion asks for confirmation naming the record. | must | US-7 |
+| FR-21 | An action deleting more than one record states the count and requires explicit confirmation. | must | US-7 |
+| FR-22 | Every record stores its origin and creation time at creation, and its last edit time on change. | must | US-6 |
+
+### Tasks
+
+| id | Requirement | Priority | Story |
+|---|---|---|---|
+| FR-23 | A task holds a title, an optional due date, an optional priority, a status of pending or done, and an optional recurrence. | must | US-1 |
+| FR-24 | The user can create, complete, edit and delete a task by command and from the records view, with the same result either way. | must | US-1, US-7 |
+| FR-25 | `/tasks` lists the user's open tasks, soonest due first. | must | US-1 |
+| FR-26 | Completing a recurring task creates its next occurrence. | should | US-1 |
+
+### Reminders
+
+| id | Requirement | Priority | Story |
+|---|---|---|---|
+| FR-27 | A reminder holds a description, a date and a time, and is one-time or recurring. | must | US-8 |
+| FR-28 | A reminder without a time uses a default time the user can change once, in settings. | should | US-8 |
+| FR-29 | The user is notified at the reminder's time, through the channel decided in Q2. | must | US-8 |
+| FR-30 | The user can edit and delete a reminder, including its schedule. | must | US-7 |
+| FR-31 | `/reminders` lists upcoming reminders, soonest first. | must | US-8 |
+| FR-32 | A reminder whose delivery fails is retried, and a reminder that has still not been delivered is visible as undelivered rather than silently dropped. | must | US-8 |
+
+## 7. Non-functional requirements
+
+| id | Requirement | Number | How it is measured |
+|---|---|---|---|
+| NFR-1 | The command list appears while the user keeps typing. | Under 100 ms at p95 | Client instrumentation from keypress to list painted |
+| NFR-2 | A capture is acknowledged quickly enough that the user does not wait on it. | First visible response under 1.5 s at p95 | Server timing from submit to first byte of response |
+| NFR-3 | A created record appears in the records view without a perceptible gap. | Under 1 s at p95 | Time from record creation to visible in a records query |
+| NFR-4 | Field extraction is correct on unambiguous everyday input. | Over 90% of fields correct | Labelled evaluation set, built before build plan approval |
+| NFR-5 | Type classification of plain-language capture is correct. | Over 85% top-1 | Same evaluation set |
+| NFR-6 | Reminders fire on time. | Within 60 s of the scheduled time at p99 | Delivery timestamp against scheduled timestamp |
+| NFR-7 | A user's records are never readable by another user, in storage or in a model prompt. | Zero incidents | Authorisation tests on every record path |
+| NFR-8 | The records view stays responsive as records accumulate. | Under 1 s at p95 for a user with 10,000 records | Load test |
+| NFR-9 | No capture is lost once acknowledged. | Zero acknowledged captures without a record | Reconciliation of acknowledgements against records |
+| NFR-10 | Model spend per capture stays inside the per-user ceiling. | Ceiling to be set in Q4 | Cost per capture, tracked per user |
+
+## 8. Success metrics
+
+Measured thirty days after launch to the first users.
+
+| Metric | Target | Instrumented by |
+|---|---|---|
+| Captures per active user per week | Needs Q7 | Record creation events, by origin |
+| Share of captures made by command versus plain language | Reported, no target | Record origin field |
+| Share of weekly actives opening a records view | Over 60%, proposed | View events |
+| Correction rate within five minutes of creation | Under 10%, proposed | Edit and delete events against creation time |
+| Reminder delivery success | Over 99% | Delivery outcomes |
+| Week-four retention | Needs Q7 | Cohort activity |
+
+## 9. Dependencies
+
+| Dependency | Type | Owner | Status |
+|---|---|---|---|
+| Surface decision, Q1 | product | user | Open, blocks design |
+| Notification channel, Q2 | product | user | Open, blocks FR-29 |
+| Account and auth model, Q3 | platform | user | Open, blocks build plan |
+| Model provider, budget and latency, Q4 | vendor | user | Open, blocks NFR-2, NFR-4, NFR-10 |
+| Labelled evaluation set for extraction and classification | internal | Claude, with user-supplied phrasings | Not started, needed before build plan approval |
+| Numeric targets for the hypotheses, Q7 | product | user | Open, blocks approval of section 3 |
+
+## 10. Risks
+
+| Risk | Likelihood | Impact | Mitigation |
+|---|---|---|---|
+| Extraction gets dates subtly wrong, so the user stops trusting capture | high | high | FR-7 shows every extracted field at creation, FR-10 and FR-19 make correction one action, NFR-4 sets a bar before launch |
+| Plain-language classification guesses the wrong type often enough to annoy | medium | high | Commands stay the fast path and never guess, FR-10 makes a wrong guess cheap to fix, NFR-5 sets a bar |
+| Model cost per capture makes the unit economics fail | medium | high | Q4 sets the ceiling, NFR-10 tracks it, cheap paths for unambiguous commands are a build plan question |
+| Reminders fire late or not at all, which destroys the reason to set them | medium | high | NFR-6 and FR-32, delivery is a build plan question, not an afterthought |
+| The epic grows to cover every record type before shipping anything | high | medium | Non-goals list every excluded type explicitly, epic map holds the rest |
+| Records view becomes a second, competing way to work, splitting the product | low | medium | Principle 2 in the brief, both paths write the same records |
+
+## 11. Open questions
+
+| # | Question | Blocks | Owner | Answer |
+|---|---|---|---|---|
+| Q1 | Which surface ships first: web, mobile, desktop, or a mix? Typing `/` and receiving a notification mean different things on each. | design, HLD | user | |
+| Q2 | How does a reminder reach the user: push notification, email, in-app only? | FR-29, design, HLD | user | |
+| Q3 | One personal account per user, or workspaces with members? | HLD, data model | user | |
+| Q4 | Which model provider, at what cost ceiling per user per month, and what latency budget for a capture? | NFR-2, NFR-4, NFR-10 | user | |
+| Q5 | Should plain-language capture create records directly, or propose them for one-tap confirmation until accuracy is proven? | FR-9, design | user | |
+| Q6 | Are task priority and recurrence needed in V1, or can they wait? The source lists both, and both add real cost. | FR-23, FR-26 | user | |
+| Q7 | What numeric targets make G1 to G4 and the V1 hypotheses pass or fail? | section 3, section 8 | user | |
+| Q8 | Is there a settings surface in this epic at all, for the default reminder time and timezone, or does that wait? | FR-28, scope | user | |
+| Q9 | Can the user see and edit records at all when a capture is ambiguous and unanswered, or is the pending question blocking? | FR-8, design | user | |
+
+## 12. Out of scope
+
+Everything in the product non-goals, plus the record types and views assigned to
+epics 002 to 009 in the epic map. Also out: bulk import, data export, offline
+capture, undo beyond edit and delete, attachments on records, and any sharing.
+
+## Change log
+
+| Date | Change | Why | Approved by |
+|---|---|---|---|
+| 2026-09-08 | Created from the V1 product definition | First epic of V1 | pending |

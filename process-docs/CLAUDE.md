@@ -54,6 +54,9 @@ process-docs/
 ├── product/
 │   ├── product-brief.md         ← what Jarvis is, who it serves, pillars
 │   ├── glossary.md              ← one definition per domain term
+│   ├── v1-epic-map.md           ← how a release breaks into epics
+│   ├── intake/                  ← product-level requirements as supplied
+│   │   └── YYYY-MM-DD-<slug>.md
 │   └── decisions/               ← product- and platform-wide decision records
 │       └── NNNN-<slug>.md
 ├── templates/                   ← copy these, never edit in place
@@ -139,7 +142,12 @@ Use the matching file in `templates/`. Sections marked required must exist even
 when the answer is "none".
 
 ### 00-context.md — Intake
-Raw capture of what the user asked for. Their words, lightly organised. Product
+Raw capture of what the user asked for. When the user supplies a product-level
+document covering several epics, it is transcribed once into `product/intake/`
+and each feature's `00-context.md` cites the sections that define that epic
+rather than copying them.
+
+Their words, lightly organised. Product
 details, constraints, references, links, competitor notes. This is the only doc
 where unresolved mess is allowed. Never edit the user's stated requirement into
 something cleaner. Record it, then interpret it in the PRD.
