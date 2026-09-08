@@ -148,17 +148,21 @@ These may be revisited once the core product is validated.
 
 ## 10. Success criteria
 
-V1 exists to test three hypotheses. Targets are proposed and need confirmation
-before the first PRD is approved.
+V1 exists to test three hypotheses.
 
-| # | Hypothesis | Signal | Proposed target |
-|---|---|---|---|
-| H1 | Users will record their life in Jarvis | Capture commands per active user per week | Needs a number, see Q7 |
-| H2 | Users will inspect their structured data | Share of active users who open a records view weekly | Needs a number, see Q7 |
-| H3 | Persistent context creates recurring value | Retrieval actions per user per week, and week-four retention | Needs a number, see Q7 |
+| # | Hypothesis | Signal |
+|---|---|---|
+| H1 | Users will record their life in Jarvis | Captures per active user per week |
+| H2 | Users will inspect their structured data | Share of weekly actives who open a records view |
+| H3 | Persistent context creates recurring value | Retrieval actions per week, and week-four retention |
 
-> Assumption: the source states the hypotheses but sets no numbers. Every metric
-> above is unusable until Q7 is answered.
+**No pass or fail numbers are set, by decision on 2026-09-08.** With no users
+there is no baseline, so a target would be invented. Every signal is
+instrumented from launch and read once usage exists.
+
+The consequence, stated plainly: until numbers are set, these hypotheses cannot
+be failed, only observed. Set them before any decision to keep building or stop
+depends on the result.
 
 ## 11. Platform baseline
 
@@ -209,7 +213,7 @@ the feature that first needs them.
 | Q11 | One shared API key serves every user, so every user shares one quota. What happens when the quota is exhausted: queue, degrade, or refuse? | HLD | user |
 | Q12 | Are we charging users in V1? | brief, pricing | user |
 | Q6 | Currency and locale: is ₹ the only currency in V1? | PRD | user |
-| Q7 | What numeric targets make each V1 hypothesis pass or fail? | PRD metrics | user |
+| ~~Q7~~ | ~~What numeric targets make each V1 hypothesis pass or fail?~~ **Deferred 2026-09-08. Instrument now, set targets once there is usage.** | — | — |
 | Q8 | Is offline capture required, and is data export a V1 promise? | PRD, HLD | user |
 | Q9 | How long is the V1 build window, and is there a launch date to hit? | epic sequencing | user |
 
@@ -220,4 +224,5 @@ the feature that first needs them.
 | 2026-09-08 | Created as skeleton | Process bootstrap | — |
 | 2026-09-08 | Filled from the V1 product definition | User supplied the product | pending |
 | 2026-09-08 | Surface, notifications and model provider settled. Q1, Q2, Q4 closed. Q10 to Q12 opened. | User answered the blocking questions | user |
+| 2026-09-08 | Numeric targets deferred. Hypotheses instrumented without pass or fail numbers. Q7 closed. | User decision | user |
 | 2026-09-08 | One account per user. Plain-language capture, the Life Inbox, and task priority and recurrence deferred out of V1. Pillar P1 marked as partly deferred. Q3 closed. | User cut scope | user |

@@ -42,15 +42,26 @@ Jobs served, from the brief: J1 what do I need to do, J5 what have I recorded.
 
 ## 3. Goals
 
-| # | Goal | Metric | Baseline | Target | Source |
-|---|---|---|---|---|---|
-| G1 | Capture is faster than the app it replaces | Median seconds from first keystroke to confirmed record | None, new product | Under 8 s | proposed, needs Q7 |
-| G2 | The user trusts what was recorded | Share of created records where the user does not immediately edit or delete | None | Over 90% | proposed, needs Q7 |
-| G3 | The user inspects their data rather than only asking | Share of weekly active users who open a records view in a week | None | Over 60% | proposed, needs Q7 |
-| G4 | Field extraction inside a command is good enough to rely on | Share of captures where every extracted field is correct without user correction | None | Over 90% | proposed, needs Q7 |
+| # | Goal | What we measure |
+|---|---|---|
+| G1 | Capture is faster than the app it replaces | Median seconds from first keystroke to confirmed record |
+| G2 | The user trusts what was recorded | Share of created records the user does not immediately edit or delete |
+| G3 | The user inspects their data rather than only asking | Share of weekly active users who open a records view in a week |
+| G4 | Field extraction inside a command is good enough to rely on | Share of captures where every extracted field is correct without user correction |
 
-> Assumption: the source sets no numeric targets. Every target above is proposed
-> and needs confirmation before this PRD is approved. See Q7.
+**No targets are set, by decision on 2026-09-08.** V1 has no users, so any target
+would be invented. Each goal is instrumented from day one and the numbers are
+read once real usage exists. Targets get set then, against a baseline that
+actually happened.
+
+This is a deliberate trade. Without a target, a result cannot fail, only inform.
+That is acceptable while the question is "what does usage look like" rather than
+"did we hit the bar". It stops being acceptable the moment a decision to keep
+building or stop rests on these numbers.
+
+The engineering numbers in section 7 are a different thing and stay. A
+non-functional requirement without a number cannot be tested, so those are
+build targets, not success bets.
 
 ## 4. Non-goals
 
@@ -156,16 +167,20 @@ Jobs served, from the brief: J1 what do I need to do, J5 what have I recorded.
 
 ## 8. Success metrics
 
-Measured thirty days after launch to the first users.
+Instrumented from launch, reported weekly, no targets set. See section 3.
 
-| Metric | Target | Instrumented by |
+| Metric | Instrumented by | What it tells us |
 |---|---|---|
-| Captures per active user per week | Needs Q7 | Record creation events, by origin |
-| Share of sessions where the user typed without a command and had to restate it as one | Reported, no target. A high number is the case for adding plain language | FR-9 events |
-| Share of weekly actives opening a records view | Over 60%, proposed | View events |
-| Correction rate within five minutes of creation | Under 10%, proposed | Edit and delete events against creation time |
-| Reminder delivery success | Over 99% | Delivery outcomes |
-| Week-four retention | Needs Q7 | Cohort activity |
+| Captures per active user per week | Record creation events | Whether the capture habit forms at all |
+| Captures by command name | Record creation events | Which commands earn their place, and which are dead weight |
+| Sessions where the user typed without a command | FR-9 events | The cost of the commands-only cut. A high number is the case for adding plain language |
+| Weekly actives opening a records view | View events | Whether structured data is inspected or ignored |
+| Corrections within five minutes of creation | Edit and delete events against creation time | Whether extraction is trusted |
+| Reminder delivery success and lateness | Delivery outcomes against scheduled time | Whether reminders are worth setting |
+| Week-four retention by signup cohort | Cohort activity | Whether accumulated context brings people back |
+
+Reminder delivery keeps a number, in NFR-6 and NFR-32, because a late reminder
+is a defect rather than a disappointing result.
 
 ## 9. Dependencies
 
@@ -179,7 +194,7 @@ Measured thirty days after launch to the first users.
 | Email delivery service | vendor | user | Not chosen, blocks FR-33 in the build plan |
 | Account and auth model, Q3 | platform | user | Open, blocks build plan |
 | Labelled evaluation set for extraction and classification | internal | Claude, with user-supplied phrasings | Not started, needed before build plan approval |
-| Numeric targets for the hypotheses, Q7 | product | user | Open, blocks approval of section 3 |
+| Numeric targets for the hypotheses | product | user | Deferred by decision, 2026-09-08. Not a blocker |
 
 ## 10. Risks
 
@@ -209,7 +224,7 @@ Measured thirty days after launch to the first users.
 | ~~Q6~~ | Are task priority and recurrence needed in V1? | FR-23, FR-26 | user | **No.** Both are out. A task is a title, a due date and a status. |
 | Q13 | Task recurrence is out. Are recurring **reminders** also out? They are the same scheduling machinery, so keeping them for reminders spends most of the cost the cut was meant to avoid. | FR-27, HLD | user | |
 | Q14 | With conversation out of V1, does `/search` still answer questions in sentences, or only return matching records? Epic 003 owns search, but the answer changes what the command surface is. | epic 003 | user | |
-| Q7 | What numeric targets make G1 to G4 and the V1 hypotheses pass or fail? | section 3, section 8 | user | |
+| ~~Q7~~ | What numeric targets make G1 to G4 pass or fail? | section 3 | user | **Deferred.** No targets in V1. Instrument everything, set targets once there is real usage. |
 | Q8 | Is there a settings surface in this epic at all, for the default reminder time and timezone, or does that wait? | FR-28, scope | user | |
 | Q9 | Can the user see and edit records at all when a capture is ambiguous and unanswered, or is the pending question blocking? | FR-8, design | user | |
 
@@ -225,5 +240,6 @@ capture, undo beyond edit and delete, attachments on records, and any sharing.
 | Date | Change | Why | Approved by |
 |---|---|---|---|
 | 2026-09-08 | Created from the V1 product definition | First epic of V1 | pending |
+| 2026-09-08 | Numeric targets removed from goals and success metrics. Metrics are instrumented without targets. Engineering numbers in section 7 unchanged. Q7 closed as deferred. | User deferred targets until real usage exists | user |
 | 2026-09-08 | Commands-only capture. FR-1 rewritten, FR-9 repurposed to handle non-command input, FR-10, FR-11, FR-26 and NFR-5 withdrawn, FR-23 reduced to title, due date and status. US-4 dropped, US-9 added. Q3, Q5, Q6 closed. Q13, Q14 opened. | User cut plain language, task priority and task recurrence from V1 | user |
 | 2026-09-08 | Surface, notification channels and model provider settled. FR-29 split into FR-33 and FR-34, FR-35 added for quota failure, NFR-10 rewritten from cost to quota, NFR-11 and NFR-12 added, two risks added, Q10 to Q12 opened. | User answered Q1, Q2 and Q4 | user |
