@@ -223,7 +223,7 @@ shared key made unavoidable, not a disappointing result.
 | ~~Q5~~ | Should plain-language capture create records directly, or propose them first? | FR-9, design | user | **Neither. Commands only in V1.** Plain-language capture is deferred. |
 | ~~Q6~~ | Are task priority and recurrence needed in V1? | FR-23, FR-26 | user | **No.** Both are out. A task is a title, a due date and a status. |
 | ~~Q13~~ | Are recurring reminders also out? | epic 002 | user | **In.** Reminders keep recurrence. Carried to epic 002 along with the scheduling machinery it needs. |
-| Q14 | With conversation out of V1, does `/search` still answer questions in sentences, or only return matching records? Epic 003 owns search, but the answer changes what the command surface is. | epic 003 | user | |
+| Q14 | With conversation out of V1, does `/search` still answer questions in sentences, or only return matching records? Epic 004 owns search, but the answer changes what the command surface is. | epic 004 | user | |
 | ~~Q7~~ | What numeric targets make G1 to G4 pass or fail? | section 3 | user | **Deferred.** No targets in V1. Instrument everything, set targets once there is real usage. |
 | ~~Q8~~ | Is there a settings surface in this epic? | FR-27, scope | user | **Yes.** Timezone lives here, in FR-27 and FR-28. The default reminder time goes to epic 002 with reminders. |
 | Q9 | Can the user see and edit records at all when a capture is ambiguous and unanswered, or is the pending question blocking? | FR-8, design | user | |

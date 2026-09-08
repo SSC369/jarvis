@@ -216,7 +216,7 @@ the product is validated.
 | Q6 | Currency and locale: is ₹ the only currency in V1? | PRD | user |
 | ~~Q7~~ | ~~What numeric targets make each V1 hypothesis pass or fail?~~ **Deferred 2026-09-08. Instrument now, set targets once there is usage.** | — | — |
 | Q8 | Is offline capture required, and is data export a V1 promise? | PRD, HLD | user |
-| Q9 | How long is the V1 build window, and is there a launch date to hit? | epic sequencing | user |
+| ~~Q9~~ | ~~How long is the V1 build window?~~ **Answered 2026-09-08: no deadline.** | — | — |
 
 ## Change log
 
