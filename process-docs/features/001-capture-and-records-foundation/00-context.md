@@ -20,7 +20,8 @@ Nothing is restated here that lives there.
 
 ## Requirement as stated
 
-The sections of the source that define this epic:
+The sections of the source that define this epic. Reminders, §21, were part of
+this epic until 2026-09-08 and now form epic 002.
 
 | § | Topic |
 |---|---|
@@ -33,7 +34,6 @@ The sections of the source that define this epic:
 | 13 | Task Records |
 | 19 | Record Detail |
 | 20 | Tasks |
-| 21 | Reminders |
 | 35 | Confirmation Model |
 | 36 | Record Creation Principle |
 
@@ -54,7 +54,6 @@ The user's own words on why this matters:
 | Command syntax | `/command [natural-language arguments]` | §8.1 |
 | Discovery | Typing `/` lists commands, typing `/add` filters them | §9 |
 | Task fields | Title, due date, priority, recurrence, status, project link, goal link | §20 |
-| Reminder fields | Description, date, time, one-time or recurring, notifications | §21 |
 | Records columns | Type, title, date, status | §12 |
 | Record detail | Every field, plus creation date and how it was created | §19 |
 | Confirmation | Immediate on unambiguous, one question on ambiguous, explicit on destructive | §35 |
@@ -79,7 +78,7 @@ Carried into the PRD as open questions.
 | # | Unknown |
 |---|---|
 | U1 | Which surface ships first, and therefore what "typing `/`" means physically |
-| U2 | How a reminder actually reaches the user at its due time |
+| U2 | *Resolved and moved. Reminders are epic 002.* |
 | U3 | Whether ₹ is the only currency, which matters once expenses arrive |
 | U4 | What accuracy of classification and extraction counts as good enough |
 | U5 | Whether project and goal links on a task are in scope here, given those epics land later |

@@ -8,9 +8,9 @@ Product context: [product brief](./product/product-brief.md) ·
 [V1 intake](./product/intake/2026-09-08-personal-jarvis-v1.md) ·
 [decisions](./product/decisions/)
 
-Settled platform facts: web surface, one account per user, in-app and email
-notifications, Gemini free tier as the model provider. V1 captures through
-commands only.
+Settled: web, one account per user, commands-only capture, in-app and email
+notifications, no charging in V1, no deadline. Stack and model provider are
+[decisions 0001 and 0002](./product/decisions/).
 
 ## Legend
 
@@ -35,18 +35,19 @@ Status values: `draft`, `in-review`, `approved`, `blocked`, `shipped`,
 
 ## Planned
 
-Proposed in the [V1 epic map](./product/v1-epic-map.md), not yet opened.
+Confirmed in the [V1 epic map](./product/v1-epic-map.md), not yet opened.
 
 | # | Epic | Priority | Depends on |
 |---|---|---|---|
-| 002 | Persistent Memory | P0 | 001 |
-| 003 | Personal Search and Context | P0 | 001, 002 |
-| 004 | Expenses | P1 | 001 |
-| 005 | Events | P1 | 001 |
-| 006 | Goals and Projects | P1 | 001, 003 |
-| 007 | Notes | P1 | 001 |
-| 008 | Daily Control | P1 | 001, 004, 005, 006 |
-| 009 | Proactive Jarvis | P2 | 003, 008 |
+| 002 | Reminders and Notifications | P0 | 001 |
+| 003 | Persistent Memory | P0 | 001 |
+| 004 | Personal Search and Context | P0 | 001, 003 |
+| 005 | Expenses | P1 | 001 |
+| 006 | Events | P1 | 001 |
+| 007 | Goals and Projects | P1 | 001, 004 |
+| 008 | Notes | P1 | 001 |
+| 009 | Daily Control | P1 | 001, 002, 005, 006, 007 |
+| 010 | Proactive Jarvis | P2 | 004, 009 |
 
 ## Shipped
 

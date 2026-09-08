@@ -1,7 +1,7 @@
 ---
 doc: epic-map
 title: V1 Epic Map
-status: in-review
+status: approved
 owner: user
 created: 2026-09-08
 updated: 2026-09-08
@@ -13,8 +13,8 @@ How the [V1 product definition](./intake/2026-09-08-personal-jarvis-v1.md)
 breaks into epics. Each epic gets its own folder under `features/` and runs the
 five gates independently.
 
-> This decomposition is a proposal. It is `in-review` until the user confirms
-> the split and the order.
+> Confirmed by the user on 2026-09-08, including the split of reminders out of
+> epic 001. Changes from here follow the change log.
 
 ## Slicing rule
 
@@ -31,27 +31,38 @@ loop, which is why they get smaller as the list goes on.
 
 | # | Epic | Priority | Covers (source §) | Depends on |
 |---|---|---|---|---|
-| 001 | Capture and Records Foundation | P0 | Command Center §7, Command System §8, Command discovery §9, Structured Records §10 to §13, Record detail §19, Tasks §20, Reminders §21, Confirmation model §35, Record creation principle §36 | — |
-| 002 | Persistent Memory | P0 | Memory §15 to §18 | 001 |
-| 003 | Personal Search and Context | P0 | Personal search §27, Contextual intelligence §28 | 001, 002 |
-| 004 | Expenses | P1 | Expenses §14, expense summaries | 001 |
-| 005 | Events | P1 | Events §22 | 001 |
-| 006 | Goals and Projects | P1 | Goals §23, Projects §24, goal-project-task relationships | 001, 003 |
-| 007 | Notes | P1 | Notes and Ideas §25 | 001 |
-| 008 | Daily Control | P1 | Today's view §29, Upcoming view §30, Home dashboard §32, Navigation §33 | 001, 004, 005, 006 |
-| 009 | Proactive Jarvis | P2 | Proactive Jarvis §31, advanced contextual intelligence | 003, 008 |
+| 001 | Capture and Records Foundation | P0 | Command Center §7, Command System §8, Command discovery §9, Structured Records §10 to §13, Record detail §19, Tasks §20, Confirmation model §35, Record creation principle §36 | — |
+| 002 | Reminders and Notifications | P0 | Reminders §21, recurrence, in-app and email delivery | 001 |
+| 003 | Persistent Memory | P0 | Memory §15 to §18 | 001 |
+| 004 | Personal Search and Context | P0 | Personal search §27, Contextual intelligence §28 | 001, 003 |
+| 005 | Expenses | P1 | Expenses §14, expense summaries | 001 |
+| 006 | Events | P1 | Events §22 | 001 |
+| 007 | Goals and Projects | P1 | Goals §23, Projects §24, goal-project-task relationships | 001, 004 |
+| 008 | Notes | P1 | Notes and Ideas §25 | 001 |
+| 009 | Daily Control | P1 | Today's view §29, Upcoming view §30, Home dashboard §32, Navigation §33 | 001, 002, 005, 006, 007 |
+| 010 | Proactive Jarvis | P2 | Proactive Jarvis §31, advanced contextual intelligence | 004, 009 |
 
 ## Why 001 is first and this shape
 
 The Command Center, the command system and the records store are the product.
-Every other epic is a record type or a view layered on them. Tasks and reminders
-ride along in 001 rather than waiting, for two reasons: they are the highest
-priority record types in the source, and a foundation that has never carried a
-real record type twice is not proven. Reminders in particular force the first
-scheduling and notification decisions, which are expensive to retrofit.
+Every other epic is a record type or a view layered on them. Tasks ride along in
+001 rather than waiting, because a foundation that has never carried a real
+record type is not proven.
 
-Memory is second because it is the stated differentiator and because search
-in 003 is only interesting once there is memory to search.
+**Reminders were split out on 2026-09-08**, at the user's direction. They were
+the heavier half of the original 001: scheduling, recurrence, two delivery
+channels, retry, and the Celery and Resend infrastructure underneath. Pulling
+them out roughly halves the first epic while leaving both halves usable on their
+own, which is the test that matters. 001 without reminders still ships a working
+product: capture a task by command, see it in records, edit it, complete it.
+
+The split was deliberately made on the tasks-versus-reminders line rather than
+on foundation-versus-record-types. Splitting the other way would have left 001
+with a command bar and a record store and nothing a person could actually
+record, which is a layer, not a slice.
+
+Memory follows because it is the stated differentiator, and search in 004 is
+only interesting once there is memory to search.
 
 ## Deferred out of V1
 
@@ -61,27 +72,31 @@ regrow them.
 | Cut | Was part of | Why it goes |
 |---|---|---|
 | Plain-language capture, §3.3 | 001 | V1 captures through commands only |
-| Life Inbox, §26 | 007 | It is capture without choosing a type, which commands-only forbids. It returns with plain language or not at all |
+| Life Inbox, §26 | 008 | It is capture without choosing a type, which commands-only forbids. It returns with plain language or not at all |
 | Task priority and recurrence, §20 | 001 | Cost out of proportion to V1 |
 
 ## Sequencing note
 
-Epics 004, 005 and 007 are near-identical in shape once 001 exists: a new record
+Epics 005, 006 and 008 are near-identical in shape once 001 exists: a new record
 type, its command set, its fields, its list view. They can run in any order, or
-in parallel, once the foundation is approved. 008 needs the record types it
+in parallel, once the foundation is approved. 009 needs the record types it
 displays, so it lands after them.
+
+There is no deadline for V1, confirmed 2026-09-08, so the order is driven by
+dependency and by what each epic teaches, not by what fits a date.
 
 ## Open questions
 
-| # | Question | Blocks |
-|---|---|---|
-| Q1 | Is this the right split, and is 001 the right first epic? | all |
-| Q2 | Should tasks and reminders be pulled out of 001 into their own epic, accepting that 001 then ships without a proven record type? | 001 |
-| Q3 | What is the V1 build window, and does anything need to be cut from V1 to hit it? | sequencing |
+| # | Question | Blocks | Answer |
+|---|---|---|---|
+| ~~Q1~~ | Is this the right split, and is 001 the right first epic? | all | **Confirmed 2026-09-08.** |
+| ~~Q2~~ | Should reminders be pulled out of 001? | 001 | **Yes, done.** Reminders are epic 002. |
+| ~~Q3~~ | What is the V1 build window? | sequencing | **No deadline.** |
 
 ## Change log
 
 | Date | Change | Why | Approved by |
 |---|---|---|---|
 | 2026-09-08 | Created | V1 product definition supplied | pending |
+| 2026-09-08 | Reminders split into epic 002, later epics renumbered to ten. Q1, Q2, Q3 closed. | User confirmed the split and settled the schedule | user |
 | 2026-09-08 | Epic 007 reduced to Notes. Life Inbox, plain-language capture, task priority and recurrence recorded as deferred. | User cut scope | user |

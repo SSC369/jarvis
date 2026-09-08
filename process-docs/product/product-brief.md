@@ -172,10 +172,10 @@ depends on the result.
 | Surfaces | Web. V1 ships as a web application. Mobile and desktop are not V1. | 2026-09-08 |
 | Notification delivery | In-app notifications and email. No push, no SMS. | 2026-09-08 |
 | Model provider | Google Gemini, free tier, through a single API key held in the server environment. See [decision 0001](./decisions/0001-model-provider-gemini-free-tier.md). | 2026-09-08 |
-| Stack | Not yet decided |  |
-| Auth and account model | Not yet decided, see Q3 |  |
-| Data stores | Not yet decided |  |
-| Hosting | Not yet decided |  |
+| Stack | FastAPI, PostgreSQL, React with Vite, Turborepo, MobX, shadcn/ui, Celery, Resend. See [decision 0002](./decisions/0002-v1-technology-stack.md). | 2026-09-08 |
+| Design system | Produced in Claude Design at stage 2 of each feature | 2026-09-08 |
+| Auth | Provider or built in-house not yet decided. One account per user makes it small either way. | |
+| Hosting | Not yet decided | |
 
 The undecided rows become decision records in `decisions/` at the build plan of
 the feature that first needs them.
@@ -192,13 +192,11 @@ the feature that first needs them.
 | Free tier | Not yet decided |
 | Metered unit | Not yet decided |
 | Marginal model cost per user | Zero in cash terms. The Gemini free tier is not billed. The real constraint is quota, not spend. See decision 0001. |
-| Charging users in V1 | Unresolved, see Q10 |
+| Charging users in V1 | No. Not charging for now. |
 
-> Assumption: "so we charge user now" is read as **we are not charging users at
-> this stage**, because the model cost is zero. If you meant the opposite, that
-> it makes charging viable, say so. It matters: charging for a product running
-> on a free tier that may train on user data is a position we would need to
-> take deliberately, not by accident.
+Confirmed 2026-09-08. Nothing in V1 is billed, which also removes the awkward
+position of charging for a product running on a free tier. Pricing returns once
+the product is validated.
 
 ## 13. Open questions
 
@@ -208,10 +206,13 @@ the feature that first needs them.
 | ~~Q2~~ | ~~How do reminder notifications reach the user?~~ **Answered 2026-09-08: in-app and email.** | — | — |
 | ~~Q3~~ | ~~One personal account per user, or workspaces with members?~~ **Answered 2026-09-08: one account per user.** | — | — |
 | ~~Q4~~ | ~~Which model provider, at what cost ceiling?~~ **Answered 2026-09-08: Gemini free tier, key in server env.** | — | — |
-| Q5 | Pricing shape and metered unit? | brief | user |
+| Q5 | Pricing shape and metered unit, once V1 is validated? | post-V1 | user |
 | Q10 | Does the Gemini free tier's data handling meet the bar for a product holding passports, finances and family details? The free tier's terms differ from the paid tier and must be read before launch, not after. | launch, decision 0001 | user |
-| Q11 | One shared API key serves every user, so every user shares one quota. What happens when the quota is exhausted: queue, degrade, or refuse? | HLD | user |
-| Q12 | Are we charging users in V1? | brief, pricing | user |
+| ~~Q11~~ | ~~What happens when the shared quota is exhausted?~~ **Answered 2026-09-08: refuse the capture with an honest message, preserve the input.** | — | — |
+| ~~Q12~~ | ~~Are we charging users in V1?~~ **Answered 2026-09-08: no.** | — | — |
+| Q13 | Do in-app notifications use polling, server-sent events, or websockets? | epic 002 HLD | user |
+| Q14 | Celery implies Redis. Confirmed, or prefer a database-backed queue to avoid a second service? | epic 002 HLD | user |
+| Q15 | Where does this run, and does hosting constrain Celery and Redis? | HLD | user |
 | Q6 | Currency and locale: is ₹ the only currency in V1? | PRD | user |
 | ~~Q7~~ | ~~What numeric targets make each V1 hypothesis pass or fail?~~ **Deferred 2026-09-08. Instrument now, set targets once there is usage.** | — | — |
 | Q8 | Is offline capture required, and is data export a V1 promise? | PRD, HLD | user |
@@ -224,5 +225,6 @@ the feature that first needs them.
 | 2026-09-08 | Created as skeleton | Process bootstrap | — |
 | 2026-09-08 | Filled from the V1 product definition | User supplied the product | pending |
 | 2026-09-08 | Surface, notifications and model provider settled. Q1, Q2, Q4 closed. Q10 to Q12 opened. | User answered the blocking questions | user |
+| 2026-09-08 | Stack settled as decision 0002. Quota exhaustion refuses honestly. Not charging in V1. No deadline. Q11 and Q12 closed, Q13 to Q15 opened for the build plans. | User settled architecture and business questions | user |
 | 2026-09-08 | Numeric targets deferred. Hypotheses instrumented without pass or fail numbers. Q7 closed. | User decision | user |
 | 2026-09-08 | One account per user. Plain-language capture, the Life Inbox, and task priority and recurrence deferred out of V1. Pillar P1 marked as partly deferred. Q3 closed. | User cut scope | user |

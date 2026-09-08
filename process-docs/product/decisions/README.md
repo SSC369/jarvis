@@ -12,3 +12,4 @@ the new record at it.
 | # | Decision | Status | Date |
 |---|---|---|---|
 | [0001](./0001-model-provider-gemini-free-tier.md) | Google Gemini free tier as the V1 model provider | accepted | 2026-09-08 |
+| [0002](./0002-v1-technology-stack.md) | V1 technology stack | accepted | 2026-09-08 |

@@ -3,6 +3,7 @@
 | Field | Value |
 |---|---|
 | Priority | P0 |
+| Scope | Commands, records, tasks, timezone settings |
 | Stage | 1 PRD |
 | Status | in-review |
 | Started | 2026-09-08 |
@@ -22,4 +23,6 @@
 ## One-line summary
 
 The Jarvis Command Center, the command system, and the structured record store,
-proven end to end with tasks and reminders.
+proven end to end with tasks.
+
+Reminders were split out into epic 002 on 2026-09-08.
