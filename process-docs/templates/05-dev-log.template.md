@@ -19,9 +19,12 @@ Appended as work happens. Records reality, including where reality left the
 plan.
 
 ## Task status
-| # | Task | Status | Commit | Note |
-|---|---|---|---|---|
-| 1 | | done / in progress / dropped | | |
+Task ids come from the implementation plan. When it was split, the id carries
+the sub-plan number and the sub-plan column names it.
+
+| # | Sub-plan | Task | Status | Commit | Note |
+|---|---|---|---|---|---|
+| T-1 | — | | done / in progress / dropped | | |
 
 ## Deviations from the plan
 | Date | Planned | Actual | Why | Approved by |

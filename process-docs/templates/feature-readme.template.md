@@ -15,6 +15,7 @@
 | 2 Design | [02-design.md](./02-design.md) | not started | |
 | 3 Build plan | [03-build-plan.md](./03-build-plan.md) | not started | |
 | 4 Implementation plan | [04-implementation-plan.md](./04-implementation-plan.md) | not started | |
+| 4.1 Sub-plan | [04.1-<slug>.md](./04.1-<slug>.md) | only if split | |
 | 5 Dev | [05-dev-log.md](./05-dev-log.md) | not started | |
 
 ## One-line summary

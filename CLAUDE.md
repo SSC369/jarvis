@@ -27,7 +27,9 @@ for the standing product context.
 ## Rules that bind outside process-docs too
 
 1. **No code before stage 4 is approved.** Sketches inside a doc are fine, files
-   in the repo are not.
+   in the repo are not. When a big feature splits stage 4 into sub-plans, code
+   for a slice waits for the index and that slice's own sub-plan, not for all
+   of them.
 2. **Do not advance a gate on your own.** If asked to skip ahead, name the
    missing approval first.
 3. **Do not invent product facts.** Unknowns go in the doc's Open Questions with

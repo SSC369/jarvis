@@ -39,6 +39,13 @@ User states the requirement
 Design work at stage 2 is done with Claude Design. The canvas link and exports
 live in the feature's `assets/` folder.
 
+When a feature is big, stage 4 splits. `04-implementation-plan.md` becomes an
+index that locks the slicing and the contracts between slices, and each slice
+gets its own `04.N-<slug>.md`. The index is approved first, then each sub-plan
+before its own dev starts, so building one slice can overlap with drafting the
+next. The thresholds for splitting, and the rule that slices are vertical and
+never layers, are in [CLAUDE.md](./CLAUDE.md).
+
 ## Starting a feature
 
 1. Copy `templates/` into `features/NNN-<slug>/`, dropping the `.template`

@@ -30,13 +30,17 @@ user.
 | 1 | Epic PRD | `01-prd.md` | User approves | Scope, users, requirements, success criteria |
 | 2 | Design | `02-design.md` | User approves after Claude Design work | Screens, flows, states, design-system tokens |
 | 3 | Build Plan (HLD) | `03-build-plan.md` | User approves | High-level architecture, boundaries, data model, tech choices |
-| 4 | Implementation Plan (LLD) | `04-implementation-plan.md` | User approves | File-level plan, contracts, task breakdown, test plan |
+| 4 | Implementation Plan (LLD) | `04-implementation-plan.md`, split into `04.N-*.md` when large | User approves | File-level plan, contracts, task breakdown, test plan |
 | 5 | Dev | `05-dev-log.md` | Claude writes as it builds | Nothing — it records reality |
 
 **Gate rule.** Do not write stage N+1 while stage N is `draft` or `in-review`.
 If asked to skip ahead, state the missing approval and ask for it. If the user
 explicitly says to proceed anyway, proceed and add a `> Gate skipped:` note at
 the top of the doc.
+
+A large stage 4 is the one exception, and only inside itself: once the
+implementation plan index is approved, a sub-plan may be built while a later
+sub-plan is still being drafted. See stage 4 in §6.
 
 **Lock rule.** When the user approves a doc, set its status to `approved` and
 add the approval line. An approved doc is not silently edited. Changes go
@@ -66,7 +70,8 @@ process-docs/
         ├── 01-prd.md
         ├── 02-design.md
         ├── 03-build-plan.md
-        ├── 04-implementation-plan.md
+        ├── 04-implementation-plan.md    ← index when split
+        ├── 04.1-<slice-slug>.md         ← sub-plans, only if split
         ├── 05-dev-log.md
         └── assets/              ← exports, screenshots, canvas links
 ```
@@ -212,6 +217,55 @@ Rules:
   a case. `good coverage` is not.
 - No code is written before this document is approved.
 
+**Splitting a large implementation plan.**
+
+One implementation plan that covers everything is unreviewable past a certain
+size, and a plan nobody finishes reading is not a plan. When a feature is big,
+split it.
+
+Split when any of these is true:
+
+| Trigger | Threshold |
+|---|---|
+| Tasks in the breakdown | more than 15 |
+| Files created or modified | more than 25 |
+| Independently shippable slices | more than one |
+| Distinct boundaries touched | more than two, for example data, capture pipeline, and the records surface |
+| Length of the drafted plan | more than 500 lines |
+
+How it is split:
+
+- `04-implementation-plan.md` stays, and becomes the **index**. Its path never
+  changes, split or not, so links and habits hold.
+- Sub-plans are siblings, numbered `04.1-<slug>.md`, `04.2-<slug>.md`, in build
+  order.
+- **Split by vertical slice, never by layer.** A sub-plan ends with something
+  that works end to end. `04.1-task-capture` is a slice. `04.1-database-layer`
+  is a layer, and it is wrong: nothing can be verified until the last one lands.
+- The index holds what is shared and what would otherwise be repeated: scope
+  recap, the slice list with dependencies and order, interfaces and contracts
+  crossing slice boundaries, data migrations, rollout, and the feature's
+  definition of done. Sub-plans link to it, never restate it.
+- Each sub-plan holds its own file-by-file plan, its internal contracts, its
+  error handling, its test plan, its task breakdown, and its own definition of
+  done. It must be buildable from itself plus the index, with nothing else open.
+- Task ids carry the sub-plan: task 3 of `04.2` is `T-2.3`. The dev log uses
+  these ids and names the sub-plan on every row.
+- One dev log per feature, not one per sub-plan.
+
+Approval when split, and this is the point of splitting:
+
+1. The **index is approved first**. That gate locks the slicing, the order, and
+   the contracts between slices. Nothing else can be approved before it.
+2. Each **sub-plan is approved on its own**, before its own dev starts.
+3. Dev on an approved slice may start while a later sub-plan is still being
+   written. This is the only place in the process where a stage runs
+   concurrently with itself.
+4. Changing a contract in the index re-opens every sub-plan that depends on it.
+   Say which ones, in the index change log.
+
+Do not split to look thorough. Under the thresholds, one document is better.
+
 ### 05-dev-log.md — Dev
 Appended during and after implementation. Records what actually happened: what
 shipped, what deviated from the plan and why, what was deferred, what broke.
@@ -268,6 +322,7 @@ section exists, no `TBD` remains outside Open Questions, every claim is sourced,
 and it links correctly to the previous stage.
 
 **A feature is done when:** the dev log records every task in the
-implementation plan as shipped or explicitly dropped, deviations are logged, the
+implementation plan, and in every sub-plan when it was split, as shipped or
+explicitly dropped, deviations are logged, the
 design matches what was approved or a change record explains why not, and
 `index.md` shows the feature as `shipped`.
