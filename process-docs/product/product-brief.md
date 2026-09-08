@@ -150,18 +150,22 @@ before the first PRD is approved.
 
 ## 11. Platform baseline
 
-| Area | Decision |
-|---|---|
-| Surfaces | Not yet decided, see Q1 |
-| Stack | Not yet decided |
-| Auth and account model | Not yet decided, see Q3 |
-| Model providers | Not yet decided, see Q4 |
-| Data stores | Not yet decided |
-| Notification delivery | Not yet decided, see Q2 |
-| Hosting | Not yet decided |
+| Area | Decision | Settled |
+|---|---|---|
+| Surfaces | Web. V1 ships as a web application. Mobile and desktop are not V1. | 2026-09-08 |
+| Notification delivery | In-app notifications and email. No push, no SMS. | 2026-09-08 |
+| Model provider | Google Gemini, free tier, through a single API key held in the server environment. See [decision 0001](./decisions/0001-model-provider-gemini-free-tier.md). | 2026-09-08 |
+| Stack | Not yet decided |  |
+| Auth and account model | Not yet decided, see Q3 |  |
+| Data stores | Not yet decided |  |
+| Hosting | Not yet decided |  |
 
-Each becomes a decision record in `decisions/` once settled, at the build plan
-of the feature that first needs it.
+The undecided rows become decision records in `decisions/` at the build plan of
+the feature that first needs them.
+
+> Assumption: "in-app notifications or email" is read as both channels shipping,
+> with the user choosing. If you meant one of the two, say which and this
+> narrows.
 
 ## 12. Business model
 
@@ -170,17 +174,27 @@ of the feature that first needs it.
 | Pricing shape | Not yet decided, see Q5 |
 | Free tier | Not yet decided |
 | Metered unit | Not yet decided |
-| Cost ceiling per user per month | Not yet decided, see Q4 |
+| Marginal model cost per user | Zero in cash terms. The Gemini free tier is not billed. The real constraint is quota, not spend. See decision 0001. |
+| Charging users in V1 | Unresolved, see Q10 |
+
+> Assumption: "so we charge user now" is read as **we are not charging users at
+> this stage**, because the model cost is zero. If you meant the opposite, that
+> it makes charging viable, say so. It matters: charging for a product running
+> on a free tier that may train on user data is a position we would need to
+> take deliberately, not by accident.
 
 ## 13. Open questions
 
 | # | Question | Blocks | Owner |
 |---|---|---|---|
-| Q1 | Which surface ships first: web, mobile, desktop, or a mix? | design, HLD | user |
-| Q2 | How do reminder notifications reach the user: push, email, in-app only? | PRD, HLD | user |
+| ~~Q1~~ | ~~Which surface ships first?~~ **Answered 2026-09-08: web.** | — | — |
+| ~~Q2~~ | ~~How do reminder notifications reach the user?~~ **Answered 2026-09-08: in-app and email.** | — | — |
 | Q3 | One personal account per user, or workspaces with members? | HLD, data model | user |
-| Q4 | Which model providers, at what cost ceiling per user per month, at what latency budget? | HLD | user |
+| ~~Q4~~ | ~~Which model provider, at what cost ceiling?~~ **Answered 2026-09-08: Gemini free tier, key in server env.** | — | — |
 | Q5 | Pricing shape and metered unit? | brief | user |
+| Q10 | Does the Gemini free tier's data handling meet the bar for a product holding passports, finances and family details? The free tier's terms differ from the paid tier and must be read before launch, not after. | launch, decision 0001 | user |
+| Q11 | One shared API key serves every user, so every user shares one quota. What happens when the quota is exhausted: queue, degrade, or refuse? | HLD | user |
+| Q12 | Are we charging users in V1? | brief, pricing | user |
 | Q6 | Currency and locale: is ₹ the only currency in V1? | PRD | user |
 | Q7 | What numeric targets make each V1 hypothesis pass or fail? | PRD metrics | user |
 | Q8 | Is offline capture required, and is data export a V1 promise? | PRD, HLD | user |
@@ -192,3 +206,4 @@ of the feature that first needs it.
 |---|---|---|---|
 | 2026-09-08 | Created as skeleton | Process bootstrap | — |
 | 2026-09-08 | Filled from the V1 product definition | User supplied the product | pending |
+| 2026-09-08 | Surface, notifications and model provider settled. Q1, Q2, Q4 closed. Q10 to Q12 opened. | User answered the blocking questions | user |

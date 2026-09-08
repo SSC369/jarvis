@@ -5,7 +5,11 @@ as any stage change.
 
 Product context: [product brief](./product/product-brief.md) ·
 [V1 epic map](./product/v1-epic-map.md) ·
-[V1 intake](./product/intake/2026-09-08-personal-jarvis-v1.md)
+[V1 intake](./product/intake/2026-09-08-personal-jarvis-v1.md) ·
+[decisions](./product/decisions/)
+
+Settled platform facts: web surface, in-app and email notifications, Gemini free
+tier as the model provider.
 
 ## Legend
 

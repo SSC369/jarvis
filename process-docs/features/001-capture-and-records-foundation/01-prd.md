@@ -124,17 +124,20 @@ Jobs served, from the brief: J1 what do I need to do, J5 what have I recorded.
 |---|---|---|---|
 | FR-27 | A reminder holds a description, a date and a time, and is one-time or recurring. | must | US-8 |
 | FR-28 | A reminder without a time uses a default time the user can change once, in settings. | should | US-8 |
-| FR-29 | The user is notified at the reminder's time, through the channel decided in Q2. | must | US-8 |
+| FR-29 | The user is notified in the application at the reminder's time. | must | US-8 |
+| FR-33 | The user is notified by email at the reminder's time. | must | US-8 |
+| FR-34 | The user can turn either channel off, and the setting applies to all their reminders. | should | US-8 |
 | FR-30 | The user can edit and delete a reminder, including its schedule. | must | US-7 |
 | FR-31 | `/reminders` lists upcoming reminders, soonest first. | must | US-8 |
 | FR-32 | A reminder whose delivery fails is retried, and a reminder that has still not been delivered is visible as undelivered rather than silently dropped. | must | US-8 |
+| FR-35 | When a capture cannot be understood because the model is unavailable or the shared quota is exhausted, the user is told plainly and the input is preserved, never discarded. | must | US-1 |
 
 ## 7. Non-functional requirements
 
 | id | Requirement | Number | How it is measured |
 |---|---|---|---|
 | NFR-1 | The command list appears while the user keeps typing. | Under 100 ms at p95 | Client instrumentation from keypress to list painted |
-| NFR-2 | A capture is acknowledged quickly enough that the user does not wait on it. | First visible response under 1.5 s at p95 | Server timing from submit to first byte of response |
+| NFR-2 | A capture is acknowledged quickly enough that the user does not wait on it. | First visible response under 1.5 s at p95, measured against Gemini free-tier latency | Server timing from submit to first byte of response |
 | NFR-3 | A created record appears in the records view without a perceptible gap. | Under 1 s at p95 | Time from record creation to visible in a records query |
 | NFR-4 | Field extraction is correct on unambiguous everyday input. | Over 90% of fields correct | Labelled evaluation set, built before build plan approval |
 | NFR-5 | Type classification of plain-language capture is correct. | Over 85% top-1 | Same evaluation set |
@@ -142,7 +145,9 @@ Jobs served, from the brief: J1 what do I need to do, J5 what have I recorded.
 | NFR-7 | A user's records are never readable by another user, in storage or in a model prompt. | Zero incidents | Authorisation tests on every record path |
 | NFR-8 | The records view stays responsive as records accumulate. | Under 1 s at p95 for a user with 10,000 records | Load test |
 | NFR-9 | No capture is lost once acknowledged. | Zero acknowledged captures without a record | Reconciliation of acknowledgements against records |
-| NFR-10 | Model spend per capture stays inside the per-user ceiling. | Ceiling to be set in Q4 | Cost per capture, tracked per user |
+| NFR-10 | Model usage stays inside the shared free-tier quota under expected V1 load. | No user-visible refusal caused by quota exhaustion in normal operation | Requests against the provider limit, tracked daily and at peak |
+| NFR-11 | A single user cannot exhaust the shared quota for everyone. | Per-user request cap, value set in the build plan | Requests per user per hour |
+| NFR-12 | The model provider sits behind one boundary, so it can be replaced by configuration. | Zero model-provider references outside that boundary | Code review, enforced by a lint rule or an import check |
 
 ## 8. Success metrics
 
@@ -161,10 +166,13 @@ Measured thirty days after launch to the first users.
 
 | Dependency | Type | Owner | Status |
 |---|---|---|---|
-| Surface decision, Q1 | product | user | Open, blocks design |
-| Notification channel, Q2 | product | user | Open, blocks FR-29 |
+| Web as the V1 surface | product | user | Settled 2026-09-08 |
+| In-app and email notifications | product | user | Settled 2026-09-08 |
+| Gemini free tier, shared key in server env | vendor | user | Settled 2026-09-08, see [decision 0001](../../product/decisions/0001-model-provider-gemini-free-tier.md) |
+| Gemini free-tier rate limits, read from the provider's current documentation | vendor | Claude | Not started, needed before the build plan sets NFR-11 |
+| Gemini free-tier data handling terms | vendor | user | Not read. Blocks launch, not the build. See Q10 |
+| Email delivery service | vendor | user | Not chosen, blocks FR-33 in the build plan |
 | Account and auth model, Q3 | platform | user | Open, blocks build plan |
-| Model provider, budget and latency, Q4 | vendor | user | Open, blocks NFR-2, NFR-4, NFR-10 |
 | Labelled evaluation set for extraction and classification | internal | Claude, with user-supplied phrasings | Not started, needed before build plan approval |
 | Numeric targets for the hypotheses, Q7 | product | user | Open, blocks approval of section 3 |
 
@@ -174,7 +182,9 @@ Measured thirty days after launch to the first users.
 |---|---|---|---|
 | Extraction gets dates subtly wrong, so the user stops trusting capture | high | high | FR-7 shows every extracted field at creation, FR-10 and FR-19 make correction one action, NFR-4 sets a bar before launch |
 | Plain-language classification guesses the wrong type often enough to annoy | medium | high | Commands stay the fast path and never guess, FR-10 makes a wrong guess cheap to fix, NFR-5 sets a bar |
-| Model cost per capture makes the unit economics fail | medium | high | Q4 sets the ceiling, NFR-10 tracks it, cheap paths for unambiguous commands are a build plan question |
+| One shared free-tier key means one shared quota, so one heavy user degrades the product for everyone | high | high | NFR-11 caps per-user requests, NFR-10 tracks headroom, FR-35 makes exhaustion honest rather than silent, a non-model fast path for unambiguous commands is a build plan question |
+| Free-tier terms allow user data to improve the provider's products, in a product holding passports and finances | medium | high | Q10 must be answered before launch, not after. If the terms are unacceptable the tier changes or the user is told before their first capture |
+| Free-tier models or limits change without notice | medium | medium | NFR-12 keeps the provider behind one boundary, so a switch is configuration |
 | Reminders fire late or not at all, which destroys the reason to set them | medium | high | NFR-6 and FR-32, delivery is a build plan question, not an afterthought |
 | The epic grows to cover every record type before shipping anything | high | medium | Non-goals list every excluded type explicitly, epic map holds the rest |
 | Records view becomes a second, competing way to work, splitting the product | low | medium | Principle 2 in the brief, both paths write the same records |
@@ -183,10 +193,13 @@ Measured thirty days after launch to the first users.
 
 | # | Question | Blocks | Owner | Answer |
 |---|---|---|---|---|
-| Q1 | Which surface ships first: web, mobile, desktop, or a mix? Typing `/` and receiving a notification mean different things on each. | design, HLD | user | |
-| Q2 | How does a reminder reach the user: push notification, email, in-app only? | FR-29, design, HLD | user | |
+| ~~Q1~~ | Which surface ships first? | design, HLD | user | **Web.** Mobile and desktop are out of V1. |
+| ~~Q2~~ | How does a reminder reach the user? | FR-29, design | user | **In-app and email.** No push. Assumption: both ship, user can disable either. |
 | Q3 | One personal account per user, or workspaces with members? | HLD, data model | user | |
-| Q4 | Which model provider, at what cost ceiling per user per month, and what latency budget for a capture? | NFR-2, NFR-4, NFR-10 | user | |
+| ~~Q4~~ | Which model provider, at what cost, at what latency? | NFR-2, NFR-4, NFR-10 | user | **Gemini free tier, single key in the server environment.** Recorded as decision 0001. Cost is zero, quota is the constraint. |
+| Q10 | Do the Gemini free-tier data handling terms meet the bar for a product holding passports, finances and family details? | launch | user | |
+| Q11 | When the shared quota is exhausted, does a capture queue, degrade to a non-model path, or refuse? | FR-35, HLD | user | |
+| Q12 | Are we charging users in V1? Free model cost does not settle this by itself. | pricing | user | |
 | Q5 | Should plain-language capture create records directly, or propose them for one-tap confirmation until accuracy is proven? | FR-9, design | user | |
 | Q6 | Are task priority and recurrence needed in V1, or can they wait? The source lists both, and both add real cost. | FR-23, FR-26 | user | |
 | Q7 | What numeric targets make G1 to G4 and the V1 hypotheses pass or fail? | section 3, section 8 | user | |
@@ -204,3 +217,4 @@ capture, undo beyond edit and delete, attachments on records, and any sharing.
 | Date | Change | Why | Approved by |
 |---|---|---|---|
 | 2026-09-08 | Created from the V1 product definition | First epic of V1 | pending |
+| 2026-09-08 | Surface, notification channels and model provider settled. FR-29 split into FR-33 and FR-34, FR-35 added for quota failure, NFR-10 rewritten from cost to quota, NFR-11 and NFR-12 added, two risks added, Q10 to Q12 opened. | User answered Q1, Q2 and Q4 | user |
