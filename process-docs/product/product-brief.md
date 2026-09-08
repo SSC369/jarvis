@@ -46,10 +46,17 @@ reconsider it.
 
 | # | Pillar | What it means | What it rules out |
 |---|---|---|---|
-| P1 | Capture without deciding | The user says the thing. Jarvis works out what kind of thing it is. Commands give explicit intent, plain language gives flexibility, both work. | Mandatory category pickers, rigid CLI syntax, forms as the primary input |
+| P1 | Capture without deciding | The user says the thing in one line and it is recorded. | Mandatory category pickers, rigid CLI syntax, forms as the primary input |
 | P2 | Everything recorded is visible | Every item Jarvis creates appears as a structured record the user can inspect, search, edit and delete. | An opaque assistant whose memory can only be interrogated by asking it |
 | P3 | Context accumulates and pays back | Information given once is used later, across conversations, and connected to related items without the user restating it. | Stateless chat, per-session memory, manual relationship management |
 | P4 | The user is in control | View, search, edit, delete and forget are always available. Destructive actions confirm. | Silent retention, unforgettable memory, irreversible bulk actions |
+
+> **P1 is partly deferred in V1.** The user decided on 2026-09-08 that V1
+> captures through commands only. Picking `/add-task` is still the user deciding
+> the type, so V1 delivers the smaller half of this pillar: one place instead of
+> six apps. The larger half, saying a thing and having Jarvis work out what it
+> is, waits. This is a deliberate cut, not an oversight, and it is the first
+> thing to revisit if capture volume disappoints.
 
 ## 4. Principles
 
@@ -111,8 +118,13 @@ epics in [the V1 epic map](./v1-epic-map.md).
 | Priority | Capabilities |
 |---|---|
 | P0 | Command Center, Command System, Structured Records, Persistent Memory, Tasks, Reminders, Personal Search, Context Awareness |
-| P1 | Expenses, Events, Today's View, Upcoming View, Goals, Projects, Notes and Ideas, Life Inbox, Memory Management |
+| P1 | Expenses, Events, Today's View, Upcoming View, Goals, Projects, Notes and Ideas, Memory Management |
 | P2 | Proactive Suggestions, Advanced Contextual Intelligence |
+| Deferred | Plain-language capture (§3.3), Life Inbox (§26), task priority and recurrence |
+
+Cut from V1 on 2026-09-08. The Life Inbox is frictionless capture without
+choosing a type, so it cannot exist while capture is commands-only. It returns
+with plain-language capture or not at all.
 
 ## 9. Product non-goals
 
@@ -152,6 +164,7 @@ before the first PRD is approved.
 
 | Area | Decision | Settled |
 |---|---|---|
+| Account model | One account per user. No workspaces, no members, no sharing. | 2026-09-08 |
 | Surfaces | Web. V1 ships as a web application. Mobile and desktop are not V1. | 2026-09-08 |
 | Notification delivery | In-app notifications and email. No push, no SMS. | 2026-09-08 |
 | Model provider | Google Gemini, free tier, through a single API key held in the server environment. See [decision 0001](./decisions/0001-model-provider-gemini-free-tier.md). | 2026-09-08 |
@@ -189,7 +202,7 @@ the feature that first needs them.
 |---|---|---|---|
 | ~~Q1~~ | ~~Which surface ships first?~~ **Answered 2026-09-08: web.** | — | — |
 | ~~Q2~~ | ~~How do reminder notifications reach the user?~~ **Answered 2026-09-08: in-app and email.** | — | — |
-| Q3 | One personal account per user, or workspaces with members? | HLD, data model | user |
+| ~~Q3~~ | ~~One personal account per user, or workspaces with members?~~ **Answered 2026-09-08: one account per user.** | — | — |
 | ~~Q4~~ | ~~Which model provider, at what cost ceiling?~~ **Answered 2026-09-08: Gemini free tier, key in server env.** | — | — |
 | Q5 | Pricing shape and metered unit? | brief | user |
 | Q10 | Does the Gemini free tier's data handling meet the bar for a product holding passports, finances and family details? The free tier's terms differ from the paid tier and must be read before launch, not after. | launch, decision 0001 | user |
@@ -207,3 +220,4 @@ the feature that first needs them.
 | 2026-09-08 | Created as skeleton | Process bootstrap | — |
 | 2026-09-08 | Filled from the V1 product definition | User supplied the product | pending |
 | 2026-09-08 | Surface, notifications and model provider settled. Q1, Q2, Q4 closed. Q10 to Q12 opened. | User answered the blocking questions | user |
+| 2026-09-08 | One account per user. Plain-language capture, the Life Inbox, and task priority and recurrence deferred out of V1. Pillar P1 marked as partly deferred. Q3 closed. | User cut scope | user |

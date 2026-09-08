@@ -8,8 +8,9 @@ Product context: [product brief](./product/product-brief.md) ·
 [V1 intake](./product/intake/2026-09-08-personal-jarvis-v1.md) ·
 [decisions](./product/decisions/)
 
-Settled platform facts: web surface, in-app and email notifications, Gemini free
-tier as the model provider.
+Settled platform facts: web surface, one account per user, in-app and email
+notifications, Gemini free tier as the model provider. V1 captures through
+commands only.
 
 ## Legend
 
@@ -43,7 +44,7 @@ Proposed in the [V1 epic map](./product/v1-epic-map.md), not yet opened.
 | 004 | Expenses | P1 | 001 |
 | 005 | Events | P1 | 001 |
 | 006 | Goals and Projects | P1 | 001, 003 |
-| 007 | Notes and Life Inbox | P1 | 001 |
+| 007 | Notes | P1 | 001 |
 | 008 | Daily Control | P1 | 001, 004, 005, 006 |
 | 009 | Proactive Jarvis | P2 | 003, 008 |
 

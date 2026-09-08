@@ -37,7 +37,7 @@ loop, which is why they get smaller as the list goes on.
 | 004 | Expenses | P1 | Expenses §14, expense summaries | 001 |
 | 005 | Events | P1 | Events §22 | 001 |
 | 006 | Goals and Projects | P1 | Goals §23, Projects §24, goal-project-task relationships | 001, 003 |
-| 007 | Notes and Life Inbox | P1 | Notes and Ideas §25, Life Inbox §26 | 001 |
+| 007 | Notes | P1 | Notes and Ideas §25 | 001 |
 | 008 | Daily Control | P1 | Today's view §29, Upcoming view §30, Home dashboard §32, Navigation §33 | 001, 004, 005, 006 |
 | 009 | Proactive Jarvis | P2 | Proactive Jarvis §31, advanced contextual intelligence | 003, 008 |
 
@@ -52,6 +52,17 @@ scheduling and notification decisions, which are expensive to retrofit.
 
 Memory is second because it is the stated differentiator and because search
 in 003 is only interesting once there is memory to search.
+
+## Deferred out of V1
+
+Cut by the user on 2026-09-08, recorded here so the epic map does not silently
+regrow them.
+
+| Cut | Was part of | Why it goes |
+|---|---|---|
+| Plain-language capture, §3.3 | 001 | V1 captures through commands only |
+| Life Inbox, §26 | 007 | It is capture without choosing a type, which commands-only forbids. It returns with plain language or not at all |
+| Task priority and recurrence, §20 | 001 | Cost out of proportion to V1 |
 
 ## Sequencing note
 
@@ -73,3 +84,4 @@ displays, so it lands after them.
 | Date | Change | Why | Approved by |
 |---|---|---|---|
 | 2026-09-08 | Created | V1 product definition supplied | pending |
+| 2026-09-08 | Epic 007 reduced to Notes. Life Inbox, plain-language capture, task priority and recurrence recorded as deferred. | User cut scope | user |
