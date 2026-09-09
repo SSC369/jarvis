@@ -39,6 +39,10 @@
     {
       "id": "page-10",
       "name": "Name, round two"
+    },
+    {
+      "id": "page-11",
+      "name": "Name, round three"
     }
   ],
   "artboards": [
@@ -417,6 +421,62 @@
       "w": 1440,
       "h": 900,
       "page": "page-10"
+    },
+    {
+      "file": "NameShortlist.dc.html",
+      "x": 0,
+      "y": 0,
+      "w": 1440,
+      "h": 900,
+      "page": "page-11"
+    },
+    {
+      "file": "NameDocket.dc.html",
+      "x": 1560,
+      "y": 0,
+      "w": 1440,
+      "h": 900,
+      "page": "page-11"
+    },
+    {
+      "file": "NameKist.dc.html",
+      "x": 3120,
+      "y": 0,
+      "w": 1440,
+      "h": 900,
+      "page": "page-11"
+    },
+    {
+      "file": "NameSundry.dc.html",
+      "x": 4680,
+      "y": 0,
+      "w": 1440,
+      "h": 900,
+      "page": "page-11"
+    },
+    {
+      "file": "NameColophon.dc.html",
+      "x": 6240,
+      "y": 0,
+      "w": 1440,
+      "h": 900,
+      "page": "page-11"
+    },
+    {
+      "file": "NameMnemo.dc.html",
+      "x": 7800,
+      "y": 0,
+      "w": 1440,
+      "h": 900,
+      "page": "page-11"
+    },
+    {
+      "file": "NameKeepsake.dc.html",
+      "x": 9360,
+      "y": 0,
+      "w": 1440,
+      "h": 900,
+      "page": "page-11"
     }
   ],
   "annotations": [
@@ -531,10 +591,18 @@
       "w": 1300,
       "page": "page-10",
       "text": "NAME, ROUND TWO\nRound one collided because all four were common English words. This round is built for ownability instead: two near-forgotten words with exact meanings, one mosaic term, one Roman root.\n\nEach card carries a collision risk read as well as a case and a cost.\n\nMy pick is Cairn: the plainest to say and spell, the easiest mark to draw, and the metaphor is the product.\n\nI cannot check domains or trademarks from here. Every risk note is reasoning from general knowledge and needs a real search before you commit."
+    },
+    {
+      "id": "n-names3",
+      "x": 0,
+      "y": -230,
+      "w": 1300,
+      "page": "page-11",
+      "text": "NAME, ROUND THREE\nSix more, plus a shortlist sheet that puts all fourteen candidates from all three rounds side by side with a risk read.\n\nThe spread is deliberate: Keepsake is understood by everyone and owns nothing; Kist is owned by nobody and understood by nobody. Every name on these pages sits somewhere on that line, and choosing is really choosing where.\n\nMy two are Cairn, plain and warm, and Docket, hard and modern and the only name that says both halves of the product. Kist if ownability beats everything.\n\nStart with the shortlist sheet on the left."
     }
   ],
   "launch": {
     "view": "canvas",
-    "page": "page-10"
+    "page": "page-11"
   }
 }

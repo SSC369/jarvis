@@ -12,10 +12,10 @@ origin: features/001-capture-and-records-foundation/02-design.md section 5d
 # 0003 — Product name and mark
 
 > **Reopened 2026-09-09.** Slash was chosen, then found to collide with existing
-> products. Round two is in section "Round two" below and on the canvas page
-> "Name, round two". Slash remains the working name in the documents until a
-> replacement is chosen, because churning every file twice costs more than
-> waiting one decision.
+> products. Rounds two and three follow below and on the canvas pages "Name,
+> round two" and "Name, round three": fourteen candidates in total. Slash remains
+> the working name in the documents until a replacement is chosen, because
+> churning every file twice costs more than waiting one decision.
 
 ## Context
 
@@ -101,8 +101,37 @@ nothing in software currently uses.
 | **Tessera** | One tile in a mosaic, and in Rome a token recording an entitlement | Each capture is one tile, the life is the mosaic. Holds all the way down, and the mark scales from favicon to wall | Three syllables and slightly precious. People will shorten it, so decide the short form now |
 | **Kalend** | The first day of the Roman month, when debts were called in and books written up. Root of "calendar" | Reads as coined while carrying real meaning, which is the easiest combination to own | Looks like a misspelling of calendar. Expect corrections and lost typed traffic |
 
-**Recommendation: Cairn.** It is the only one that is simultaneously easy to say,
-easy to spell, easy to draw, and a true description of what the product does.
+## Round three
+
+Six more, because four was not enough of a pool. They spread deliberately across
+one axis, and understanding that axis is most of the decision.
+
+**Every name trades understanding against ownership.** Keepsake is understood by
+everyone the moment they hear it and owned by nobody. Kist is owned by nobody
+else and understood by nobody at all. Every candidate sits somewhere on that
+line, and choosing a name is really choosing where on it you want to stand.
+
+| Candidate | What it means | The case | The cost |
+|---|---|---|---|
+| **Docket**, strongest of round three | A list of matters to deal with, and the record of what happened to them | The only name that says both halves of the product at once. Short, hard, modern | Legal software has claimed much of the word. Upstream in search and possibly in the register |
+| **Kist** | A chest for keeping valuables and documents, still current in Scots | One syllable, four letters, almost certainly free everywhere. The most ownable name across all rounds | It looks like a typo. Everyone will ask how it is spelled |
+| **Sundry** | The small miscellaneous things that fit no category | Does the Life Inbox's job before onboarding says a word. Warm, slightly witty, rare in software | Modest. It undersells goals and projects, which are not odds and ends |
+| **Colophon** | The inscription recording who made a book, where and when | The most precisely correct name here: every record carries its origin, its time and what you typed | Almost nobody knows the word, so it teaches nothing on first contact |
+| **Mnemo** | From Mnemosyne, root of mnemonic | Four letters that already mean memory. Coined and modern, with a real root | The silent M. Said wrong and typed wrong for a year |
+| **Keepsake** | A thing kept because it matters | Understood instantly by everyone, which no obscure name here can claim | Sentimental, leaning to mementoes when half this product is logistics |
+
+## Recommendation
+
+**Cairn** if you want it plain and warm. It is the only candidate that is at once
+easy to say, easy to spell, easy to draw, and a true description of the product.
+
+**Docket** if you want it hard and modern, and you are willing to fight for the
+word.
+
+**Kist** if ownability beats everything else.
+
+All fourteen candidates from all three rounds sit on one sheet, on the canvas
+page "Name, round three", with a risk read against each.
 
 ## What I cannot tell you
 
