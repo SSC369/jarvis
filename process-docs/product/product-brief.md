@@ -71,6 +71,7 @@ Standing rules for every feature, so each PRD does not restate them.
 | 5 | Every record carries its origin and creation time, so the user can see why it exists. | §19, §36 |
 | 6 | Model cost and latency are product decisions, budgeted per feature. | proposed |
 | 7 | User data never crosses a user boundary, in storage or in a prompt. | proposed |
+| 8 | One Jarvis-held provider credential serves many authenticated users. Users never hold a provider key, and every model call is attributed to one user. | AI API key architecture, 2026-09-09 |
 
 > Assumption: principles 6 and 7 are proposed defaults, not stated in the source.
 > Confirm or strike them.
@@ -171,6 +172,7 @@ depends on the result.
 | Account model | One account per user. No workspaces, no members, no sharing. | 2026-09-08 |
 | Surfaces | Web. V1 ships as a web application. Mobile and desktop are not V1. | 2026-09-08 |
 | Notification delivery | In-app notifications and email. No push, no SMS. | 2026-09-08 |
+| AI access | All model calls go through one gateway holding the credential. The client never sees it. Usage is recorded per user. See [epic 000](../features/000-ai-gateway/). | 2026-09-09 |
 | Model provider | Google Gemini, free tier, through a single API key held in the server environment. See [decision 0001](./decisions/0001-model-provider-gemini-free-tier.md). | 2026-09-08 |
 | Stack | FastAPI, PostgreSQL, React with Vite, Turborepo, MobX, shadcn/ui, Celery, Resend. See [decision 0002](./decisions/0002-v1-technology-stack.md). | 2026-09-08 |
 | Design system | Produced in Claude Design at stage 2 of each feature | 2026-09-08 |
@@ -213,7 +215,7 @@ the product is validated.
 | ~~Q13~~ | ~~Notification transport?~~ **Answered 2026-09-09: WebSockets.** | — | — |
 | ~~Q14~~ | ~~Redis or a database-backed queue?~~ **Answered 2026-09-09: Redis.** | — | — |
 | ~~Q15~~ | ~~Where does this run?~~ **Answered 2026-09-09: backend on AWS EC2.** | — | — |
-| Q16 | Which auth provider? | HLD | user |
+| Q16 | Which auth provider? | HLD, epic 000 | user |
 | Q17 | Where does the frontend run? | HLD | user |
 | Q6 | Currency and locale: is ₹ the only currency in V1? | PRD | user |
 | ~~Q7~~ | ~~What numeric targets make each V1 hypothesis pass or fail?~~ **Deferred 2026-09-08. Instrument now, set targets once there is usage.** | — | — |
@@ -227,6 +229,7 @@ the product is validated.
 | 2026-09-08 | Created as skeleton | Process bootstrap | — |
 | 2026-09-08 | Filled from the V1 product definition | User supplied the product | pending |
 | 2026-09-08 | Surface, notifications and model provider settled. Q1, Q2, Q4 closed. Q10 to Q12 opened. | User answered the blocking questions | user |
+| 2026-09-09 | Epic 000 added for the AI gateway. Principle 8 added: one Jarvis-held credential, many users, usage attributed per user. | User supplied the AI API key architecture | user |
 | 2026-09-09 | Auth by provider, backend on AWS EC2, WebSockets for in-app notifications, Redis with Celery. Q13 to Q15 closed, Q16 and Q17 opened. | User settled the remaining platform questions | user |
 | 2026-09-08 | Stack settled as decision 0002. Quota exhaustion refuses honestly. Not charging in V1. No deadline. Q11 and Q12 closed, Q13 to Q15 opened for the build plans. | User settled architecture and business questions | user |
 | 2026-09-08 | Numeric targets deferred. Hypotheses instrumented without pass or fail numbers. Q7 closed. | User decision | user |

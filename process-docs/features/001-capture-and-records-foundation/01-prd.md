@@ -194,6 +194,7 @@ shared key made unavoidable, not a disappointing result.
 | Web as the V1 surface | product | user | Settled 2026-09-08 |
 | In-app and email notifications | product | user | Settled 2026-09-08 |
 | Gemini free tier, shared key in server env | vendor | user | Settled 2026-09-08, see [decision 0001](../../product/decisions/0001-model-provider-gemini-free-tier.md) |
+| [Epic 000, the AI Gateway](../000-ai-gateway/) | internal | user | Added 2026-09-09. This epic makes no model call of its own. FR-4, FR-5 and FR-35 are served through the gateway |
 | Gemini free-tier rate limits, read from the provider's current documentation | vendor | Claude | Not started, needed before the build plan sets NFR-11 |
 | Gemini free-tier data handling terms | vendor | user | Not read. Blocks launch, not the build. See Q10 |
 | Resend for email, Celery for background jobs | vendor | user | Settled 2026-09-08. Used by epic 002, not by this epic |
@@ -247,6 +248,7 @@ capture, undo beyond edit and delete, attachments on records, and any sharing.
 | Date | Change | Why | Approved by |
 |---|---|---|---|
 | 2026-09-08 | Created from the V1 product definition | First epic of V1 | pending |
+| 2026-09-09 | Epic 000 added as a dependency after approval. No requirement changed: FR-4 and FR-5 already needed a model call, and FR-35 already described the refusal. The gateway is now where those happen. Nothing downstream is stale. | User supplied the AI API key architecture | user |
 | 2026-09-09 | **PRD approved.** Pending questions confirmed non-blocking: FR-8 rewritten, FR-36 to FR-38 added, US-10 added. Q9 closed. | User approved the PRD and settled the pending-question behaviour | user |
 | 2026-09-08 | Reminders split out into epic 002. FR-27 to FR-34 and NFR-6 removed from this epic, US-8 moved. Settings added as FR-27 and FR-28 for timezone. FR-35 rewritten to refuse honestly on quota exhaustion. Q8, Q11, Q12, Q13 closed. | User split the epic and settled the stack | user |
 | 2026-09-08 | Numeric targets removed from goals and success metrics. Metrics are instrumented without targets. Engineering numbers in section 7 unchanged. Q7 closed as deferred. | User deferred targets until real usage exists | user |

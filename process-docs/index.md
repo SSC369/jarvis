@@ -31,6 +31,7 @@ Status values: `draft`, `in-review`, `approved`, `blocked`, `shipped`,
 
 | # | Feature | Priority | Stage | Status | Waiting on | Updated |
 |---|---|---|---|---|---|---|
+| 000 | [AI Gateway and Usage](./features/000-ai-gateway/) | P0, platform | 1 PRD | in-review | User review of the PRD | 2026-09-09 |
 | 001 | [Capture and Records Foundation](./features/001-capture-and-records-foundation/) | P0 | 2 Design | PRD approved 2026-09-09, design not started | User to request the design | 2026-09-09 |
 
 ## Planned

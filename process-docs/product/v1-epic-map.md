@@ -18,8 +18,8 @@ five gates independently.
 
 ## Slicing rule
 
-Epics are vertical slices, not layers. Every epic ends with something the user
-can do end to end, because the core principle is that anything Jarvis records,
+Epics are vertical slices, not layers. Every epic except 000 ends with something
+the user can do end to end, because the core principle is that anything Jarvis records,
 the user can see. An epic that stores records without a way to inspect them
 would break that principle on the day it ships.
 
@@ -31,7 +31,8 @@ loop, which is why they get smaller as the list goes on.
 
 | # | Epic | Priority | Covers (source §) | Depends on |
 |---|---|---|---|---|
-| 001 | Capture and Records Foundation | P0 | Command Center §7, Command System §8, Command discovery §9, Structured Records §10 to §13, Record detail §19, Tasks §20, Confirmation model §35, Record creation principle §36 | — |
+| 000 | AI Gateway and Usage | P0, platform | AI API key architecture, supplied 2026-09-09 | — |
+| 001 | Capture and Records Foundation | P0 | Command Center §7, Command System §8, Command discovery §9, Structured Records §10 to §13, Record detail §19, Tasks §20, Confirmation model §35, Record creation principle §36 | 000 |
 | 002 | Reminders and Notifications | P0 | Reminders §21, recurrence, in-app and email delivery | 001 |
 | 003 | Persistent Memory | P0 | Memory §15 to §18 | 001 |
 | 004 | Personal Search and Context | P0 | Personal search §27, Contextual intelligence §28 | 001, 003 |
@@ -42,7 +43,25 @@ loop, which is why they get smaller as the list goes on.
 | 009 | Daily Control | P1 | Today's view §29, Upcoming view §30, Home dashboard §32, Navigation §33 | 001, 002, 005, 006, 007 |
 | 010 | Proactive Jarvis | P2 | Proactive Jarvis §31, advanced contextual intelligence | 004, 009 |
 
-## Why 001 is first and this shape
+## Why 000 comes before 001
+
+Epic 000 was added on 2026-09-09 when the user supplied the AI API key
+architecture. It is numbered 000 rather than inserted as 002 because epic 001 is
+already approved, and renumbering an approved epic would break every reference
+to it.
+
+It has to precede 001 rather than follow it. Epic 001 resolves "tomorrow" inside
+`/add-task Finish docs tomorrow`, which is a model call, so 001 cannot ship
+without the gateway that makes model calls safely.
+
+**000 is the one epic that does not end in something a user can do.** That
+breaks the slicing rule below, deliberately. The alternative was to fold the
+gateway into 001's build plan, which would bury a security boundary and a
+shared-credential limit inside another epic's architecture section, where
+neither would get its own review. A platform epic with its own gate is the
+lesser evil. It is verified by 001's first successful capture, not by a screen.
+
+## Why 001 is first among the product epics and this shape
 
 The Command Center, the command system and the records store are the product.
 Every other epic is a record type or a view layered on them. Tasks ride along in
@@ -98,5 +117,6 @@ dependency and by what each epic teaches, not by what fits a date.
 | Date | Change | Why | Approved by |
 |---|---|---|---|
 | 2026-09-08 | Created | V1 product definition supplied | pending |
+| 2026-09-09 | Epic 000, AI Gateway and Usage, added ahead of 001. Recorded as a deliberate exception to the vertical-slice rule. | User supplied the AI API key architecture | user |
 | 2026-09-08 | Reminders split into epic 002, later epics renumbered to ten. Q1, Q2, Q3 closed. | User confirmed the split and settled the schedule | user |
 | 2026-09-08 | Epic 007 reduced to Notes. Life Inbox, plain-language capture, task priority and recurrence recorded as deferred. | User cut scope | user |
