@@ -34,12 +34,12 @@ choice changes, it changes here, and the change log at the bottom records it.
 | In-app notification transport | GraphQL subscriptions over WebSockets |
 | Background jobs | Procrastinate, backed by PostgreSQL |
 | Frontend | React, built with Vite |
-| Server state | TanStack Query, over `graphql-request` |
+| Server state | Apollo Client, with MobX stores as the source of truth |
 | UI state | MobX |
 | Typed client | `graphql-codegen` from the Strawberry schema |
 | Components | shadcn/ui |
 | Design system | Produced in Claude Design at stage 2 of each feature |
-| Repository | Plain folders, `apps/web`, `apps/api`, `packages/` |
+| Repository | Plain folders, `backend/` and `frontend/` |
 | Backend hosting | Managed container host. Render or Railway, undecided |
 | Frontend hosting | Static host. Vercel or Cloudflare Pages, undecided |
 | Email | Resend |
@@ -81,7 +81,7 @@ one auth path.
 
 **What it costs.** N+1 queries are GraphQL's default failure mode, so DataLoader
 is required from the first resolver rather than retrofitted. HTTP caching by URL
-stops working, and caching moves into TanStack Query and the resolvers. A
+stops working, and caching moves into the client and the resolvers. A
 careless or hostile deep query is expensive, so depth and complexity limits are
 needed before public launch. Strawberry is a smaller ecosystem than FastAPI's
 REST path.
@@ -129,21 +129,57 @@ that is fine. At ten thousand times this size it is not.
 **What it costs.** Four vendors instead of one, each a dependency and a bill.
 Not free, unlike the EC2 free tier on paper.
 
-### Frontend data layer: TanStack Query
+### Frontend data layer: Apollo Client, with MobX as the store of record
+
+Chosen by the user on 2026-09-09, replacing TanStack Query.
+
+The objection that decided the original choice still stands and is answered
+structurally rather than abandoned. **A normalised cache is a second store of
+what the server holds, with its own invalidation rules. Pillar P2 forbids the AI
+path and the structured path disagreeing, and a stale cache is precisely that
+disagreement.**
+
+So Apollo is used as a transport, not as a cache. MobX stores are the source of
+truth for server state. Operations fetch with `network-only`, `InMemoryCache` is
+left untuned, and every response is written into a store by the operation's
+response handler. There is one store of server data, and the AI path and the
+structured path both write into it.
 
 | Alternative | Why it lost |
 |---|---|
-| urql or Apollo Client with a normalised cache | A normalised cache is a second store of what the server holds, with its own invalidation rules. Pillar P2 forbids the AI path and the structured path disagreeing, and a stale cache is precisely that disagreement. This product's data is document-shaped records rather than a densely connected graph, so normalisation earns little |
+| TanStack Query over `graphql-request` | The original choice, and a good one. Replaced by user direction |
+| Apollo with its normalised cache as the source of truth | The pillar P2 objection above, unanswered. This is the configuration being avoided, not the library |
+| urql | Same cache question as Apollo, with a smaller ecosystem and no advantage here |
 
-MobX keeps the command palette, the in-flight input and transient UI. It does
-not hold server state.
+**What it buys.** One client covers queries, mutations and subscriptions over a
+single auth path, so the WebSocket transport of section 1 needs no second
+library. A subscription payload writes into the same store method a query calls,
+which removes cache reconciliation entirely.
+
+**What it costs.** More code than letting a cache do the work, and a discipline
+that has to be enforced rather than assumed: a component reading a query result
+directly instead of a store silently reintroduces the second store. The rule is
+written down in `frontend/rules/repo-rules.md` section 7.
 
 ### Repository: plain folders
+
+Two folders at the repository root, `backend/` and `frontend/`, set by the user
+on 2026-09-09. The earlier `apps/api`, `apps/web`, `packages/` layout carried a
+`packages/` folder that nothing would fill and an `apps/` level that wrapped two
+entries.
 
 Turborepo was the original choice and is deferred. A Python API and one web app
 share no TypeScript package, so monorepo tooling has nothing to do yet. The
 folder discipline is free, the tooling is not. Add it the day a second
 JavaScript app exists.
+
+Each folder owns its own structure and conventions, and neither is restated
+here:
+
+| Folder | Ruleset |
+|---|---|
+| `backend/` | [`backend/rules/repo-rules.md`](../backend/rules/repo-rules.md) |
+| `frontend/` | [`frontend/rules/repo-rules.md`](../frontend/rules/repo-rules.md) |
 
 ### Model provider: Gemini Flash, paid tier
 
@@ -237,7 +273,7 @@ Two obligations sit alongside it:
 
 ## 8. History
 
-The stack was revised once, on 2026-09-09.
+The stack has been revised twice, both times on 2026-09-09.
 
 The original choice put FastAPI, Celery, Celery beat, Redis and PostgreSQL on a
 single AWS EC2 instance, assumed a REST API, left the auth provider open, and
@@ -249,9 +285,22 @@ became indefensible for a product holding passports.
 FastAPI, PostgreSQL, React, Vite, MobX, shadcn/ui, Resend and Gemini carried
 over unchanged. Everything else in the infrastructure layer was replaced.
 
-The full original records, and the ones that superseded them, are in git history
-under `process-docs/product/decisions/`, removed on 2026-09-09 when the decision
-folder was folded into this document.
+The second revision was narrower and touched the frontend only: the data layer
+moved from TanStack Query to Apollo Client, and the repository layout moved from
+`apps/api` and `apps/web` to `backend/` and `frontend/`. Both came from reading
+the `radius` codebase, an existing production system on the same patterns, while
+drafting the two repository rulesets.
+
+The full original records, and the ones that superseded them, were removed on
+2026-09-09 by commit `f8016bd`, when the decision folder was folded into this
+document. They are readable at its parent:
+
+```
+git show f8016bd^:process-docs/product/decisions/0004-v1-technology-stack-revised.md
+```
+
+Seven files sit there: decisions 0001 to 0006 and their README. Decisions 0004,
+0005 and 0006 are the ones this document absorbed.
 
 ---
 
@@ -260,3 +309,11 @@ folder was folded into this document.
 | Date | Change | Why | Approved by |
 |---|---|---|---|
 | 2026-09-09 | Created, absorbing decision records 0004, 0005 and 0006 | User removed the decisions folder and asked for one technical document | user |
+| 2026-09-09 | Server state moved from TanStack Query to Apollo Client. The pillar P2 objection to a normalised cache is preserved by making MobX stores the source of truth and Apollo a transport | User direction while drafting the repository rulesets | user |
+| 2026-09-09 | Repository layout moved from `apps/api`, `apps/web`, `packages/` to `backend/` and `frontend/`. Each folder now owns a `rules/repo-rules.md` | User direction | user |
+
+**Downstream documents made stale by the two 2026-09-09 revisions: none.** Rule 7
+of the process requires this to be stated rather than assumed. The stack is
+consumed at stage 3, and no feature has reached it. Epic 000 is waiting on its
+build plan and epic 001 is at stage 2. Neither approved document names a data
+layer or a repository path.
