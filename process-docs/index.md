@@ -9,8 +9,9 @@ Product context: [product brief](./product/product-brief.md) ·
 [decisions](./product/decisions/)
 
 Settled: named Slashit ([decision 0003](./product/decisions/0003-product-name-and-mark.md)), web, one account per user, commands-only capture, in-app and email
-notifications, no charging in V1, no deadline. Stack and model provider are
-[decisions 0001 and 0002](./product/decisions/).
+notifications, no charging in V1, no deadline. The stack, auth and model
+provider are [decisions 0004, 0005 and 0006](./product/decisions/), which
+supersede 0002 and 0001.
 
 ## Legend
 

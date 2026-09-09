@@ -182,10 +182,10 @@ Instrumented from launch, reported weekly, no targets set. See section 3.
 | Weekly actives opening a records view | View events | Whether structured data is inspected or ignored |
 | Corrections within five minutes of creation | Edit and delete events against creation time | Whether extraction is trusted |
 | Week-four retention by signup cohort | Cohort activity | Whether accumulated context brings people back |
-| Captures refused for quota or provider outage | FR-35 events | Whether the free tier can carry the product |
+| Captures refused for a reached cap or a provider outage | FR-35 events | Whether the model path can carry the product |
 
-Quota refusals keep a count rather than a target. A refusal is a defect the
-shared key made unavoidable, not a disappointing result.
+Refusals keep a count rather than a target. A refusal is a defect the shared key
+made unavoidable, not a disappointing result.
 
 ## 9. Dependencies
 
@@ -193,14 +193,14 @@ shared key made unavoidable, not a disappointing result.
 |---|---|---|---|
 | Web as the V1 surface | product | user | Settled 2026-09-08 |
 | In-app and email notifications | product | user | Settled 2026-09-08 |
-| Gemini free tier, shared key in server env | vendor | user | Settled 2026-09-08, see [decision 0001](../../product/decisions/0001-model-provider-gemini-free-tier.md) |
+| Gemini Flash, paid tier, shared key in server env | vendor | user | Settled 2026-09-09, see [decision 0006](../../product/decisions/0006-model-provider-gemini-paid-tier.md) |
 | [Epic 000, the AI Gateway](../000-ai-gateway/) | internal | user | Added 2026-09-09. This epic makes no model call of its own. FR-4, FR-5 and FR-35 are served through the gateway |
-| Gemini free-tier rate limits, read from the provider's current documentation | vendor | Claude | Not started, needed before the build plan sets NFR-11 |
-| Gemini free-tier data handling terms | vendor | user | Not read. Blocks launch, not the build. See Q10 |
-| Resend for email, Celery for background jobs | vendor | user | Settled 2026-09-08. Used by epic 002, not by this epic |
+| Gemini paid-tier rate limits, read from the provider's current documentation | vendor | Claude | Not started, needed before the build plan sets NFR-11 |
+| Gemini paid-tier data handling terms | vendor | user | Not read. Blocks launch, not the build. See Q10 |
+| Email delivery and a background job runner | vendor | user | Settled 2026-09-09. Used by epic 002, not by this epic |
 | One account per user | platform | user | Settled 2026-09-08 |
-| Stack: FastAPI, PostgreSQL, React, Vite, Turborepo, MobX, shadcn/ui | platform | user | Settled 2026-09-08, see [decision 0002](../../product/decisions/0002-v1-technology-stack.md) |
-| Auth provider, AWS EC2 hosting | platform | user | Settled 2026-09-09. Which provider is a build plan question |
+| Platform stack | platform | user | Settled 2026-09-09, see [decision 0004](../../product/decisions/0004-v1-technology-stack-revised.md) |
+| An identity provider, so records have an owner | platform | user | Settled 2026-09-09, see [decision 0005](../../product/decisions/0005-auth-supabase-and-data-isolation.md) |
 | Labelled evaluation set for extraction and classification | internal | Claude, with user-supplied phrasings | Not started, needed before build plan approval |
 | Numeric targets for the hypotheses | product | user | Deferred by decision, 2026-09-08. Not a blocker |
 
@@ -224,8 +224,8 @@ shared key made unavoidable, not a disappointing result.
 | ~~Q1~~ | Which surface ships first? | design, HLD | user | **Web.** Mobile and desktop are out of V1. |
 | ~~Q2~~ | How does a reminder reach the user? | epic 002 | user | **In-app and email.** No push. Both ship, user can disable either. Carried to epic 002. |
 | ~~Q3~~ | One personal account per user, or workspaces with members? | HLD, data model | user | **One account per user.** No workspaces, no members, no sharing in V1. |
-| ~~Q4~~ | Which model provider, at what cost, at what latency? | NFR-2, NFR-4, NFR-10 | user | **Gemini free tier, single key in the server environment.** Recorded as decision 0001. Cost is zero, quota is the constraint. |
-| Q10 | Do the Gemini free-tier data handling terms meet the bar for a product holding passports, finances and family details? | launch | user | |
+| ~~Q4~~ | Which model provider, at what cost, at what latency? | NFR-2, NFR-4, NFR-10 | user | **Gemini Flash, paid tier, single key in the server environment.** Recorded as decision 0006, which supersedes 0001. Cost is about 0.0001 USD per capture, `estimate`. |
+| Q10 | Do the Gemini **paid-tier** data handling terms meet the bar for a product holding passports, finances and family details? | launch | user | |
 | ~~Q11~~ | When the shared quota is exhausted, does a capture queue, degrade, or refuse? | FR-35 | user | **Refuse, with an honest message.** No silent queueing, no half-formed record. FR-35 rewritten. |
 | ~~Q12~~ | Are we charging users in V1? | pricing | user | **No.** Not charging for now. |
 | ~~Q5~~ | Should plain-language capture create records directly, or propose them first? | FR-9, design | user | **Neither. Commands only in V1.** Plain-language capture is deferred. |
@@ -250,6 +250,7 @@ capture, undo beyond edit and delete, attachments on records, and any sharing.
 | 2026-09-08 | Created from the V1 product definition | First epic of V1 | pending |
 | 2026-09-09 | **Change proposed, not applied.** FR-42, theme following the system with a user override, is drafted in [02-design.md](./02-design.md) section 5b. Dark theme itself needs no requirement: it is how the approved surfaces look, not new behaviour. The override is behaviour, so it needs one. | User asked for a dark theme | pending |
 | 2026-09-09 | **Change proposed, not applied.** The design adds installed-app surfaces, which this PRD does not cover. FR-39 install, FR-40 offline read, FR-41 update waiting are drafted in [02-design.md](./02-design.md) section 5b and need approval before they are requirements. Mobile layout needs no change: this PRD ships web, and a phone browser is web. Nothing here is stale meanwhile. | User asked for mobile and PWA designs | pending |
+| 2026-09-09 | Dependencies repointed at decisions 0004 to 0006, and framework names dropped from them. The model tier moved from free to paid, so Q4 and Q10 are restated and the refusal metric no longer says "free tier". No requirement changed. NFR-10, rewritten from cost to quota on 2026-09-08, now describes the weaker half of the constraint: on a paid tier, spend matters alongside quota. Left as approved pending the user's call. | The stack was revised and the model tier moved from free to paid | user |
 | 2026-09-09 | Epic 000 added as a dependency after approval. No requirement changed: FR-4 and FR-5 already needed a model call, and FR-35 already described the refusal. The gateway is now where those happen. Nothing downstream is stale. | User supplied the AI API key architecture | user |
 | 2026-09-09 | **PRD approved.** Pending questions confirmed non-blocking: FR-8 rewritten, FR-36 to FR-38 added, US-10 added. Q9 closed. | User approved the PRD and settled the pending-question behaviour | user |
 | 2026-09-08 | Reminders split out into epic 002. FR-27 to FR-34 and NFR-6 removed from this epic, US-8 moved. Settings added as FR-27 and FR-28 for timezone. FR-35 rewritten to refuse honestly on quota exhaustion. Q8, Q11, Q12, Q13 closed. | User split the epic and settled the stack | user |

@@ -2,14 +2,23 @@
 doc: decision
 id: 0002
 title: V1 technology stack
-status: accepted
+status: superseded
 created: 2026-09-08
 updated: 2026-09-09
 supersedes: null
+superseded_by: ./0004-v1-technology-stack-revised.md
 origin: user direction, 2026-09-08
 ---
 
 # 0002 — V1 technology stack
+
+> **Superseded** on 2026-09-09 by
+> [decision 0004](./0004-v1-technology-stack-revised.md). The application layer
+> here survives in 0004. The infrastructure layer does not: EC2, Celery, Redis
+> and raw WebSockets are all replaced, the API medium is now GraphQL, and the
+> auth provider left open here is settled in
+> [decision 0005](./0005-auth-supabase-and-data-isolation.md). Kept as the
+> record of what was decided first and why it changed.
 
 ## Context
 

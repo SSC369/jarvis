@@ -70,7 +70,7 @@ record type is not proven.
 
 **Reminders were split out on 2026-09-08**, at the user's direction. They were
 the heavier half of the original 001: scheduling, recurrence, two delivery
-channels, retry, and the Celery and Resend infrastructure underneath. Pulling
+channels, retry, and the job-queue and Resend infrastructure underneath. Pulling
 them out roughly halves the first epic while leaving both halves usable on their
 own, which is the test that matters. 001 without reminders still ships a working
 product: capture a task by command, see it in records, edit it, complete it.

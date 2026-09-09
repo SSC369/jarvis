@@ -157,12 +157,12 @@ Instrumented from launch, no targets.
 
 | Dependency | Type | Owner | Status |
 |---|---|---|---|
-| Google Gemini free tier | vendor | user | Settled, [decision 0001](../../product/decisions/0001-model-provider-gemini-free-tier.md) |
-| The actual API key | vendor | user | Supplied at implementation, by the user's statement. Nothing here needs it |
-| Auth provider, so `user_id` exists | platform | user | Provider chosen, which one is open |
-| FastAPI, PostgreSQL, AWS EC2 | platform | user | Settled, [decision 0002](../../product/decisions/0002-v1-technology-stack.md) |
-| Gemini free-tier rate limits, read from current documentation | vendor | Claude | Not started, needed for the build plan |
-| Gemini free-tier data handling terms | vendor | user | Not read. Blocks launch |
+| Google Gemini Flash, paid tier | vendor | user | Settled, [decision 0006](../../product/decisions/0006-model-provider-gemini-paid-tier.md) |
+| The actual API key, and a billing account behind it | vendor | user | Supplied at implementation. A paid tier also needs a payment method and a provider-side spend cap |
+| Supabase Auth, so `user_id` exists | platform | user | Settled, [decision 0005](../../product/decisions/0005-auth-supabase-and-data-isolation.md) |
+| FastAPI, GraphQL, PostgreSQL on Supabase, managed hosting | platform | user | Settled, [decision 0004](../../product/decisions/0004-v1-technology-stack-revised.md) |
+| Gemini paid-tier rate limits, read from current documentation | vendor | Claude | Not started, needed for the build plan |
+| Gemini paid-tier data handling terms | vendor | user | Not read. Blocks launch, per Q10 of the product brief |
 
 ## 10. Risks
 
@@ -185,7 +185,8 @@ Instrumented from launch, no targets.
 | Q4 | How long are `ai_usage` rows kept? They are small, they accumulate per capture, and they are the record that proves attribution. | FR-11, HLD | user | |
 | Q5 | Does the operator read usage through a screen, a query, or a periodic report? A query is free, a screen is an epic. | FR-14 | user | |
 | Q6 | When the shared quota is exhausted, epic 001 refuses honestly. Should the gateway also alert the operator, and how? | FR-18 | user | |
-| Q7 | Which auth provider, since `user_id` originates there? | FR-6, HLD | user | |
+| ~~Q7~~ | Which auth provider, since `user_id` originates there? | — | — | **Answered 2026-09-09: Supabase Auth, [decision 0005](../../product/decisions/0005-auth-supabase-and-data-isolation.md).** |
+| Q8 | The tier moved from free to paid on 2026-09-09, so a runaway user now costs money rather than exhausting a shared quota. Do the per-user caps of FR-8 and FR-10 keep the same numbers, or does a spend ceiling replace the request ceiling? | FR-8, FR-10, HLD | user | |
 
 ## 12. Out of scope
 
@@ -198,4 +199,16 @@ HTTP rate limiting.
 | Date | Change | Why | Approved by |
 |---|---|---|---|
 | 2026-09-09 | Created from the AI API key architecture | User supplied the architecture and asked for it as an epic | user |
+| 2026-09-09 | Dependencies repointed at decisions 0004 to 0006. Q7 closed by Supabase Auth. Q8 opened on whether per-user caps become a spend ceiling. | The stack was revised and the model tier moved from free to paid | user |
+
+> **Stale after the 2026-09-09 tier change, and not rewritten here.** Moving from
+> a free to a paid tier changes what several approved statements are about,
+> though not the mechanisms they require. Goal G4 and user story US-3 ask whether
+> the free tier carries the load. The success metric "requests and tokens per
+> user per day" is framed against a shared quota. The risk row on cost estimation
+> giving false comfort assumes a tier that bills nothing, and Q3 asks how to cost
+> a tier that bills nothing. All four now have a different answer. See
+> [decision 0006](../../product/decisions/0006-model-provider-gemini-paid-tier.md),
+> which lists the shifts. Rewriting an approved PRD is the user's call, not
+> Claude's, so it waits for that call.
 | 2026-09-09 | **PRD approved.** Seven open questions carried to the build plan; none blocked approval. | User said proceed | user |

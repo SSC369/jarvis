@@ -178,16 +178,24 @@ depends on the result.
 | Surfaces | Web. V1 ships as a web application. Mobile and desktop are not V1. | 2026-09-08 |
 | Notification delivery | In-app notifications and email. No push, no SMS. | 2026-09-08 |
 | AI access | All model calls go through one gateway holding the credential. The client never sees it. Usage is recorded per user. See [epic 000](../features/000-ai-gateway/). | 2026-09-09 |
-| Model provider | Google Gemini, free tier, through a single API key held in the server environment. See [decision 0001](./decisions/0001-model-provider-gemini-free-tier.md). | 2026-09-08 |
-| Stack | FastAPI, PostgreSQL, React with Vite, Turborepo, MobX, shadcn/ui, Celery, Resend. See [decision 0002](./decisions/0002-v1-technology-stack.md). | 2026-09-08 |
+| Model provider | Google Gemini Flash, paid tier, through a single API key held in the server environment. See [decision 0006](./decisions/0006-model-provider-gemini-paid-tier.md). | 2026-09-09 |
+| API medium | GraphQL, served by Strawberry on FastAPI. One endpoint for queries, mutations and subscriptions. | 2026-09-09 |
+| Stack | FastAPI, GraphQL, PostgreSQL on Supabase, React with Vite, TanStack Query, MobX, shadcn/ui, Procrastinate, Resend. See [decision 0004](./decisions/0004-v1-technology-stack-revised.md). | 2026-09-09 |
 | Design system | Produced in Claude Design at stage 2 of each feature | 2026-09-08 |
 | Name and mark | Slashit. Mark is the slash, wordmark is `slash.it` in IBM Plex Mono | 2026-09-09 |
 | Theme | Light and dark, following the device by default, with a user override | 2026-09-09 |
-| Auth | Provider or built in-house not yet decided. One account per user makes it small either way. | |
-| Hosting | Not yet decided | |
+| Auth | Supabase Auth. Identity lives in `auth.users`, in Slashit's own database. See [decision 0005](./decisions/0005-auth-supabase-and-data-isolation.md). | 2026-09-09 |
+| Data isolation | PostgreSQL Row Level Security on every table holding user data. This is the mechanism behind principle 7. | 2026-09-09 |
+| Hosting | Backend on a managed container host, frontend on a static host. Which vendors is open. | 2026-09-09 |
 
-The undecided rows become decision records in `decisions/` at the build plan of
-the feature that first needs them.
+The stack was revised on 2026-09-09.
+[Decision 0004](./decisions/0004-v1-technology-stack-revised.md) supersedes 0002
+and [decision 0006](./decisions/0006-model-provider-gemini-paid-tier.md)
+supersedes 0001. Read the current three, not the originals.
+
+> The prices and free-tier limits behind these choices were stated from memory
+> during the 2026-09-09 discussion and are not yet checked against vendor pages.
+> Decision 0004 records this as verification owed.
 
 > Assumption: "in-app notifications or email" is read as both channels shipping,
 > with the user choosing. If you meant one of the two, say which and this
@@ -200,12 +208,18 @@ the feature that first needs them.
 | Pricing shape | Not yet decided, see Q5 |
 | Free tier | Not yet decided |
 | Metered unit | Not yet decided |
-| Marginal model cost per user | Zero in cash terms. The Gemini free tier is not billed. The real constraint is quota, not spend. See decision 0001. |
+| Marginal model cost per user | About 0.01 USD a month for a user capturing 100 times, `estimate`. See [decision 0006](./decisions/0006-model-provider-gemini-paid-tier.md) for the arithmetic. |
+| Running cost of the platform | About 10 USD a month to start, 50 to 70 with real users, `estimate`. See [decision 0004](./decisions/0004-v1-technology-stack-revised.md). |
 | Charging users in V1 | No. Not charging for now. |
 
-Confirmed 2026-09-08. Nothing in V1 is billed, which also removes the awkward
-position of charging for a product running on a free tier. Pricing returns once
-the product is validated.
+Not charging was confirmed 2026-09-08 and still holds. What changed on
+2026-09-09 is that V1 now has a marginal cost per user rather than none,
+because the model moved to a paid tier. The amount is small enough that it
+changes nothing about the decision not to charge. It does mean spend is a
+number to watch, not just quota, and decision 0006 makes that an obligation on
+epic 000.
+
+Pricing returns once the product is validated.
 
 ## 13. Open questions
 
@@ -216,14 +230,16 @@ the product is validated.
 | ~~Q3~~ | ~~One personal account per user, or workspaces with members?~~ **Answered 2026-09-08: one account per user.** | — | — |
 | ~~Q4~~ | ~~Which model provider, at what cost ceiling?~~ **Answered 2026-09-08: Gemini free tier, key in server env.** | — | — |
 | Q5 | Pricing shape and metered unit, once V1 is validated? | post-V1 | user |
-| Q10 | Does the Gemini free tier's data handling meet the bar for a product holding passports, finances and family details? The free tier's terms differ from the paid tier and must be read before launch, not after. | launch, decision 0001 | user |
+| Q10 | Do Gemini's **paid-tier** data-handling terms meet the bar for a product holding passports, finances and family details? Narrowed 2026-09-09 when the tier changed. Better terms are the expectation, but expectation is not reading. | launch, decision 0006 | user |
 | ~~Q11~~ | ~~What happens when the shared quota is exhausted?~~ **Answered 2026-09-08: refuse the capture with an honest message, preserve the input.** | — | — |
 | ~~Q12~~ | ~~Are we charging users in V1?~~ **Answered 2026-09-08: no.** | — | — |
 | ~~Q13~~ | ~~Notification transport?~~ **Answered 2026-09-09: WebSockets.** | — | — |
 | ~~Q14~~ | ~~Redis or a database-backed queue?~~ **Answered 2026-09-09: Redis.** | — | — |
 | ~~Q15~~ | ~~Where does this run?~~ **Answered 2026-09-09: backend on AWS EC2.** | — | — |
-| Q16 | Which auth provider? | HLD, epic 000 | user |
-| Q17 | Where does the frontend run? | HLD | user |
+| ~~Q16~~ | ~~Which auth provider?~~ **Answered 2026-09-09: Supabase Auth, with Row Level Security. [Decision 0005](./decisions/0005-auth-supabase-and-data-isolation.md).** | — | — |
+| ~~Q17~~ | ~~Where does the frontend run?~~ **Answered 2026-09-09: a static host, Vercel or Cloudflare Pages. Which of the two is open in [decision 0004](./decisions/0004-v1-technology-stack-revised.md).** | — | — |
+| Q18 | Supabase free-tier projects pause after a period of inactivity, which a product with real users cannot accept. What is the current threshold, and on what date does the project move to Pro? | launch | user |
+| Q19 | Vendor prices and free-tier limits behind decisions 0004 to 0006 were stated from memory, not read. When are they verified against vendor pages? | first bill | user |
 | Q6 | Currency and locale: is ₹ the only currency in V1? | PRD | user |
 | ~~Q7~~ | ~~What numeric targets make each V1 hypothesis pass or fail?~~ **Deferred 2026-09-08. Instrument now, set targets once there is usage.** | — | — |
 | Q8 | Is offline capture required, and is data export a V1 promise? | PRD, HLD | user |
@@ -241,3 +257,4 @@ the product is validated.
 | 2026-09-08 | Stack settled as decision 0002. Quota exhaustion refuses honestly. Not charging in V1. No deadline. Q11 and Q12 closed, Q13 to Q15 opened for the build plans. | User settled architecture and business questions | user |
 | 2026-09-08 | Numeric targets deferred. Hypotheses instrumented without pass or fail numbers. Q7 closed. | User decision | user |
 | 2026-09-08 | One account per user. Plain-language capture, the Life Inbox, and task priority and recurrence deferred out of V1. Pillar P1 marked as partly deferred. Q3 closed. | User cut scope | user |
+| 2026-09-09 | Stack revised. GraphQL as the API medium, Supabase for Postgres and auth, Row Level Security as the isolation mechanism, Procrastinate replacing Celery and Redis, managed hosting replacing EC2, Gemini moved to a paid tier. Decisions 0004 to 0006 created, 0001 and 0002 superseded. Q16 and Q17 closed, Q10 narrowed, Q18 and Q19 opened. Marginal cost per user is no longer zero. | User asked for a stack recommendation for a product going to real users, and chose GraphQL | user |

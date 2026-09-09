@@ -2,14 +2,22 @@
 doc: decision
 id: 0001
 title: Google Gemini free tier as the V1 model provider
-status: accepted
+status: superseded
 created: 2026-09-08
-updated: 2026-09-08
+updated: 2026-09-09
 supersedes: null
+superseded_by: ./0006-model-provider-gemini-paid-tier.md
 origin: user direction, 2026-09-08
 ---
 
 # 0001 — Google Gemini free tier as the V1 model provider
+
+> **Superseded** on 2026-09-09 by
+> [decision 0006](./0006-model-provider-gemini-paid-tier.md). Gemini remains the
+> provider. The free tier does not: the saving was around one dollar a month per
+> hundred users, against data-handling terms this product cannot defend and a
+> shared rate limit any one user could exhaust. Obligations 2 to 5 below still
+> bind and are carried forward by 0006.
 
 ## Context
 
