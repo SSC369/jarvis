@@ -2,7 +2,7 @@
 doc: decision
 id: 0003
 title: Product name and mark
-status: accepted
+status: proposed
 created: 2026-09-09
 updated: 2026-09-09
 supersedes: null
@@ -10,6 +10,12 @@ origin: features/001-capture-and-records-foundation/02-design.md section 5d
 ---
 
 # 0003 — Product name and mark
+
+> **Reopened 2026-09-09.** Slash was chosen, then found to collide with existing
+> products. Round two is in section "Round two" below and on the canvas page
+> "Name, round two". Slash remains the working name in the documents until a
+> replacement is chosen, because churning every file twice costs more than
+> waiting one decision.
 
 ## Context
 
@@ -22,7 +28,9 @@ a mark, an app icon and the identity applied inside the product.
 
 ## Decision
 
-**Slash.** Chosen by the user on 2026-09-09.
+**Open.** Round two is running. Recommendation is **Cairn**.
+
+Slash was chosen on 2026-09-09 and reopened the same day.
 
 The mark is the command character itself, a slash in a rounded square. The
 wordmark is IBM Plex Mono, the same face the product uses for commands, so the
@@ -75,10 +83,42 @@ The repository name is the one loose end. Renaming it breaks every existing
 clone and remote, so it is worth doing deliberately rather than as part of this
 pass.
 
+## Round two
+
+Round one failed for one reason, and it is worth stating plainly because it
+governs round two: **every candidate was a common English word.** Slash, Almanac,
+Magpie and Trove-shaped names are the easiest to think of and the hardest to own.
+A name you cannot own is a name you rent until someone with more lawyers asks for
+it back.
+
+Round two is built for distinctiveness: words with exact meanings that almost
+nothing in software currently uses.
+
+| Candidate | What it means | The case | The cost |
+|---|---|---|---|
+| **Cairn**, recommended | Stones stacked to mark a path so you find the way back | Plainest to say and spell. The mark draws itself. The metaphor is the product: small things set down deliberately, one on another | Quiet. Says nothing about software or intelligence, so first impressions rest on your copy |
+| **Quipu** | The Inca knotted-cord system that recorded accounts and dates, readable for centuries | Literally this product, four hundred years early. By far the most ownable name here | Nobody can say it or spell it after hearing it. Every word-of-mouth referral leaks users |
+| **Tessera** | One tile in a mosaic, and in Rome a token recording an entitlement | Each capture is one tile, the life is the mosaic. Holds all the way down, and the mark scales from favicon to wall | Three syllables and slightly precious. People will shorten it, so decide the short form now |
+| **Kalend** | The first day of the Roman month, when debts were called in and books written up. Root of "calendar" | Reads as coined while carrying real meaning, which is the easiest combination to own | Looks like a misspelling of calendar. Expect corrections and lost typed traffic |
+
+**Recommendation: Cairn.** It is the only one that is simultaneously easy to say,
+easy to spell, easy to draw, and a true description of what the product does.
+
+## What I cannot tell you
+
+I have no way to check domain availability, app-store listings or trademark
+registers from this session. Every collision note above is reasoning from general
+knowledge, not a search. Before committing, someone has to actually look: the
+register, the domain, the app stores, and a plain web search.
+
+That is exactly the step that was skipped in round one.
+
 ## Reversibility
 
-Was cheap, and was spent. From here the cost rises with every user, listing and
-link. Treat the name as settled.
+Still cheap. No users, no domain, no listing. The only cost of a second rename is
+another pass over the documents and the canvas, which is an hour. That cost rises
+steeply the moment anything is public, so this is the last comfortable moment to
+get it right.
 
 ## Scope
 

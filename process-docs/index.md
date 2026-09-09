@@ -8,7 +8,7 @@ Product context: [product brief](./product/product-brief.md) ·
 [V1 intake](./product/intake/2026-09-08-personal-jarvis-v1.md) ·
 [decisions](./product/decisions/)
 
-Settled: named Slash ([decision 0003](./product/decisions/0003-product-name-and-mark.md)), web, one account per user, commands-only capture, in-app and email
+Settled: web, one account per user, commands-only capture, in-app and email
 notifications, no charging in V1, no deadline. Stack and model provider are
 [decisions 0001 and 0002](./product/decisions/).
 
@@ -26,6 +26,9 @@ notifications, no charging in V1, no deadline. Stack and model provider are
 
 Status values: `draft`, `in-review`, `approved`, `blocked`, `shipped`,
 `superseded`.
+
+> **Name is open.** Slash is a working name only, see
+> [decision 0003](./product/decisions/0003-product-name-and-mark.md).
 
 ## Active
 

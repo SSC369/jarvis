@@ -9,8 +9,10 @@ updated: 2026-09-09
 
 # Slash — Product Brief
 
-> Named Slash on 2026-09-09, see [decision 0003](./decisions/0003-product-name-and-mark.md).
-> Called Jarvis before that, and the GitHub repository still carries the old name.
+> **The name is not settled.** Slash is a working name, used so the documents read
+> consistently. It collides with existing products and round two is running, see
+> [decision 0003](./decisions/0003-product-name-and-mark.md). Recommendation is
+> Cairn. The GitHub repository still carries the original name, Jarvis.
 
 The standing context every feature inherits. Read this before drafting any PRD.
 
@@ -179,7 +181,7 @@ depends on the result.
 | Model provider | Google Gemini, free tier, through a single API key held in the server environment. See [decision 0001](./decisions/0001-model-provider-gemini-free-tier.md). | 2026-09-08 |
 | Stack | FastAPI, PostgreSQL, React with Vite, Turborepo, MobX, shadcn/ui, Celery, Resend. See [decision 0002](./decisions/0002-v1-technology-stack.md). | 2026-09-08 |
 | Design system | Produced in Claude Design at stage 2 of each feature | 2026-09-08 |
-| Name and mark | Slash. The mark is the command character, the wordmark is IBM Plex Mono | 2026-09-09 |
+| Name and mark | **Open.** Slash is a working name only, see decision 0003 | — |
 | Theme | Light and dark, following the device by default, with a user override | 2026-09-09 |
 | Auth | Provider or built in-house not yet decided. One account per user makes it small either way. | |
 | Hosting | Not yet decided | |

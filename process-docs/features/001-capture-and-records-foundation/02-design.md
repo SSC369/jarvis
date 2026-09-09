@@ -254,7 +254,13 @@ cost, because a set where only the favourite gets defended is not a choice.
 | Magpie | The metaphor is the product loop: gathers what catches the eye, knows where every piece is. Short, warm, easiest to own | Playful, and magpies carry a thieving reputation, which some will notice in a product holding private information |
 | Slash | The product is the command character, so the logo and the interaction are one thing | A common word with a violent second meaning, nearly unsearchable, and it names the mechanism rather than the value |
 
-**Chosen: Slash**, on 2026-09-09, recorded as
+> **Reopened the same day.** Slash collides with existing products. Round two is
+> on the canvas page "Name, round two", four candidates chosen for ownability
+> rather than for being the first words that come to mind. Recommendation is
+> **Cairn**. Slash stays as the working name in the documents until a replacement
+> is chosen, because renaming twice costs more than waiting one decision.
+
+**Chosen and then reopened: Slash**, on 2026-09-09, recorded as
 [decision 0003](../../product/decisions/0003-product-name-and-mark.md). My
 recommendation had been Magpie, on ownability. Slash wins on a different axis and
 it is a real one: no other candidate explains the whole product in one glyph.
@@ -362,6 +368,7 @@ the set above.
 | Date | Change | Why | Approved by |
 |---|---|---|---|
 | 2026-09-09 | Created. 18 artboards across four pages. | PRD approved, design stage started | pending |
+| 2026-09-09 | Name reopened. Slash collides with existing products. Four round-two candidates drawn, chosen for ownability: Cairn, Quipu, Tessera, Kalend. Q12 reopened. Documents keep Slash as a working name until a replacement is chosen. | User reported the collision | pending |
 | 2026-09-09 | Renamed to Slash across every artboard and document, verbatim intake excepted. Wordmark set in IBM Plex Mono, mark is the slash. Command-centre tab renamed Capture. Theme toggle drawn on web and mobile in both themes, four artboards, with preview tiles. Two more dark artboards. Q12 and Q14 closed, Q15 and Q16 opened. | User chose Slash and asked for the theme toggle | pending |
 | 2026-09-09 | Dark theme drawn, six artboards, with a token sheet pairing every light and dark value. Four name and logo candidates drawn, each with its case and its cost. Sections 5c and 5d added. FR-42 proposed. Q12 to Q14 opened. | User asked for a dark theme and for name and logo options | pending |
 | 2026-09-09 | Mobile drawn at 390 x 844, six artboards. Installed app added, four artboards. Responsive section rewritten from described to drawn. Section 5a and 5b added, with FR-39 to FR-41 proposed against the approved PRD. Q8 closed, Q9 to Q11 opened. | User asked for mobile and PWA alongside web | pending |

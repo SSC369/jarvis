@@ -35,6 +35,10 @@
     {
       "id": "page-9",
       "name": "Theme toggle"
+    },
+    {
+      "id": "page-10",
+      "name": "Name, round two"
     }
   ],
   "artboards": [
@@ -381,6 +385,38 @@
       "w": 390,
       "h": 844,
       "page": "page-7"
+    },
+    {
+      "file": "NameCairn.dc.html",
+      "x": 0,
+      "y": 0,
+      "w": 1440,
+      "h": 900,
+      "page": "page-10"
+    },
+    {
+      "file": "NameQuipu.dc.html",
+      "x": 1560,
+      "y": 0,
+      "w": 1440,
+      "h": 900,
+      "page": "page-10"
+    },
+    {
+      "file": "NameTessera.dc.html",
+      "x": 3120,
+      "y": 0,
+      "w": 1440,
+      "h": 900,
+      "page": "page-10"
+    },
+    {
+      "file": "NameKalend.dc.html",
+      "x": 4680,
+      "y": 0,
+      "w": 1440,
+      "h": 900,
+      "page": "page-10"
     }
   ],
   "annotations": [
@@ -478,7 +514,7 @@
       "y": -220,
       "w": 1200,
       "page": "page-8",
-      "text": "NAME AND LOGO\nSlash was chosen on 9 September. The four candidates stay here as the record of what was weighed, including the one I recommended, Magpie.\n\nSlash's cost is real and worth remembering: a common word with a violent second meaning, hard to search for, hard to own. It buys you a mark and an interaction that are the same thing."
+      "text": "NAME, ROUND ONE\nSuperseded. Slash was chosen on 9 September and then found to collide with existing products, so the round was reopened.\n\nKept as the record of what was weighed. The lesson is on the next page: every candidate here was a common dictionary word, and common words are exactly what you cannot own."
     },
     {
       "id": "n-theme",
@@ -487,10 +523,18 @@
       "w": 1200,
       "page": "page-9",
       "text": "THEME TOGGLE\nThree choices, not two: System, Light, Dark. System is the default and follows the device through the day.\n\nThe two preview tiles are the point. A segmented control alone makes you switch the whole app to find out what you are choosing.\n\nThis needs proposed FR-42 approved. Without it the app follows the system and there is nothing to toggle."
+    },
+    {
+      "id": "n-names2",
+      "x": 0,
+      "y": -230,
+      "w": 1300,
+      "page": "page-10",
+      "text": "NAME, ROUND TWO\nRound one collided because all four were common English words. This round is built for ownability instead: two near-forgotten words with exact meanings, one mosaic term, one Roman root.\n\nEach card carries a collision risk read as well as a case and a cost.\n\nMy pick is Cairn: the plainest to say and spell, the easiest mark to draw, and the metaphor is the product.\n\nI cannot check domains or trademarks from here. Every risk note is reasoning from general knowledge and needs a real search before you commit."
     }
   ],
   "launch": {
     "view": "canvas",
-    "page": "page-9"
+    "page": "page-10"
   }
 }
