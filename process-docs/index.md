@@ -8,6 +8,10 @@ Product context: [product](./product/product.md) ·
 [tech stack](./tech-stack.md) ·
 [V1 intake](./product/intake/2026-09-08-personal-jarvis-v1.md)
 
+Code rulesets, binding once a feature reaches stage 5:
+[backend](../backend/rules/repo-rules.md) ·
+[frontend](../frontend/rules/repo-rules.md)
+
 Settled: named Slashit, web, one account per user, commands-only capture, in-app
 and email notifications, no charging in V1, no deadline. The stack, auth and
 model provider are in [the tech stack](./tech-stack.md).
