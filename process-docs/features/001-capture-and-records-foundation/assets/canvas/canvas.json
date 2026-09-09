@@ -1,0 +1,220 @@
+{
+  "pages": [
+    {
+      "id": "page-1",
+      "name": "Capture"
+    },
+    {
+      "id": "page-2",
+      "name": "Records"
+    },
+    {
+      "id": "page-3",
+      "name": "Settings and states"
+    },
+    {
+      "id": "page-4",
+      "name": "Directions"
+    }
+  ],
+  "artboards": [
+    {
+      "file": "Main.dc.html",
+      "x": 0,
+      "y": 0,
+      "w": 1440,
+      "h": 900,
+      "page": "page-1"
+    },
+    {
+      "file": "CommandPalette.dc.html",
+      "x": 1560,
+      "y": 0,
+      "w": 1440,
+      "h": 900,
+      "page": "page-1"
+    },
+    {
+      "file": "CommandFilter.dc.html",
+      "x": 3120,
+      "y": 0,
+      "w": 1440,
+      "h": 900,
+      "page": "page-1"
+    },
+    {
+      "file": "CaptureLoading.dc.html",
+      "x": 4680,
+      "y": 0,
+      "w": 1440,
+      "h": 900,
+      "page": "page-1"
+    },
+    {
+      "file": "CaptureSuccess.dc.html",
+      "x": 0,
+      "y": 1060,
+      "w": 1440,
+      "h": 900,
+      "page": "page-1"
+    },
+    {
+      "file": "PendingQuestion.dc.html",
+      "x": 1560,
+      "y": 1060,
+      "w": 1440,
+      "h": 900,
+      "page": "page-1"
+    },
+    {
+      "file": "NonCommandInput.dc.html",
+      "x": 3120,
+      "y": 1060,
+      "w": 1440,
+      "h": 900,
+      "page": "page-1"
+    },
+    {
+      "file": "QuotaRefusal.dc.html",
+      "x": 4680,
+      "y": 1060,
+      "w": 1440,
+      "h": 900,
+      "page": "page-1"
+    },
+    {
+      "file": "Records.dc.html",
+      "x": 0,
+      "y": 0,
+      "w": 1440,
+      "h": 900,
+      "page": "page-2"
+    },
+    {
+      "file": "RecordsEmpty.dc.html",
+      "x": 1560,
+      "y": 0,
+      "w": 1440,
+      "h": 900,
+      "page": "page-2"
+    },
+    {
+      "file": "RecordsTasks.dc.html",
+      "x": 3120,
+      "y": 0,
+      "w": 1440,
+      "h": 900,
+      "page": "page-2"
+    },
+    {
+      "file": "RecordDetail.dc.html",
+      "x": 0,
+      "y": 1060,
+      "w": 1440,
+      "h": 900,
+      "page": "page-2"
+    },
+    {
+      "file": "RecordEdit.dc.html",
+      "x": 1560,
+      "y": 1060,
+      "w": 1440,
+      "h": 900,
+      "page": "page-2"
+    },
+    {
+      "file": "DeleteConfirm.dc.html",
+      "x": 3120,
+      "y": 1060,
+      "w": 1440,
+      "h": 900,
+      "page": "page-2"
+    },
+    {
+      "file": "Settings.dc.html",
+      "x": 0,
+      "y": 0,
+      "w": 1440,
+      "h": 900,
+      "page": "page-3"
+    },
+    {
+      "file": "EdgeStates.dc.html",
+      "x": 1560,
+      "y": 0,
+      "w": 1440,
+      "h": 900,
+      "page": "page-3"
+    },
+    {
+      "file": "DirectionB.dc.html",
+      "x": 0,
+      "y": 0,
+      "w": 1440,
+      "h": 900,
+      "page": "page-4"
+    },
+    {
+      "file": "DirectionC.dc.html",
+      "x": 1560,
+      "y": 0,
+      "w": 1440,
+      "h": 900,
+      "page": "page-4"
+    }
+  ],
+  "annotations": [
+    {
+      "id": "n-capture",
+      "x": 0,
+      "y": -150,
+      "w": 760,
+      "page": "page-1",
+      "text": "CAPTURE\nEvery capture starts with a command. Row 1 is discovery and the moment of capture. Row 2 is the three ways it does not go cleanly: a question left waiting, text typed without a command, and the shared model limit."
+    },
+    {
+      "id": "n-cmdcount",
+      "x": 3120,
+      "y": -150,
+      "w": 760,
+      "page": "page-1",
+      "text": "Only four commands exist in epic 001, because tasks are the only record type. The filter artboard shows /add matching one command, not six. The palette is built to group as the list grows."
+    },
+    {
+      "id": "n-pending",
+      "x": 1560,
+      "y": 910,
+      "w": 760,
+      "page": "page-1",
+      "text": "FR-36 to FR-38. The question sits in the transcript and never blocks. /tasks ran underneath it and worked. Nothing is saved until the question is answered, and the answer binds to its own capture."
+    },
+    {
+      "id": "n-records",
+      "x": 0,
+      "y": -150,
+      "w": 900,
+      "page": "page-2",
+      "text": "RECORDS\nOne type filter, All and Tasks, because tasks are the only record type in this epic. Detail shows the origin and what you actually typed, so a record can always be traced back to the command that made it."
+    },
+    {
+      "id": "n-states",
+      "x": 0,
+      "y": -150,
+      "w": 900,
+      "page": "page-3",
+      "text": "Timezone is the only setting in this epic. Jarvis has one account per user, so the no-permission state can only mean a session that ended."
+    },
+    {
+      "id": "n-dir",
+      "x": 0,
+      "y": -170,
+      "w": 900,
+      "page": "page-4",
+      "text": "Two directions not taken, kept low-fi so they read as alternatives rather than half-finished screens. The built direction is warm paper, IBM Plex, one blue for action and one amber for commands. Say the word if either of these is closer."
+    }
+  ],
+  "launch": {
+    "view": "canvas",
+    "page": "page-1"
+  }
+}
