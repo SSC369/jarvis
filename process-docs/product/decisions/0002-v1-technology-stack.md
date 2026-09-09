@@ -4,7 +4,7 @@ id: 0002
 title: V1 technology stack
 status: accepted
 created: 2026-09-08
-updated: 2026-09-08
+updated: 2026-09-09
 supersedes: null
 origin: user direction, 2026-09-08
 ---
@@ -28,7 +28,10 @@ The build plan for epic 001 cannot start without a stack.
 | Frontend state | MobX |
 | Components | shadcn/ui |
 | Design system | Produced in Claude Design, stage 2 of each feature |
-| Background jobs | Celery |
+| Background jobs | Celery with Redis as the broker |
+| In-app notification transport | WebSockets |
+| Backend hosting | AWS EC2 |
+| Auth | A third-party provider, not built in-house. Which one is open |
 | Email | Resend |
 | Model provider | Google Gemini free tier, see [decision 0001](./0001-model-provider-gemini-free-tier.md) |
 
@@ -44,7 +47,8 @@ this shape of product and nothing about V1 argues against any of it.
 | FastAPI and PostgreSQL are boring in the way infrastructure should be, and Postgres covers relational records, full-text search for `/search`, and JSON fields for per-type record data | Nothing significant |
 | Turborepo makes room for a shared package between the web app and whatever comes after it | For one web app today it is overhead. It earns its place only if a second surface follows |
 | shadcn/ui puts component source in the repository, so a Claude Design system can be applied directly to components rather than fought with | Component code becomes ours to maintain, including upstream fixes |
-| Celery and Resend cover reminder scheduling and delivery in epic 002 | Celery needs a broker, so Redis joins the stack. Two services to run before a single reminder fires |
+| Celery, Redis and Resend cover reminder scheduling and delivery in epic 002 | Three processes on the EC2 instance before a single reminder fires: API, Celery worker, Celery beat, plus Redis |
+| WebSockets deliver notifications the moment they fire, with no polling interval to tune | WebSockets need sticky routing or a shared backplane as soon as there is more than one server process. Single-instance EC2 hides this until it does not |
 
 ## Recommendations on top of the decision
 
@@ -73,17 +77,22 @@ for itself.
 
 ## Open at the build plan
 
-| # | Question |
-|---|---|
-| 1 | How do in-app notifications reach an open browser: polling, server-sent events, or websockets? Epic 002 needs this and it is the one transport decision the stack does not settle |
-| 2 | Redis is implied by Celery. Confirmed, or is a database-backed job queue preferred to avoid a second service? |
-| 3 | Where does this run, and does hosting constrain Celery and Redis? |
-| 4 | Auth: built here, or a provider? One account per user makes this small either way |
+| # | Question | Answer |
+|---|---|---|
+| ~~1~~ | Notification transport | **WebSockets**, settled 2026-09-09 |
+| ~~2~~ | Redis or a database-backed queue | **Redis**, settled 2026-09-09 |
+| ~~3~~ | Where does this run | **Backend on AWS EC2**, settled 2026-09-09 |
+| ~~4~~ | Auth built or bought | **A provider**, settled 2026-09-09 |
+| 5 | Which auth provider? |  |
+| 6 | Where does the frontend run: served from the same EC2 instance, S3 and CloudFront, or a separate host? |  |
+| 7 | Is Redis self-managed on EC2 or ElastiCache? Self-managed is cheaper and is one more thing to keep alive |  |
+| 8 | A WebSocket connection per user needs somewhere to terminate. On one EC2 instance this is simple. It stops being simple the moment there are two |  |
 
 ## Reversibility
 
-Costly for FastAPI and PostgreSQL, which is normal and acceptable. Cheap for
-MobX, Turborepo and Resend, each replaceable behind a thin boundary. Decision
+Costly for FastAPI and PostgreSQL, which is normal and acceptable. Costly for
+the auth provider, since user identities live there. Cheap for MobX, Turborepo,
+Resend and Redis, each replaceable behind a thin boundary. Decision
 0001 already requires the model provider to sit behind one.
 
 ## Scope

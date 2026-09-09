@@ -4,7 +4,7 @@ title: Jarvis Product Brief
 status: in-review
 owner: user
 created: 2026-09-08
-updated: 2026-09-08
+updated: 2026-09-09
 ---
 
 # Personal Jarvis — Product Brief
@@ -210,9 +210,11 @@ the product is validated.
 | Q10 | Does the Gemini free tier's data handling meet the bar for a product holding passports, finances and family details? The free tier's terms differ from the paid tier and must be read before launch, not after. | launch, decision 0001 | user |
 | ~~Q11~~ | ~~What happens when the shared quota is exhausted?~~ **Answered 2026-09-08: refuse the capture with an honest message, preserve the input.** | — | — |
 | ~~Q12~~ | ~~Are we charging users in V1?~~ **Answered 2026-09-08: no.** | — | — |
-| Q13 | Do in-app notifications use polling, server-sent events, or websockets? | epic 002 HLD | user |
-| Q14 | Celery implies Redis. Confirmed, or prefer a database-backed queue to avoid a second service? | epic 002 HLD | user |
-| Q15 | Where does this run, and does hosting constrain Celery and Redis? | HLD | user |
+| ~~Q13~~ | ~~Notification transport?~~ **Answered 2026-09-09: WebSockets.** | — | — |
+| ~~Q14~~ | ~~Redis or a database-backed queue?~~ **Answered 2026-09-09: Redis.** | — | — |
+| ~~Q15~~ | ~~Where does this run?~~ **Answered 2026-09-09: backend on AWS EC2.** | — | — |
+| Q16 | Which auth provider? | HLD | user |
+| Q17 | Where does the frontend run? | HLD | user |
 | Q6 | Currency and locale: is ₹ the only currency in V1? | PRD | user |
 | ~~Q7~~ | ~~What numeric targets make each V1 hypothesis pass or fail?~~ **Deferred 2026-09-08. Instrument now, set targets once there is usage.** | — | — |
 | Q8 | Is offline capture required, and is data export a V1 promise? | PRD, HLD | user |
@@ -225,6 +227,7 @@ the product is validated.
 | 2026-09-08 | Created as skeleton | Process bootstrap | — |
 | 2026-09-08 | Filled from the V1 product definition | User supplied the product | pending |
 | 2026-09-08 | Surface, notifications and model provider settled. Q1, Q2, Q4 closed. Q10 to Q12 opened. | User answered the blocking questions | user |
+| 2026-09-09 | Auth by provider, backend on AWS EC2, WebSockets for in-app notifications, Redis with Celery. Q13 to Q15 closed, Q16 and Q17 opened. | User settled the remaining platform questions | user |
 | 2026-09-08 | Stack settled as decision 0002. Quota exhaustion refuses honestly. Not charging in V1. No deadline. Q11 and Q12 closed, Q13 to Q15 opened for the build plans. | User settled architecture and business questions | user |
 | 2026-09-08 | Numeric targets deferred. Hypotheses instrumented without pass or fail numbers. Q7 closed. | User decision | user |
 | 2026-09-08 | One account per user. Plain-language capture, the Life Inbox, and task priority and recurrence deferred out of V1. Pillar P1 marked as partly deferred. Q3 closed. | User cut scope | user |

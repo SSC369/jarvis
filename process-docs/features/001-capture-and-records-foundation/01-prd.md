@@ -3,15 +3,17 @@ doc: prd
 feature: 001-capture-and-records-foundation
 title: Capture and Records Foundation
 stage: 1
-status: in-review
+status: approved
 owner: user
 created: 2026-09-08
 updated: 2026-09-08
-approved_on: null
+approved_on: 2026-09-09
 supersedes: null
 ---
 
 # Epic PRD — Capture and Records Foundation
+
+> **Approved** by @user on 2026-09-09. Locked — changes require a change record (§7 of the rules).
 
 Context: [Intake](./00-context.md) · [Product brief](../../product/product-brief.md) · [V1 epic map](../../product/v1-epic-map.md)
 
@@ -89,6 +91,7 @@ build targets, not success bets.
 - **US-6.** As a user, I open a list of everything Jarvis has recorded, so that I never have to ask the AI what it holds.
 - **US-7.** As a user, I correct or delete anything Jarvis recorded, so that a mistake is not permanent.
 - **US-9.** As a user, I type something without a command and Jarvis tells me how to record it, so that I am not left guessing why nothing happened.
+- **US-10.** As a user, I leave a question from Jarvis unanswered and carry on working, so that one incomplete capture never traps me.
 - **US-8.** *Moved to epic 002 with reminders.*
 
 ## 6. Functional requirements
@@ -104,7 +107,10 @@ build targets, not success bets.
 | FR-5 | Relative dates and times in input resolve against the user's current date, time and timezone. "tomorrow at 7pm" and "yesterday" resolve to absolute values. | must | US-3 |
 | FR-6 | When every required field for the record type is present, Jarvis creates the record without asking anything further. | must | US-1 |
 | FR-7 | After creation, Jarvis shows the created record with every extracted field visible, in the same place the user typed. | must | US-5 |
-| FR-8 | When a required field cannot be extracted, Jarvis asks exactly one question naming the missing field, and creates the record on the answer. | must | US-5 |
+| FR-8 | When a required field cannot be extracted, Jarvis asks exactly one question naming the missing field. No record exists until that question is answered. | must | US-5 |
+| FR-36 | The question does not block anything. The user can move to another screen and come back, run other commands, or leave it unanswered, and the question stays where it was asked. | must | US-10 |
+| FR-37 | An unanswered question can be answered at any later point, and the record is created then. Ignoring it forever creates nothing. A partial record is never stored. | must | US-10 |
+| FR-38 | An answer applies to the capture it belongs to, not to whatever ran most recently. Relative dates in the original input resolve against the moment that input was given, not the moment the question is answered. | must | US-10 |
 | FR-9 | Input submitted without a command tells the user that Jarvis records through commands, shows how to open the command list, and preserves what they typed so a command can be applied to it without retyping. | must | US-9 |
 | FR-10 | *Withdrawn. Plain-language classification is out of V1.* | — | — |
 | FR-11 | *Withdrawn. Conversation outside a command is out of V1.* | — | — |
@@ -193,6 +199,7 @@ shared key made unavoidable, not a disappointing result.
 | Resend for email, Celery for background jobs | vendor | user | Settled 2026-09-08. Used by epic 002, not by this epic |
 | One account per user | platform | user | Settled 2026-09-08 |
 | Stack: FastAPI, PostgreSQL, React, Vite, Turborepo, MobX, shadcn/ui | platform | user | Settled 2026-09-08, see [decision 0002](../../product/decisions/0002-v1-technology-stack.md) |
+| Auth provider, AWS EC2 hosting | platform | user | Settled 2026-09-09. Which provider is a build plan question |
 | Labelled evaluation set for extraction and classification | internal | Claude, with user-supplied phrasings | Not started, needed before build plan approval |
 | Numeric targets for the hypotheses | product | user | Deferred by decision, 2026-09-08. Not a blocker |
 
@@ -226,7 +233,7 @@ shared key made unavoidable, not a disappointing result.
 | Q14 | With conversation out of V1, does `/search` still answer questions in sentences, or only return matching records? Epic 004 owns search, but the answer changes what the command surface is. | epic 004 | user | |
 | ~~Q7~~ | What numeric targets make G1 to G4 pass or fail? | section 3 | user | **Deferred.** No targets in V1. Instrument everything, set targets once there is real usage. |
 | ~~Q8~~ | Is there a settings surface in this epic? | FR-27, scope | user | **Yes.** Timezone lives here, in FR-27 and FR-28. The default reminder time goes to epic 002 with reminders. |
-| Q9 | Can the user see and edit records at all when a capture is ambiguous and unanswered, or is the pending question blocking? | FR-8, design | user | |
+| ~~Q9~~ | Is a pending question blocking? | FR-8, design | user | **No.** The question sits in the conversation. The user may leave the screen, return, answer it, ignore it, or run other commands. FR-36 to FR-38 added. |
 
 ## 12. Out of scope
 
@@ -240,6 +247,7 @@ capture, undo beyond edit and delete, attachments on records, and any sharing.
 | Date | Change | Why | Approved by |
 |---|---|---|---|
 | 2026-09-08 | Created from the V1 product definition | First epic of V1 | pending |
+| 2026-09-09 | **PRD approved.** Pending questions confirmed non-blocking: FR-8 rewritten, FR-36 to FR-38 added, US-10 added. Q9 closed. | User approved the PRD and settled the pending-question behaviour | user |
 | 2026-09-08 | Reminders split out into epic 002. FR-27 to FR-34 and NFR-6 removed from this epic, US-8 moved. Settings added as FR-27 and FR-28 for timezone. FR-35 rewritten to refuse honestly on quota exhaustion. Q8, Q11, Q12, Q13 closed. | User split the epic and settled the stack | user |
 | 2026-09-08 | Numeric targets removed from goals and success metrics. Metrics are instrumented without targets. Engineering numbers in section 7 unchanged. Q7 closed as deferred. | User deferred targets until real usage exists | user |
 | 2026-09-08 | Commands-only capture. FR-1 rewritten, FR-9 repurposed to handle non-command input, FR-10, FR-11, FR-26 and NFR-5 withdrawn, FR-23 reduced to title, due date and status. US-4 dropped, US-9 added. Q3, Q5, Q6 closed. Q13, Q14 opened. | User cut plain language, task priority and task recurrence from V1 | user |

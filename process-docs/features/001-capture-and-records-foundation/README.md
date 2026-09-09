@@ -4,8 +4,8 @@
 |---|---|
 | Priority | P0 |
 | Scope | Commands, records, tasks, timezone settings |
-| Stage | 1 PRD |
-| Status | in-review |
+| Stage | 2 Design |
+| Status | PRD approved, design not started |
 | Started | 2026-09-08 |
 | Owner | user |
 
@@ -14,7 +14,7 @@
 | Stage | Doc | Status | Approved |
 |---|---|---|---|
 | 0 Intake | [00-context.md](./00-context.md) | approved | 2026-09-08 |
-| 1 PRD | [01-prd.md](./01-prd.md) | in-review | |
+| 1 PRD | [01-prd.md](./01-prd.md) | approved | 2026-09-09 |
 | 2 Design | 02-design.md | not started | |
 | 3 Build plan | 03-build-plan.md | not started | |
 | 4 Implementation plan | 04-implementation-plan.md | not started | |
