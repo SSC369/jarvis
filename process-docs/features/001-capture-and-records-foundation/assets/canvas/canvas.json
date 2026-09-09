@@ -43,6 +43,10 @@
     {
       "id": "page-11",
       "name": "Name, round three"
+    },
+    {
+      "id": "page-12",
+      "name": "Logo"
     }
   ],
   "artboards": [
@@ -477,6 +481,54 @@
       "w": 1440,
       "h": 900,
       "page": "page-11"
+    },
+    {
+      "file": "LogoPrimary.dc.html",
+      "x": 0,
+      "y": 0,
+      "w": 1440,
+      "h": 900,
+      "page": "page-12"
+    },
+    {
+      "file": "LogoWordmark.dc.html",
+      "x": 1560,
+      "y": 0,
+      "w": 1440,
+      "h": 900,
+      "page": "page-12"
+    },
+    {
+      "file": "LogoConstruction.dc.html",
+      "x": 3120,
+      "y": 0,
+      "w": 1440,
+      "h": 900,
+      "page": "page-12"
+    },
+    {
+      "file": "LogoLockups.dc.html",
+      "x": 4680,
+      "y": 0,
+      "w": 1440,
+      "h": 900,
+      "page": "page-12"
+    },
+    {
+      "file": "LogoMisuse.dc.html",
+      "x": 6240,
+      "y": 0,
+      "w": 1440,
+      "h": 900,
+      "page": "page-12"
+    },
+    {
+      "file": "LogoApplication.dc.html",
+      "x": 7800,
+      "y": 0,
+      "w": 1440,
+      "h": 900,
+      "page": "page-12"
     }
   ],
   "annotations": [
@@ -598,11 +650,19 @@
       "y": -230,
       "w": 1300,
       "page": "page-11",
-      "text": "NAME, ROUND THREE\nSix more, plus a shortlist sheet that puts all fourteen candidates from all three rounds side by side with a risk read.\n\nThe spread is deliberate: Keepsake is understood by everyone and owns nothing; Kist is owned by nobody and understood by nobody. Every name on these pages sits somewhere on that line, and choosing is really choosing where.\n\nMy two are Cairn, plain and warm, and Docket, hard and modern and the only name that says both halves of the product. Kist if ownability beats everything.\n\nStart with the shortlist sheet on the left."
+      "text": "NAME, ROUND THREE\nClosed. Slashit was chosen on 9 September. These fourteen candidates stay as the record of what was weighed across three rounds.\n\nThe logo built from that choice is on the Logo page."
+    },
+    {
+      "id": "n-logo",
+      "x": 0,
+      "y": -230,
+      "w": 1300,
+      "page": "page-12",
+      "text": "LOGO\nThe mark is the keystroke. Every record begins with a slash, so the logo is the first thing the user types rather than a picture of something else.\n\nRead the Wordmark sheet second, and read it before you buy a domain. Set as one lowercase word, slashit breaks at the wrong place for a lot of readers. Three of the four treatments fix it; slash.it is the one I would ship.\n\nConstruction, lockups, misuse and application follow."
     }
   ],
   "launch": {
     "view": "canvas",
-    "page": "page-11"
+    "page": "page-12"
   }
 }

@@ -2,7 +2,7 @@
 doc: decision
 id: 0003
 title: Product name and mark
-status: proposed
+status: accepted
 created: 2026-09-09
 updated: 2026-09-09
 supersedes: null
@@ -11,11 +11,13 @@ origin: features/001-capture-and-records-foundation/02-design.md section 5d
 
 # 0003 — Product name and mark
 
-> **Reopened 2026-09-09.** Slash was chosen, then found to collide with existing
-> products. Rounds two and three follow below and on the canvas pages "Name,
-> round two" and "Name, round three": fourteen candidates in total. Slash remains
-> the working name in the documents until a replacement is chosen, because
-> churning every file twice costs more than waiting one decision.
+> **Settled 2026-09-09: the product is Slashit.** The logo is set as
+> `slash.it`, not as one lowercase word. Read "The wordmark is not the name"
+> below before buying a domain or a handle.
+>
+> Three rounds ran. Slash was chosen and reopened when it turned out to collide.
+> Fourteen candidates were drawn in total; they stay on the canvas as the record
+> of what was weighed.
 
 ## Context
 
@@ -28,9 +30,43 @@ a mark, an app icon and the identity applied inside the product.
 
 ## Decision
 
-**Open.** Round two is running. Recommendation is **Cairn**.
+**Slashit.** Chosen by the user on 2026-09-09, after Slash was found to collide.
 
-Slash was chosen on 2026-09-09 and reopened the same day.
+Slashit keeps what was good about Slash, the command character as the mark, and
+adds the thing Slash lacked: a distinctive, ownable form. It is also a verb
+phrase, which is rare and useful. "Slash it" is an instruction the product can
+put in a user's mouth.
+
+**The mark** is the slash itself, set in a rounded ink square. Every record in
+this product begins with a slash, so the logo is the first thing the user types
+rather than a picture of something else.
+
+**The wordmark** is `slash.it` in IBM Plex Mono, the face the product sets
+commands in, with the dot in amber. It is the only coloured element.
+
+## The wordmark is not the name
+
+The name is Slashit. The logo is never set as `slashit`.
+
+Set as one undifferentiated lowercase word it breaks at the wrong place for a
+lot of readers: sla, shit. This is the same failure that produced
+therapistfinder and whorepresents, and it is a property of the letters rather
+than of anybody's intent.
+
+It is not a reason to drop the name. It is a reason to always break the word
+visibly. Three treatments do this, and any of them removes the problem:
+
+| Treatment | Verdict | Note |
+|---|---|---|
+| `slash.it` | **Shipped** | The dot breaks the word, reads as a domain, monospace ties it to the command line |
+| `SlashIt` | Safe | Camel case, no punctuation. Use where a dot would read as a file extension |
+| `Slash It` | Workable | Unambiguous, but two words are harder to own and to type as a handle |
+| `slashit` | Never | The form that misreads. Not permitted as a logo |
+
+**This has a practical consequence.** Domains and handles are lowercase and
+undifferentiated by nature. `slashit.com` reads the bad way. `slash.it` does not,
+and it is the reason the wordmark carries a dot. Check what a handle looks like
+before registering it, in lowercase, with fresh eyes.
 
 The mark is the command character itself, a slash in a rounded square. The
 wordmark is IBM Plex Mono, the same face the product uses for commands, so the
@@ -120,9 +156,10 @@ line, and choosing a name is really choosing where on it you want to stand.
 | **Mnemo** | From Mnemosyne, root of mnemonic | Four letters that already mean memory. Coined and modern, with a real root | The silent M. Said wrong and typed wrong for a year |
 | **Keepsake** | A thing kept because it matters | Understood instantly by everyone, which no obscure name here can claim | Sentimental, leaning to mementoes when half this product is logistics |
 
-## Recommendation
+## Recommendation, at the time
 
-**Cairn** if you want it plain and warm. It is the only candidate that is at once
+For the record, the recommendation before the decision was **Cairn** if you want
+it plain and warm. It is the only candidate that is at once
 easy to say, easy to spell, easy to draw, and a true description of the product.
 
 **Docket** if you want it hard and modern, and you are willing to fight for the
@@ -142,12 +179,39 @@ register, the domain, the app stores, and a plain web search.
 
 That is exactly the step that was skipped in round one.
 
+## The logo system
+
+On the canvas, page "Logo", six sheets: primary lockup, wordmark treatments,
+construction and clear space, lockups and one-colour forms, misuse, and applied.
+
+| Rule | Value |
+|---|---|
+| Corner radius | 22% of the mark's width |
+| Slash angle | 20 degrees from vertical |
+| Stroke width | 19% of the mark's width |
+| Clear space | 25% of the mark's height on every side |
+| Minimum mark | 16 px |
+| Minimum lockup | 104 px wide |
+| Colour | Ink ground, cream slash, amber dot in the wordmark. Nothing else |
+
+## Consequences
+
+| Good | Bad |
+|---|---|
+| The mark and the first keystroke are the same thing | The wordmark can never be set as one lowercase word, which constrains handles and domains |
+| Distinctive enough to own, unlike Slash | Still built on a common root, so search results will carry noise from "slash" |
+| The rename cost almost nothing: no users, no domain, no listing | A third pass over the documents and the canvas |
+
 ## Reversibility
 
-Still cheap. No users, no domain, no listing. The only cost of a second rename is
-another pass over the documents and the canvas, which is an hour. That cost rises
-steeply the moment anything is public, so this is the last comfortable moment to
-get it right.
+Spent. From here the cost rises with every user, listing and link. The name is
+settled.
+
+## Still outstanding
+
+I cannot check registers, domains or app stores from this session. Nothing above
+is a clearance search, and one still has to happen before the name goes public.
+Check the lowercase forms specifically.
 
 ## Scope
 

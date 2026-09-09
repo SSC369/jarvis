@@ -1,4 +1,4 @@
-# Slash
+# Slashit
 
 An AI SaaS application. Early stage: the process is set up, the product is not
 yet defined.

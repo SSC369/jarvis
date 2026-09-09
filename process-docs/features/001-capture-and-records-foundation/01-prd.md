@@ -78,20 +78,20 @@ build targets, not success bets.
 - Voice input, offline capture, and importing from other apps.
 - **Plain-language capture.** V1 records only what arrives as a command.
   Classifying a bare sentence into a record type is out, and so is conversing
-  with Slash outside a command. Deferred, not cancelled.
+  with Slashit outside a command. Deferred, not cancelled.
 - **Task priority and recurrence.** A task has a title, a due date and a status.
   Nothing else.
 
 ## 5. User stories
 
 - **US-1.** As a user, I type a command and my task exists, so that capture costs one line.
-- **US-2.** As a user, I type `/` and see what Slash can do, so that I do not have to memorise commands.
+- **US-2.** As a user, I type `/` and see what Slashit can do, so that I do not have to memorise commands.
 - **US-3.** As a user, I write the arguments the way I speak, so that I do not have to learn a syntax.
-- **US-5.** As a user, I see what Slash extracted right after it creates the record, so that I catch a wrong date immediately.
-- **US-6.** As a user, I open a list of everything Slash has recorded, so that I never have to ask the AI what it holds.
-- **US-7.** As a user, I correct or delete anything Slash recorded, so that a mistake is not permanent.
-- **US-9.** As a user, I type something without a command and Slash tells me how to record it, so that I am not left guessing why nothing happened.
-- **US-10.** As a user, I leave a question from Slash unanswered and carry on working, so that one incomplete capture never traps me.
+- **US-5.** As a user, I see what Slashit extracted right after it creates the record, so that I catch a wrong date immediately.
+- **US-6.** As a user, I open a list of everything Slashit has recorded, so that I never have to ask the AI what it holds.
+- **US-7.** As a user, I correct or delete anything Slashit recorded, so that a mistake is not permanent.
+- **US-9.** As a user, I type something without a command and Slashit tells me how to record it, so that I am not left guessing why nothing happened.
+- **US-10.** As a user, I leave a question from Slashit unanswered and carry on working, so that one incomplete capture never traps me.
 - **US-8.** *Moved to epic 002 with reminders.*
 
 ## 6. Functional requirements
@@ -103,15 +103,15 @@ build targets, not success bets.
 | FR-1 | Every capture starts with a command. Input that does not start with `/` creates nothing. | must | US-1 |
 | FR-2 | Typing `/` presents the list of available commands, each with a one-line description. | must | US-2 |
 | FR-3 | Typing further characters after `/` filters the list to commands whose name contains the typed text. `/add` yields every add command. | must | US-2 |
-| FR-4 | A command accepts natural-language arguments and Slash extracts the structured fields for that record type from them. | must | US-3 |
+| FR-4 | A command accepts natural-language arguments and Slashit extracts the structured fields for that record type from them. | must | US-3 |
 | FR-5 | Relative dates and times in input resolve against the user's current date, time and timezone. "tomorrow at 7pm" and "yesterday" resolve to absolute values. | must | US-3 |
-| FR-6 | When every required field for the record type is present, Slash creates the record without asking anything further. | must | US-1 |
-| FR-7 | After creation, Slash shows the created record with every extracted field visible, in the same place the user typed. | must | US-5 |
-| FR-8 | When a required field cannot be extracted, Slash asks exactly one question naming the missing field. No record exists until that question is answered. | must | US-5 |
+| FR-6 | When every required field for the record type is present, Slashit creates the record without asking anything further. | must | US-1 |
+| FR-7 | After creation, Slashit shows the created record with every extracted field visible, in the same place the user typed. | must | US-5 |
+| FR-8 | When a required field cannot be extracted, Slashit asks exactly one question naming the missing field. No record exists until that question is answered. | must | US-5 |
 | FR-36 | The question does not block anything. The user can move to another screen and come back, run other commands, or leave it unanswered, and the question stays where it was asked. | must | US-10 |
 | FR-37 | An unanswered question can be answered at any later point, and the record is created then. Ignoring it forever creates nothing. A partial record is never stored. | must | US-10 |
 | FR-38 | An answer applies to the capture it belongs to, not to whatever ran most recently. Relative dates in the original input resolve against the moment that input was given, not the moment the question is answered. | must | US-10 |
-| FR-9 | Input submitted without a command tells the user that Slash records through commands, shows how to open the command list, and preserves what they typed so a command can be applied to it without retyping. | must | US-9 |
+| FR-9 | Input submitted without a command tells the user that Slashit records through commands, shows how to open the command list, and preserves what they typed so a command can be applied to it without retyping. | must | US-9 |
 | FR-10 | *Withdrawn. Plain-language classification is out of V1.* | — | — |
 | FR-11 | *Withdrawn. Conversation outside a command is out of V1.* | — | — |
 | FR-12 | An unrecognised command name tells the user so and offers the closest matches, and creates nothing. | should | US-2 |
@@ -151,7 +151,7 @@ build targets, not success bets.
 
 | id | Requirement | Priority | Story |
 |---|---|---|---|
-| FR-35 | When a capture cannot be completed because the model is unavailable or the shared quota is exhausted, Slash refuses the capture, says plainly why and that it is temporary, and preserves what the user typed. Nothing is recorded half-formed. | must | US-1 |
+| FR-35 | When a capture cannot be completed because the model is unavailable or the shared quota is exhausted, Slashit refuses the capture, says plainly why and that it is temporary, and preserves what the user typed. Nothing is recorded half-formed. | must | US-1 |
 
 ## 7. Non-functional requirements
 

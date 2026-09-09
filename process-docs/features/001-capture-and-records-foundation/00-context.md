@@ -25,7 +25,7 @@ this epic until 2026-09-08 and now form epic 002.
 
 | § | Topic |
 |---|---|
-| 7 | Slash Command Center |
+| 7 | Slashit Command Center |
 | 8 | Command System, syntax and the V1 command list |
 | 9 | Command Discovery |
 | 10 | Structured Records, the core V1 feature |
@@ -39,11 +39,11 @@ this epic until 2026-09-08 and now form epic 002.
 
 The user's own words on why this matters:
 
-> Every time Slash records something, the user should be able to view it as
+> Every time Slashit records something, the user should be able to view it as
 > structured data. The user should never have to rely exclusively on asking the
 > AI "What have I told you?" They can open Records and inspect everything.
 
-> If Slash can record it, the user can see it. If the user can see it, they can
+> If Slashit can record it, the user can see it. If the user can see it, they can
 > control it.
 
 ## Product details supplied

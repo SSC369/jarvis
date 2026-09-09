@@ -1,6 +1,6 @@
 # Process Docs
 
-The source of truth for what we build in Slash and why. Code answers the
+The source of truth for what we build in Slashit and why. Code answers the
 questions these documents ask.
 
 The rules Claude follows when writing anything here are in
@@ -62,7 +62,7 @@ Then work the gates. Do not start a stage while the previous one is unapproved.
 |---|---|
 | `CLAUDE.md` | Binding rules for writing these docs |
 | `index.md` | Every feature, its stage and status |
-| `product/product-brief.md` | What Slash is, who it serves, the pillars |
+| `product/product-brief.md` | What Slashit is, who it serves, the pillars |
 | `product/glossary.md` | One definition per domain term |
 | `product/decisions/` | Decisions that bind more than one feature |
 | `templates/` | Copy these, never edit in place |

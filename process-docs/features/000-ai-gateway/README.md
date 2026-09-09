@@ -21,7 +21,7 @@
 
 ## One-line summary
 
-One Slash-held provider credential, many authenticated users, every model call
+One Slashit-held provider credential, many authenticated users, every model call
 attributed and limited per user, and the key never leaving the backend.
 
 ## Why this is 000

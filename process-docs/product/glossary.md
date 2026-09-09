@@ -19,25 +19,25 @@ sentences.
 
 | Term | Definition |
 |---|---|
-| Command Center | The primary Slash interface where the user types commands, converses, searches and retrieves. |
+| Command Center | The primary Slashit interface where the user types commands, converses, searches and retrieves. |
 | Command | An explicit instruction starting with `/`, followed by natural-language arguments. `/add-task Finish API docs tomorrow`. |
 | Command discovery | The list of available commands shown when the user types `/`, filtered as they type further characters. |
-| Record | One structured item Slash has stored for the user: a task, reminder, expense, memory, event, goal, project or note. |
+| Record | One structured item Slashit has stored for the user: a task, reminder, expense, memory, event, goal, project or note. |
 | Record type | The category a record belongs to. The V1 types are task, reminder, expense, memory, event, goal, project, note. |
 | Records | The structured view of every record the user owns, browsable, searchable, filterable and editable. |
 | Record detail | The view of a single record showing every stored field plus its origin and creation time. |
 | Origin | How a record came to exist: a command, a conversation, or the Life Inbox. Stored on every record. |
-| Memory | Information the user has asked Slash to retain as durable context, distinct from a task or a note. |
+| Memory | Information the user has asked Slashit to retain as durable context, distinct from a task or a note. |
 | Forget | Deleting a memory at the user's instruction. Destructive, so it confirms. |
-| Life Inbox | Frictionless capture where the user dumps input without categorising it, and Slash proposes the record type for review. |
-| Classification | Slash deciding which record type a piece of plain-language input becomes. |
-| Extraction | Slash pulling the structured fields for a record type out of natural-language input. |
+| Life Inbox | Frictionless capture where the user dumps input without categorising it, and Slashit proposes the record type for review. |
+| Classification | Slashit deciding which record type a piece of plain-language input becomes. |
+| Extraction | Slashit pulling the structured fields for a record type out of natural-language input. |
 | Personal search | Unified search across every record type, so the user need not know which category holds the answer. |
-| Contextual intelligence | Slash understanding relationships between records, such as a task belonging to a project that serves a goal. |
-| Proactive suggestion | Information Slash surfaces without being asked. Relevant, limited, actionable, non-intrusive. |
+| Contextual intelligence | Slashit understanding relationships between records, such as a task belonging to a project that serves a goal. |
+| Proactive suggestion | Information Slashit surfaces without being asked. Relevant, limited, actionable, non-intrusive. |
 | Today's view | The user's current situation: today's tasks, events, reminders and anything time-critical. |
 | Upcoming view | A forward timeline of obligations and important dates. |
-| Confirmation model | The rule for when Slash acts immediately, asks one question, or requires explicit confirmation. |
+| Confirmation model | The rule for when Slashit acts immediately, asks one question, or requires explicit confirmation. |
 
 ## Process terms
 

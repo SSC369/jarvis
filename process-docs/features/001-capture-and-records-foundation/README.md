@@ -22,7 +22,7 @@
 
 ## One-line summary
 
-The Slash Command Center, the command system, and the structured record store,
+The Slashit Command Center, the command system, and the structured record store,
 proven end to end with tasks.
 
 Reminders were split out into epic 002 on 2026-09-08.

@@ -15,7 +15,7 @@ supersedes: null
 
 Supplied by the user on 2026-09-09. Transcribed as given.
 
-> **The product was renamed to Slash on 2026-09-09**, per
+> **The product was renamed to Slashit on 2026-09-09**, per
 > [decision 0003](../decisions/0003-product-name-and-mark.md). This document is
 > left exactly as it was supplied, because intake records the user's own words.
 > Every other document uses the new name. Source document for
