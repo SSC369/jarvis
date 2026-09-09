@@ -23,6 +23,14 @@
     {
       "id": "page-6",
       "name": "Installed app"
+    },
+    {
+      "id": "page-7",
+      "name": "Dark theme"
+    },
+    {
+      "id": "page-8",
+      "name": "Name and logo"
     }
   ],
   "artboards": [
@@ -249,6 +257,86 @@
       "w": 1440,
       "h": 900,
       "page": "page-6"
+    },
+    {
+      "file": "DarkCapture.dc.html",
+      "x": 0,
+      "y": 0,
+      "w": 1440,
+      "h": 900,
+      "page": "page-7"
+    },
+    {
+      "file": "DarkRecords.dc.html",
+      "x": 1560,
+      "y": 0,
+      "w": 1440,
+      "h": 900,
+      "page": "page-7"
+    },
+    {
+      "file": "DarkRecordDetail.dc.html",
+      "x": 3120,
+      "y": 0,
+      "w": 1440,
+      "h": 900,
+      "page": "page-7"
+    },
+    {
+      "file": "DarkTokens.dc.html",
+      "x": 0,
+      "y": 1060,
+      "w": 1440,
+      "h": 900,
+      "page": "page-7"
+    },
+    {
+      "file": "DarkMobileMain.dc.html",
+      "x": 1560,
+      "y": 1060,
+      "w": 390,
+      "h": 844,
+      "page": "page-7"
+    },
+    {
+      "file": "DarkMobileRecords.dc.html",
+      "x": 2070,
+      "y": 1060,
+      "w": 390,
+      "h": 844,
+      "page": "page-7"
+    },
+    {
+      "file": "NameJarvis.dc.html",
+      "x": 0,
+      "y": 0,
+      "w": 1440,
+      "h": 900,
+      "page": "page-8"
+    },
+    {
+      "file": "NameAlmanac.dc.html",
+      "x": 1560,
+      "y": 0,
+      "w": 1440,
+      "h": 900,
+      "page": "page-8"
+    },
+    {
+      "file": "NameMagpie.dc.html",
+      "x": 3120,
+      "y": 0,
+      "w": 1440,
+      "h": 900,
+      "page": "page-8"
+    },
+    {
+      "file": "NameSlash.dc.html",
+      "x": 4680,
+      "y": 0,
+      "w": 1440,
+      "h": 900,
+      "page": "page-8"
     }
   ],
   "annotations": [
@@ -331,10 +419,26 @@
       "w": 1440,
       "page": "page-6",
       "text": "No push notification design here on purpose. The approved decision is in-app and email, no push. Installing makes web push cheap to add, which is worth reopening at epic 002 with reminders, as a decision rather than a side effect."
+    },
+    {
+      "id": "n-dark",
+      "x": 0,
+      "y": -190,
+      "w": 1020,
+      "page": "page-7",
+      "text": "DARK THEME\nNot the light palette inverted. Warm near-black rather than blue-grey, because the light theme is warm paper and both have to read as one product. Accents lighten so they stay legible; the token sheet gives every pair.\n\nThe theme follows the operating system, with an override in settings. That override is a setting the PRD does not currently have."
+    },
+    {
+      "id": "n-names",
+      "x": 0,
+      "y": -220,
+      "w": 1200,
+      "page": "page-8",
+      "text": "NAME AND LOGO\nFour candidates, each with the mark, the app icon, and the identity applied in the product. Every one carries an honest case and an honest cost, because a set where only the favourite gets defended is a rigged vote.\n\nMy pick is Magpie. It is the only one here that is both easy to own and a description of what the product does.\n\nRead the Jarvis card before deciding: Jasper.ai shipped as Jarvis.ai and renamed in 2022 after a Marvel trademark dispute. That is not legal advice, it is a reason to spend twenty minutes with someone who gives it."
     }
   ],
   "launch": {
     "view": "canvas",
-    "page": "page-5"
+    "page": "page-8"
   }
 }

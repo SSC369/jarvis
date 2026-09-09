@@ -74,6 +74,25 @@ page of the canvas.
 | Update waiting | A new version is ready to load | proposed FR-41 | `PWAUpdate` |
 | Installed identity | Icons, maskable safe zone, splash, manifest values | proposed FR-39 | `PWAIdentity` |
 
+### Dark theme
+
+| Screen | Purpose | Serves | Artboard |
+|---|---|---|---|
+| Capture, dark | The command surface and a created record | proposed FR-42 | `DarkCapture` |
+| Records, dark | The table on a dark ground | proposed FR-42 | `DarkRecords` |
+| Record detail, dark | Fields and origin on a dark ground | proposed FR-42 | `DarkRecordDetail` |
+| Mobile, dark | Command centre and records on a phone | proposed FR-42 | `DarkMobileMain`, `DarkMobileRecords` |
+| Token pairs | Every token, light beside dark, with its role | proposed FR-42 | `DarkTokens` |
+
+### Name and logo candidates
+
+| Candidate | Mark | Artboard |
+|---|---|---|
+| Jarvis | Serif J monogram | `NameJarvis` |
+| Almanac | Stacked rules with a marker dot | `NameAlmanac` |
+| Magpie | Bird with an amber tail | `NameMagpie` |
+| Slash | The command character itself | `NameSlash` |
+
 ## 3. Flows
 
 | Flow | Entry | Steps | Exit | Serves |
@@ -183,9 +202,48 @@ Proposed requirements, for the user to approve or strike:
 | FR-39 | Jarvis can be installed to a home screen and runs without browser chrome, with an icon, a name and a splash. The invitation appears at most once per session and can be dismissed permanently. |
 | FR-40 | With no connection, records already on the device stay readable and are stamped with when they were saved. Capture is refused before the user commits, and nothing is queued. |
 | FR-41 | When a new version is available, the user is told and chooses when to load it. Anything typed survives the reload. |
+| FR-42 | The interface follows the operating system's light or dark setting, and the user can override it. The override persists across sessions and devices. |
 
 Approving these re-opens nothing downstream: no design, build plan or
 implementation plan exists yet for this epic beyond this document.
+
+## 5c. Dark theme
+
+Dark is not the light palette inverted. The light theme is warm paper, so the
+dark ground is warm near-black rather than blue-grey, and the two read as one
+product rather than two. Accents lighten so they stay legible on a dark ground,
+and a primary button becomes a light blue field with dark ink on it rather than
+white on a mid blue.
+
+`DarkTokens` carries every pair, token by token, with its role. Nothing in the
+dark theme is a new decision about layout, spacing or type. Only colour changes.
+
+**How the theme is chosen.** It follows the operating system by default, with an
+override in settings. The override is a setting the PRD does not currently have,
+and it is the third proposed requirement below.
+
+## 5d. Name and logo
+
+Four candidates, each drawn as a mark, an app icon at three sizes, and the
+identity applied inside the product. Each carries an honest case and an honest
+cost, because a set where only the favourite gets defended is not a choice.
+
+| Candidate | The case | The cost |
+|---|---|---|
+| Jarvis | Says AI assistant before anyone reads a word, and every document and the repository already use it | It is Marvel's J.A.R.V.I.S. See the risk below |
+| Almanac | A book of dates, records and things worth looking up, which is what this product is. Positions it as a record rather than a chatbot | Sounds archival rather than active, and the product also acts |
+| Magpie | The metaphor is the product loop: gathers what catches the eye, knows where every piece is. Short, warm, easiest to own | Playful, and magpies carry a thieving reputation, which some will notice in a product holding private information |
+| Slash | The product is the command character, so the logo and the interaction are one thing | A common word with a violent second meaning, nearly unsearchable, and it names the mechanism rather than the value |
+
+**Recommendation: Magpie.** It is the only candidate that is both easy to own and
+a description of what the product does.
+
+**The risk on the incumbent name.** Jasper.ai shipped as Jarvis.ai and renamed to
+Jasper in 2022 following a Marvel trademark dispute. That is a matter of public
+record rather than legal advice, and it is a reason to spend twenty minutes with
+someone who gives legal advice before the name goes on anything public. Nothing
+here blocks development: the repository and the documents can keep the name until
+a decision is made.
 
 ## 6. Design system deltas
 
@@ -204,6 +262,18 @@ establishes one.
 | Record table | added | component | Type, title, date, status, with a status pill |
 | Status pill | added | component | Pending, done, waiting, error |
 | Note block | added | component | Info, warning, error, used for guidance and refusals |
+
+**Added 2026-09-09 with dark theme and identity:**
+
+| Change | Kind | Token or component | Note |
+|---|---|---|---|
+| Dark value for every colour token | added | all colour tokens | Same names, second value. No token exists in one theme only |
+| Warm near-black ground | added | `paper`, `surface`, `rail` dark values | Warm rather than blue-grey, to match the light theme's paper |
+| Inverted primary button | changed | `.btn.pri` in dark | Light blue field, dark ink on it |
+| Bottom tab bar | added | component | Mobile only, replaces the rail |
+| Stacked record row | added | component | Mobile records, replaces the table row |
+| Offline and update banners | added | component | Installed app only |
+| Brand mark | added | component | Four candidates, one to be chosen |
 
 No one-off styles outstanding. Every colour and size in the canvas comes from
 the set above.
@@ -249,10 +319,14 @@ the set above.
 | Q9 | Do you approve proposed FR-39 to FR-41, so the installed app can be built? Without them the PWA artboards are design with no requirement behind them. | user | |
 | Q10 | Offline reads but never captures. Is that the right line, or should an offline capture be held and sent when the connection returns? Holding it means a record that appears minutes later with a date resolved against the wrong moment. | user | |
 | Q11 | Tablet is neither drawn nor decided. Leave it to fall between the two drawn ends? | user | |
+| Q12 | Which name? Magpie is recommended. Keeping Jarvis is a decision to make knowingly, given the trademark question. | user | |
+| Q13 | Does the theme override belong in epic 001, as proposed FR-42, or does following the system setting suffice for V1? Following only is cheaper and removes a setting. | user | |
+| Q14 | If the name changes, when? Renaming after the build starts costs more, and renaming now costs a pass over documents that are otherwise settled. | user | |
 
 ## Change log
 
 | Date | Change | Why | Approved by |
 |---|---|---|---|
 | 2026-09-09 | Created. 18 artboards across four pages. | PRD approved, design stage started | pending |
+| 2026-09-09 | Dark theme drawn, six artboards, with a token sheet pairing every light and dark value. Four name and logo candidates drawn, each with its case and its cost. Sections 5c and 5d added. FR-42 proposed. Q12 to Q14 opened. | User asked for a dark theme and for name and logo options | pending |
 | 2026-09-09 | Mobile drawn at 390 x 844, six artboards. Installed app added, four artboards. Responsive section rewritten from described to drawn. Section 5a and 5b added, with FR-39 to FR-41 proposed against the approved PRD. Q8 closed, Q9 to Q11 opened. | User asked for mobile and PWA alongside web | pending |
