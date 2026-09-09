@@ -33,16 +33,16 @@ idea.
 The stack is owned by [`process-docs/tech-stack.md`](../../process-docs/tech-stack.md).
 The rows that shape this folder:
 
-| Layer | Choice |
-|---|---|
-| Language | Python |
-| API framework | FastAPI |
-| GraphQL server | Strawberry |
-| Database | PostgreSQL, hosted by Supabase |
-| Data isolation | Row Level Security |
-| Auth | Supabase Auth |
-| Background jobs | Procrastinate, backed by PostgreSQL |
-| Vector search | pgvector |
+| Layer                  | Choice                                |
+| ---------------------- | ------------------------------------- |
+| Language               | Python                                |
+| API framework          | FastAPI                               |
+| GraphQL server         | Strawberry                            |
+| Database               | PostgreSQL, hosted by Supabase        |
+| Data isolation         | Row Level Security                    |
+| Auth                   | Supabase Auth                         |
+| Background jobs        | Procrastinate, backed by PostgreSQL   |
+| Vector search          | pgvector                              |
 | Notification transport | GraphQL subscriptions over WebSockets |
 
 Standing rules T1 to T8 of the tech stack are binding here and are not restated.
@@ -116,14 +116,14 @@ repositories/  services/   SQL, vendors, jobs, email
 models/   PostgreSQL   Gemini   Procrastinate
 ```
 
-| Layer | May | May not |
-|---|---|---|
-| Resolver | Read context, call one interactor, return a union member | Touch the ORM. Hold a business rule. Call a second interactor |
-| Interactor | Validate, decide, orchestrate, raise domain errors | Import SQLAlchemy. Construct its own collaborators. Call a vendor directly |
-| Repository | Execute SQL, convert model to DTO | Return a model, a `Session` or a `Select`. Hold a business rule |
-| Service | Talk to Gemini, Resend, the job queue | Import another domain's repository |
-| Adapter | Import one other domain's `public.py` and translate it | Return that domain's types upward. See §6 |
-| Model | Describe a table | Contain methods with business meaning |
+| Layer      | May                                                      | May not                                                                    |
+| ---------- | -------------------------------------------------------- | -------------------------------------------------------------------------- |
+| Resolver   | Read context, call one interactor, return a union member | Touch the ORM. Hold a business rule. Call a second interactor              |
+| Interactor | Validate, decide, orchestrate, raise domain errors       | Import SQLAlchemy. Construct its own collaborators. Call a vendor directly |
+| Repository | Execute SQL, convert model to DTO                        | Return a model, a `Session` or a `Select`. Hold a business rule            |
+| Service    | Talk to Gemini, Resend, the job queue                    | Import another domain's repository                                         |
+| Adapter    | Import one other domain's `public.py` and translate it   | Return that domain's types upward. See §6                                  |
+| Model      | Describe a table                                         | Contain methods with business meaning                                      |
 
 **The test for a violation.** If deleting `graphql/` would break an interactor,
 the dependency points the wrong way. If swapping PostgreSQL for a dictionary
@@ -179,11 +179,11 @@ codebase greppable.
 A domain never imports another domain's internals. Crossing happens through
 exactly three pieces, and no other route is permitted.
 
-| Piece | Lives in | Job |
-|---|---|---|
-| Published service | The **providing** domain, in `services/`, re-exported from its `public.py` | The only entry point other domains may call |
-| Port | The **consuming** domain, in `interfaces/ports.py` | A Protocol describing what this domain needs, in its own vocabulary |
-| Adapter | The **consuming** domain, in `adapters/` | Implements the port by calling the published service, and translates types across |
+| Piece             | Lives in                                                                   | Job                                                                               |
+| ----------------- | -------------------------------------------------------------------------- | --------------------------------------------------------------------------------- |
+| Published service | The **providing** domain, in `services/`, re-exported from its `public.py` | The only entry point other domains may call                                       |
+| Port              | The **consuming** domain, in `interfaces/ports.py`                         | A Protocol describing what this domain needs, in its own vocabulary               |
+| Adapter           | The **consuming** domain, in `adapters/`                                   | Implements the port by calling the published service, and translates types across |
 
 **The port belongs to the consumer.** This is the half that is easy to get wrong
 and the half that does the work. If the consuming domain imports the providing
@@ -262,13 +262,13 @@ not change when `gateway` changes shape.
 
 ### 6.2 What may cross
 
-| May cross | May not cross |
-|---|---|
-| A published service class, imported from `public.py` | A repository, concrete or Protocol |
-| A DTO listed in `public.py` | A model, a `Session`, a `Select` |
-| A constant or enum listed in `public.py` | An interactor |
-| | Anything under the provider's `graphql/`, including its error types |
-| | Anything not named in `public.py` |
+| May cross                                            | May not cross                                                       |
+| ---------------------------------------------------- | ------------------------------------------------------------------- |
+| A published service class, imported from `public.py` | A repository, concrete or Protocol                                  |
+| A DTO listed in `public.py`                          | A model, a `Session`, a `Select`                                    |
+| A constant or enum listed in `public.py`             | An interactor                                                       |
+|                                                      | Anything under the provider's `graphql/`, including its error types |
+|                                                      | Anything not named in `public.py`                                   |
 
 **A domain's `public.py` is its contract.** Adding a name to it is a deliberate
 act, reviewed like an API change, because from that moment other domains may
@@ -292,31 +292,6 @@ yourself needing one, the fix is one of three things, never an exception:
 Enforce it with a test. An import-linter contract, or a test that walks
 `app/domains/*/adapters/` and asserts the graph is acyclic, costs one afternoon
 and holds forever.
-
-### 6.4 Is this hexagonal architecture?
-
-The mechanism is, and ports and adapters is the right vocabulary for it. Two
-qualifications are worth stating, because they change what you do.
-
-**Hexagonal was described for a different boundary.** Cockburn's ports and
-adapters separates the application core from the outside world, with driving
-adapters that call in, such as a resolver, and driven adapters that the core
-calls out to, such as a repository. §4 is that boundary. Applying the same
-mechanism between domains inside one deployable is a legitimate extension of it,
-not the original scope.
-
-**The pattern at a domain boundary has more precise names**, from Domain-Driven
-Design's strategic patterns. The provider's `public.py` is an **Open Host
-Service**: a deliberate, published interface for other domains. The consumer's
-`adapters/` is an **Anticorruption Layer**: a translating layer that stops the
-provider's model leaking into the consumer's.
-
-The practical consequence of the second name is the rule in the paragraph after
-the table above. An anticorruption layer that passes the upstream type straight
-through is not an anticorruption layer. If `GatewayUsageAdapter` returned
-`AllowanceDTO`, `gateway`'s model would be in `records`' interactor signature
-and the boundary would be decorative. It returns `bool`, because that is what
-`records` asked for.
 
 ## 7. The API lifecycle
 
@@ -657,11 +632,11 @@ calls that are not user-facing, embedding generation, exports.
 
 ## 15. Testing
 
-| Kind | Location | Against | Covers |
-|---|---|---|---|
-| Unit | `tests/unit/<domain>/` | Interactors, with fakes from `tests/fakes/` | Every business rule and every raised error |
-| Integration | `tests/integration/` | Resolver through to a real database | The union mapping, permissions, RLS |
-| Boundary | `tests/integration/` | Resolver as user A requesting user B's row | Rule T7. One per feature touching user data |
+| Kind        | Location               | Against                                     | Covers                                      |
+| ----------- | ---------------------- | ------------------------------------------- | ------------------------------------------- |
+| Unit        | `tests/unit/<domain>/` | Interactors, with fakes from `tests/fakes/` | Every business rule and every raised error  |
+| Integration | `tests/integration/`   | Resolver through to a real database         | The union mapping, permissions, RLS         |
+| Boundary    | `tests/integration/`   | Resolver as user A requesting user B's row  | Rule T7. One per feature touching user data |
 
 Fakes are in-memory Protocol implementations, not `unittest.mock.patch` chains.
 This is only cheap because interactors take collaborators in `__init__`, which
@@ -694,32 +669,32 @@ error type the frontend's exhaustiveness check will meet first in production.
 Each of these is a real failure in `~/projects/radius`, named so it is not
 repeated by inheritance.
 
-| Anti-pattern | What it cost |
-|---|---|
-| Two parallel exception hierarchies | `points/exceptions/custom_exceptions.py` and `points_graphql/exceptions/graphql_exceptions.py` declare near-identical classes. Every new error is two classes, one `except` clause, one union entry, in three files |
-| Hand-written exception mapping per resolver | One `mutate()` carries ten `except` clauses. Adding an error means editing every resolver that can raise it |
-| Manual schema registration | 165 lines of imports and assignments. A missed registration fails at runtime |
-| Authentication as the only gate | Admin deletion sits in the user schema with no field-level check |
-| Two dependency injection strategies | A composition root for REST, inline construction for GraphQL. Neither is enforceable |
-| An untyped collaborator | `user_storage` with no annotation and no Protocol. The one dependency that is awkward to fake |
-| Cross-domain imports | `radius` scaffolded `radius_core/adapters/notification_service/` and left it empty. It has 233 direct cross-domain imports instead, reaching concrete repositories (`reports` imports `points.storages.map_point_storage`), models (`radius_core` imports `iam.models`) and even another domain's presentation layer (`radius_core` imports `iam.iam_graphql` twenty times). §6 is the sanctioned route |
-| Cyclic domain dependencies | `radius_core` imports `iam` 96 times and `iam` imports `radius_core` 6 times. `radius_core` and `notifications` do the same. Neither pair can be tested, deployed or reasoned about separately. §6.3 |
-| `class BaseException` | Shadows the builtin in `points/exceptions/` |
-| State in the repository root | `db.sqlite3`, `dump.rdb`, `celerybeat-schedule`, `.env` and `.env.alpha` all committed or present |
+| Anti-pattern                                | What it cost                                                                                                                                                                                                                                                                                                                                                                                            |
+| ------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| Two parallel exception hierarchies          | `points/exceptions/custom_exceptions.py` and `points_graphql/exceptions/graphql_exceptions.py` declare near-identical classes. Every new error is two classes, one `except` clause, one union entry, in three files                                                                                                                                                                                     |
+| Hand-written exception mapping per resolver | One `mutate()` carries ten `except` clauses. Adding an error means editing every resolver that can raise it                                                                                                                                                                                                                                                                                             |
+| Manual schema registration                  | 165 lines of imports and assignments. A missed registration fails at runtime                                                                                                                                                                                                                                                                                                                            |
+| Authentication as the only gate             | Admin deletion sits in the user schema with no field-level check                                                                                                                                                                                                                                                                                                                                        |
+| Two dependency injection strategies         | A composition root for REST, inline construction for GraphQL. Neither is enforceable                                                                                                                                                                                                                                                                                                                    |
+| An untyped collaborator                     | `user_storage` with no annotation and no Protocol. The one dependency that is awkward to fake                                                                                                                                                                                                                                                                                                           |
+| Cross-domain imports                        | `radius` scaffolded `radius_core/adapters/notification_service/` and left it empty. It has 233 direct cross-domain imports instead, reaching concrete repositories (`reports` imports `points.storages.map_point_storage`), models (`radius_core` imports `iam.models`) and even another domain's presentation layer (`radius_core` imports `iam.iam_graphql` twenty times). §6 is the sanctioned route |
+| Cyclic domain dependencies                  | `radius_core` imports `iam` 96 times and `iam` imports `radius_core` 6 times. `radius_core` and `notifications` do the same. Neither pair can be tested, deployed or reasoned about separately. §6.3                                                                                                                                                                                                    |
+| `class BaseException`                       | Shadows the builtin in `points/exceptions/`                                                                                                                                                                                                                                                                                                                                                             |
+| State in the repository root                | `db.sqlite3`, `dump.rdb`, `celerybeat-schedule`, `.env` and `.env.alpha` all committed or present                                                                                                                                                                                                                                                                                                       |
 
 ## 18. Open
 
 Inherited from `process-docs/tech-stack.md` §7 and not answered here.
 
-| # | Question | Blocks |
-|---|---|---|
-| T-Q2 | How identity reaches the database connection so RLS applies | The shape of `app/core/db.py` |
-| T-Q3 | Subscription backplane for more than one instance | `graphql/subscriptions.py` beyond one instance |
-| T-Q4 | Query depth and complexity limits, as numbers | A guard in `main.py` before public launch |
-| T-Q7 | One graph or a split schema as epics land | `graphql/schema.py` composition |
+| #    | Question                                                    | Blocks                                         |
+| ---- | ----------------------------------------------------------- | ---------------------------------------------- |
+| T-Q2 | How identity reaches the database connection so RLS applies | The shape of `app/core/db.py`                  |
+| T-Q3 | Subscription backplane for more than one instance           | `graphql/subscriptions.py` beyond one instance |
+| T-Q4 | Query depth and complexity limits, as numbers               | A guard in `main.py` before public launch      |
+| T-Q7 | One graph or a split schema as epics land                   | `graphql/schema.py` composition                |
 
 One question this document raises on its own:
 
-| # | Question | Owner |
-|---|---|---|
-| B-Q1 | `process-docs/tech-stack.md` still names `apps/api` as the backend root. It needs updating to `backend/`, or this folder needs renaming | user |
+| #    | Question                                                                                                                                | Owner |
+| ---- | --------------------------------------------------------------------------------------------------------------------------------------- | ----- |
+| B-Q1 | `process-docs/tech-stack.md` still names `apps/api` as the backend root. It needs updating to `backend/`, or this folder needs renaming | user  |
