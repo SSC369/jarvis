@@ -9,7 +9,7 @@ then follow the user's decision.
 ## 1. What this folder is
 
 `process-docs/` is the single source of truth for **why** and **what** we build
-in Jarvis. Code is the answer; these docs are the question, the shape, and the
+in Slash. Code is the answer; these docs are the question, the shape, and the
 agreed plan. Nothing gets built that does not have a trail here.
 
 Context is cumulative. A later doc never restates an earlier one — it links to
@@ -56,7 +56,7 @@ process-docs/
 ├── README.md                    ← human-readable overview of the process
 ├── index.md                     ← registry of every feature and its stage
 ├── product/
-│   ├── product-brief.md         ← what Jarvis is, who it serves, pillars
+│   ├── product-brief.md         ← what Slash is, who it serves, pillars
 │   ├── glossary.md              ← one definition per domain term
 │   ├── v1-epic-map.md           ← how a release breaks into epics
 │   ├── intake/                  ← product-level requirements as supplied

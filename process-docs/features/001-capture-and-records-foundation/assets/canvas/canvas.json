@@ -31,6 +31,10 @@
     {
       "id": "page-8",
       "name": "Name and logo"
+    },
+    {
+      "id": "page-9",
+      "name": "Theme toggle"
     }
   ],
   "artboards": [
@@ -152,7 +156,7 @@
       "y": 0,
       "w": 1440,
       "h": 900,
-      "page": "page-3"
+      "page": "page-9"
     },
     {
       "file": "EdgeStates.dc.html",
@@ -337,6 +341,46 @@
       "w": 1440,
       "h": 900,
       "page": "page-8"
+    },
+    {
+      "file": "DarkSettings.dc.html",
+      "x": 1560,
+      "y": 0,
+      "w": 1440,
+      "h": 900,
+      "page": "page-9"
+    },
+    {
+      "file": "MobileSettings.dc.html",
+      "x": 3120,
+      "y": 0,
+      "w": 390,
+      "h": 844,
+      "page": "page-9"
+    },
+    {
+      "file": "DarkMobileSettings.dc.html",
+      "x": 3630,
+      "y": 0,
+      "w": 390,
+      "h": 844,
+      "page": "page-9"
+    },
+    {
+      "file": "DarkCommandPalette.dc.html",
+      "x": 4680,
+      "y": 0,
+      "w": 1440,
+      "h": 900,
+      "page": "page-7"
+    },
+    {
+      "file": "DarkMobileCapture.dc.html",
+      "x": 2580,
+      "y": 1060,
+      "w": 390,
+      "h": 844,
+      "page": "page-7"
     }
   ],
   "annotations": [
@@ -426,7 +470,7 @@
       "y": -190,
       "w": 1020,
       "page": "page-7",
-      "text": "DARK THEME\nNot the light palette inverted. Warm near-black rather than blue-grey, because the light theme is warm paper and both have to read as one product. Accents lighten so they stay legible; the token sheet gives every pair.\n\nThe theme follows the operating system, with an override in settings. That override is a setting the PRD does not currently have."
+      "text": "DARK THEME\nNot the light palette inverted. Warm near-black rather than blue-grey, because the light theme is warm paper and both have to read as one product. Accents lighten so they stay legible; the token sheet gives every pair.\n\nThe toggle itself is on the Theme toggle page."
     },
     {
       "id": "n-names",
@@ -434,11 +478,19 @@
       "y": -220,
       "w": 1200,
       "page": "page-8",
-      "text": "NAME AND LOGO\nFour candidates, each with the mark, the app icon, and the identity applied in the product. Every one carries an honest case and an honest cost, because a set where only the favourite gets defended is a rigged vote.\n\nMy pick is Magpie. It is the only one here that is both easy to own and a description of what the product does.\n\nRead the Jarvis card before deciding: Jasper.ai shipped as Jarvis.ai and renamed in 2022 after a Marvel trademark dispute. That is not legal advice, it is a reason to spend twenty minutes with someone who gives it."
+      "text": "NAME AND LOGO\nSlash was chosen on 9 September. The four candidates stay here as the record of what was weighed, including the one I recommended, Magpie.\n\nSlash's cost is real and worth remembering: a common word with a violent second meaning, hard to search for, hard to own. It buys you a mark and an interaction that are the same thing."
+    },
+    {
+      "id": "n-theme",
+      "x": 0,
+      "y": -200,
+      "w": 1200,
+      "page": "page-9",
+      "text": "THEME TOGGLE\nThree choices, not two: System, Light, Dark. System is the default and follows the device through the day.\n\nThe two preview tiles are the point. A segmented control alone makes you switch the whole app to find out what you are choosing.\n\nThis needs proposed FR-42 approved. Without it the app follows the system and there is nothing to toggle."
     }
   ],
   "launch": {
     "view": "canvas",
-    "page": "page-8"
+    "page": "page-9"
   }
 }

@@ -26,13 +26,13 @@ Context: [Intake](./00-context.md) · [Product brief](../../product/product-brie
 
 ## 1. Problem
 
-Every capture in Jarvis runs through a model. `/add-task Finish docs tomorrow`
+Every capture in Slash runs through a model. `/add-task Finish docs tomorrow`
 is worthless unless something resolves "tomorrow", so the model sits on the
 product's hottest path rather than at its edges.
 
 That creates three problems at once, and they have one answer between them.
 
-The credential is the first. One provider key belongs to Jarvis, not to users,
+The credential is the first. One provider key belongs to Slash, not to users,
 and a key that reaches a browser is a key that is gone. It cannot appear in the
 client, in a response, in a log, or in an error message, and none of those
 happen by accident once rather than repeatedly.
@@ -83,7 +83,7 @@ No targets, consistent with the product brief. Instrument and read.
 ## 5. User stories
 
 - **US-1.** As the person capturing, my input is understood, so that a command becomes a record.
-- **US-2.** As the person capturing, I am told plainly when the model cannot serve me and why, so that I do not think Jarvis is broken or silently lost my input.
+- **US-2.** As the person capturing, I am told plainly when the model cannot serve me and why, so that I do not think Slash is broken or silently lost my input.
 - **US-3.** As the operator, I see usage per user, so that I know whether the free tier carries the product before it stops.
 - **US-4.** As the operator, I cap one user's usage, so that one person cannot take the product down for everyone.
 - **US-5.** As another epic, I ask for a structured extraction and get one, without knowing the provider or holding a credential.

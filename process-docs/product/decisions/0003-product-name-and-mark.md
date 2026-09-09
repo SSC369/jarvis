@@ -2,7 +2,7 @@
 doc: decision
 id: 0003
 title: Product name and mark
-status: proposed
+status: accepted
 created: 2026-09-09
 updated: 2026-09-09
 supersedes: null
@@ -22,11 +22,15 @@ a mark, an app icon and the identity applied inside the product.
 
 ## Decision
 
-**Proposed, not accepted.** Waiting on the user.
+**Slash.** Chosen by the user on 2026-09-09.
 
-Recommendation: **Magpie**. It is the only candidate that is both easy to own as
-a trademark and a description of what the product does. A magpie gathers what
-catches its eye and knows where every piece is, which is the product loop.
+The mark is the command character itself, a slash in a rounded square. The
+wordmark is IBM Plex Mono, the same face the product uses for commands, so the
+name and the thing it names are set in the same type.
+
+My recommendation was Magpie, on trademark ownability. The user chose Slash. The
+case for it is real and is the strongest of the four on one axis: no other
+candidate explains the entire product in one glyph.
 
 ## Alternatives
 
@@ -35,7 +39,7 @@ catches its eye and knows where every piece is, which is the product loop.
 | Jarvis | Says AI assistant instantly. Already everywhere in the repository | Marvel's J.A.R.V.I.S. See the risk below |
 | Almanac | A book of dates and records, which positions the product as a record rather than a chatbot | Sounds archival. The product also acts |
 | Magpie | Collects everything, remembers where it put it. Short, warm, ownable | Playful. Magpies are associated with thieving, in a product holding private data |
-| Slash | The product is the command character, so mark and interaction are one thing | Common word, violent second meaning, nearly unsearchable, names the mechanism rather than the value |
+| **Slash, chosen** | The product is the command character, so mark and interaction are one thing | Common word, violent second meaning, nearly unsearchable, names the mechanism rather than the value |
 
 ## The trademark question on Jarvis
 
@@ -53,15 +57,28 @@ lawyer's time behind it, rather than a decision made by never revisiting it.
 
 ## Consequences
 
-| Choosing | Costs |
+| Good | Bad |
 |---|---|
-| Jarvis | Nothing today. An unquantified trademark exposure later |
-| Anything else | A rename pass over the repository, the documents, the wordmark and the icon. Cheap now, expensive after launch |
+| The mark and the interaction are one thing. `/` is the logo, the first keystroke, and the whole product model | "Slash" is a common English word with a violent second meaning. Search and social handles will be hard |
+| The trademark question on the incumbent name goes away entirely | The name describes the mechanism, not the value. If capture ever stops being commands-only, the name ages badly |
+| Renamed while it cost almost nothing: no domain, no users, no listing | A rename pass across every document, done on 2026-09-09 |
+
+## What the rename touched
+
+| Changed | Left alone |
+|---|---|
+| Every document under `process-docs/` except the verbatim intake | `product/intake/`, which records the user's own words and must not be edited |
+| Every design artboard except the four naming candidates | The four candidates, kept as the record of what was weighed |
+| The wordmark, the app icon, the splash and the manifest | The GitHub repository, still named `jarvis` |
+
+The repository name is the one loose end. Renaming it breaks every existing
+clone and remote, so it is worth doing deliberately rather than as part of this
+pass.
 
 ## Reversibility
 
-Cheap today. Expensive after the first public user. That asymmetry is the whole
-reason this is a decision record rather than a design detail.
+Was cheap, and was spent. From here the cost rises with every user, listing and
+link. Treat the name as settled.
 
 ## Scope
 

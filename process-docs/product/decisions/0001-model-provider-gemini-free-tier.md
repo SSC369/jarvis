@@ -13,7 +13,7 @@ origin: user direction, 2026-09-08
 
 ## Context
 
-Every capture in Jarvis runs through a model: classifying plain language into a
+Every capture in Slash runs through a model: classifying plain language into a
 record type, and extracting the fields for that type. That makes the model a
 per-request dependency on the product's hottest path, not an occasional call.
 V1 needs a provider before the first build plan can be written.

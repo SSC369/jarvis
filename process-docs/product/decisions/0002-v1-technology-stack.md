@@ -55,7 +55,7 @@ this shape of product and nothing about V1 argues against any of it.
 Neither changes the decision. Both are worth a yes or no at the epic 001 build
 plan.
 
-**1. Do not hold server data in MobX.** Almost everything in Jarvis is server
+**1. Do not hold server data in MobX.** Almost everything in Slash is server
 state: records, lists, search results. MobX is a client state library, so using
 it for server data means writing caching, refetching, invalidation and stale
 handling by hand, and every one of those hand-written pieces is a place for the

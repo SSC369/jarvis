@@ -31,4 +31,4 @@ origin: features/NNN-feature-slug/03-build-plan.md
 <Cheap or costly, and what it would take to undo.>
 
 ## Scope
-<Which parts of Jarvis this binds.>
+<Which parts of Slash this binds.>

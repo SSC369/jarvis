@@ -19,7 +19,7 @@ five gates independently.
 ## Slicing rule
 
 Epics are vertical slices, not layers. Every epic except 000 ends with something
-the user can do end to end, because the core principle is that anything Jarvis records,
+the user can do end to end, because the core principle is that anything Slash records,
 the user can see. An epic that stores records without a way to inspect them
 would break that principle on the day it ships.
 
@@ -41,7 +41,7 @@ loop, which is why they get smaller as the list goes on.
 | 007 | Goals and Projects | P1 | Goals §23, Projects §24, goal-project-task relationships | 001, 004 |
 | 008 | Notes | P1 | Notes and Ideas §25 | 001 |
 | 009 | Daily Control | P1 | Today's view §29, Upcoming view §30, Home dashboard §32, Navigation §33 | 001, 002, 005, 006, 007 |
-| 010 | Proactive Jarvis | P2 | Proactive Jarvis §31, advanced contextual intelligence | 004, 009 |
+| 010 | Proactive Slash | P2 | Proactive Slash §31, advanced contextual intelligence | 004, 009 |
 
 ## Why 000 comes before 001
 

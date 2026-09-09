@@ -21,7 +21,7 @@ Nothing is restated here that lives there.
 
 The user's principle, in their words:
 
-> One Jarvis-managed AI credential, many authenticated users, with usage tracked
+> One Slash-managed AI credential, many authenticated users, with usage tracked
 > independently per user.
 
 And the rule the whole epic exists to hold:
@@ -33,7 +33,7 @@ And the rule the whole epic exists to hold:
 
 | Topic | Detail | Source |
 |---|---|---|
-| Credential ownership | Jarvis holds one provider key in the server environment. No per-user keys | §2, §4 |
+| Credential ownership | Slash holds one provider key in the server environment. No per-user keys | §2, §4 |
 | Request path | Authenticated request, identify user, check limits, then the gateway calls the provider | §3 |
 | Gateway duties | Call providers, hold credentials, select model, handle requests and errors, track tokens and estimated cost | §6 |
 | Usage record | user_id, provider, model, input tokens, output tokens, total, estimated cost, created_at | §7 |
@@ -43,7 +43,7 @@ And the rule the whole epic exists to hold:
 
 ## Constraints given
 
-- The frontend knows only Jarvis APIs. It never learns a provider credential.
+- The frontend knows only Slash APIs. It never learns a provider credential.
 - One shared credential serves every user, so isolation is enforced by
   attribution and limits rather than by separate keys.
 - The user will supply the actual key at implementation time. Nothing in this

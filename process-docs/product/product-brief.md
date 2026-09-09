@@ -1,13 +1,16 @@
 ---
 doc: product-brief
-title: Jarvis Product Brief
+title: Slash Product Brief
 status: in-review
 owner: user
 created: 2026-09-08
 updated: 2026-09-09
 ---
 
-# Personal Jarvis — Product Brief
+# Slash — Product Brief
+
+> Named Slash on 2026-09-09, see [decision 0003](./decisions/0003-product-name-and-mark.md).
+> Called Jarvis before that, and the GitHub repository still carries the old name.
 
 The standing context every feature inherits. Read this before drafting any PRD.
 
@@ -15,15 +18,15 @@ Source: [V1 product definition](./intake/2026-09-08-personal-jarvis-v1.md),
 supplied 2026-09-08. Where this brief states something the source does not, it
 is marked as an assumption.
 
-## 1. What Jarvis is
+## 1. What Slash is
 
-Personal Jarvis is a command-first AI personal operating system. The user
+Slash is a command-first AI personal operating system. The user
 records tasks, reminders, expenses, memories, events, goals, projects and notes
 by typing a command or speaking plainly, and every one of them becomes a
-structured record the user can browse, search, edit and delete. Jarvis uses that
+structured record the user can browse, search, edit and delete. Slash uses that
 accumulated context to answer questions about the user's own life.
 
-**Promise.** Tell Jarvis what matters. Jarvis remembers it, organizes it, and
+**Promise.** Tell Slash what matters. Slash remembers it, organizes it, and
 helps you act on it.
 
 **Positioning.** Not another AI chatbot. An AI-powered personal command center
@@ -47,14 +50,14 @@ reconsider it.
 | # | Pillar | What it means | What it rules out |
 |---|---|---|---|
 | P1 | Capture without deciding | The user says the thing in one line and it is recorded. | Mandatory category pickers, rigid CLI syntax, forms as the primary input |
-| P2 | Everything recorded is visible | Every item Jarvis creates appears as a structured record the user can inspect, search, edit and delete. | An opaque assistant whose memory can only be interrogated by asking it |
+| P2 | Everything recorded is visible | Every item Slash creates appears as a structured record the user can inspect, search, edit and delete. | An opaque assistant whose memory can only be interrogated by asking it |
 | P3 | Context accumulates and pays back | Information given once is used later, across conversations, and connected to related items without the user restating it. | Stateless chat, per-session memory, manual relationship management |
 | P4 | The user is in control | View, search, edit, delete and forget are always available. Destructive actions confirm. | Silent retention, unforgettable memory, irreversible bulk actions |
 
 > **P1 is partly deferred in V1.** The user decided on 2026-09-08 that V1
 > captures through commands only. Picking `/add-task` is still the user deciding
 > the type, so V1 delivers the smaller half of this pillar: one place instead of
-> six apps. The larger half, saying a thing and having Jarvis work out what it
+> six apps. The larger half, saying a thing and having Slash work out what it
 > is, waits. This is a deliberate cut, not an oversight, and it is the first
 > thing to revisit if capture volume disappoints.
 
@@ -64,21 +67,21 @@ Standing rules for every feature, so each PRD does not restate them.
 
 | # | Principle | Source |
 |---|---|---|
-| 1 | If Jarvis can record it, the user can see it. If the user can see it, they can control it. | Core V1 principle, §44 |
+| 1 | If Slash can record it, the user can see it. If the user can see it, they can control it. | Core V1 principle, §44 |
 | 2 | AI is the interface for creating and querying. Structured views are the interface for inspecting and managing. Neither is a separate source of truth. | §34 |
 | 3 | Minimize confirmation. Create immediately when the input is unambiguous, ask one question when it is not, always confirm destructive actions. | §35 |
 | 4 | Proactive behaviour is relevant, limited, actionable and non-intrusive. Quality over frequency. | §31 |
 | 5 | Every record carries its origin and creation time, so the user can see why it exists. | §19, §36 |
 | 6 | Model cost and latency are product decisions, budgeted per feature. | proposed |
 | 7 | User data never crosses a user boundary, in storage or in a prompt. | proposed |
-| 8 | One Jarvis-held provider credential serves many authenticated users. Users never hold a provider key, and every model call is attributed to one user. | AI API key architecture, 2026-09-09 |
+| 8 | One Slash-held provider credential serves many authenticated users. Users never hold a provider key, and every model call is attributed to one user. | AI API key architecture, 2026-09-09 |
 
 > Assumption: principles 6 and 7 are proposed defaults, not stated in the source.
 > Confirm or strike them.
 
 ## 5. Core user jobs
 
-Jarvis answers six questions.
+Slash answers six questions.
 
 | # | Question | Served by |
 |---|---|---|
@@ -108,7 +111,7 @@ serve a goal. Others emerge per feature.
 ```
 Capture (command or chat) → Understand → Record / Remember / Act
         → Structured data → Records (search, edit, review)
-        → Context accumulates → Jarvis helps → Capture
+        → Context accumulates → Slash helps → Capture
 ```
 
 ## 8. V1 scope
@@ -129,7 +132,7 @@ with plain-language capture or not at all.
 
 ## 9. Product non-goals
 
-V1 does not attempt to be a fully autonomous Jarvis. Feature PRDs inherit these.
+V1 does not attempt to be a fully autonomous Slash. Feature PRDs inherit these.
 
 - Email management
 - Banking integrations and automatic financial transactions
@@ -153,7 +156,7 @@ V1 exists to test three hypotheses.
 
 | # | Hypothesis | Signal |
 |---|---|---|
-| H1 | Users will record their life in Jarvis | Captures per active user per week |
+| H1 | Users will record their life in Slash | Captures per active user per week |
 | H2 | Users will inspect their structured data | Share of weekly actives who open a records view |
 | H3 | Persistent context creates recurring value | Retrieval actions per week, and week-four retention |
 
@@ -176,6 +179,8 @@ depends on the result.
 | Model provider | Google Gemini, free tier, through a single API key held in the server environment. See [decision 0001](./decisions/0001-model-provider-gemini-free-tier.md). | 2026-09-08 |
 | Stack | FastAPI, PostgreSQL, React with Vite, Turborepo, MobX, shadcn/ui, Celery, Resend. See [decision 0002](./decisions/0002-v1-technology-stack.md). | 2026-09-08 |
 | Design system | Produced in Claude Design at stage 2 of each feature | 2026-09-08 |
+| Name and mark | Slash. The mark is the command character, the wordmark is IBM Plex Mono | 2026-09-09 |
+| Theme | Light and dark, following the device by default, with a user override | 2026-09-09 |
 | Auth | Provider or built in-house not yet decided. One account per user makes it small either way. | |
 | Hosting | Not yet decided | |
 
@@ -229,7 +234,7 @@ the product is validated.
 | 2026-09-08 | Created as skeleton | Process bootstrap | — |
 | 2026-09-08 | Filled from the V1 product definition | User supplied the product | pending |
 | 2026-09-08 | Surface, notifications and model provider settled. Q1, Q2, Q4 closed. Q10 to Q12 opened. | User answered the blocking questions | user |
-| 2026-09-09 | Epic 000 added for the AI gateway. Principle 8 added: one Jarvis-held credential, many users, usage attributed per user. | User supplied the AI API key architecture | user |
+| 2026-09-09 | Epic 000 added for the AI gateway. Principle 8 added: one Slash-held credential, many users, usage attributed per user. | User supplied the AI API key architecture | user |
 | 2026-09-09 | Auth by provider, backend on AWS EC2, WebSockets for in-app notifications, Redis with Celery. Q13 to Q15 closed, Q16 and Q17 opened. | User settled the remaining platform questions | user |
 | 2026-09-08 | Stack settled as decision 0002. Quota exhaustion refuses honestly. Not charging in V1. No deadline. Q11 and Q12 closed, Q13 to Q15 opened for the build plans. | User settled architecture and business questions | user |
 | 2026-09-08 | Numeric targets deferred. Hypotheses instrumented without pass or fail numbers. Q7 closed. | User decision | user |
