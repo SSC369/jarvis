@@ -54,6 +54,26 @@ page of the canvas.
 | Shared states | Loading, error, session ended, empty result | all surfaces | `EdgeStates` |
 | Direction B, C | Alternatives not taken, low-fi | — | `DirectionB`, `DirectionC` |
 
+### Mobile, 390 x 844
+
+| Screen | Purpose | Serves | Artboard |
+|---|---|---|---|
+| Command Center | Capture on a phone, rail replaced by a bottom bar | FR-1, FR-2 | `MobileMain` |
+| Command discovery | The command list as a tap-first sheet | FR-2, FR-3 | `MobileCommands` |
+| Capture confirmed | Field card stacked instead of three-up | FR-6, FR-7 | `MobileCaptureSuccess` |
+| Question waiting | The same non-blocking question, with the waiting chip | FR-8, FR-36 to FR-38 | `MobilePending` |
+| Records | Table becomes stacked rows | FR-13 to FR-17 | `MobileRecords` |
+| Record detail | Fields stacked, actions full width | FR-18, FR-19, FR-20 | `MobileRecordDetail` |
+
+### Installed app
+
+| Screen | Purpose | Serves | Artboard |
+|---|---|---|---|
+| Install invitation | Ask to add to the home screen, once | proposed FR-39 | `PWAInstall` |
+| Offline | Records readable, capture honestly refused | proposed FR-40 | `PWAOffline` |
+| Update waiting | A new version is ready to load | proposed FR-41 | `PWAUpdate` |
+| Installed identity | Icons, maskable safe zone, splash, manifest values | proposed FR-39 | `PWAIdentity` |
+
 ## 3. Flows
 
 | Flow | Entry | Steps | Exit | Serves |
@@ -112,15 +132,60 @@ left blank.
 
 ## 5. Responsive behaviour
 
-| Breakpoint | Layout change |
-|---|---|
-| Desktop, 1280 and up | Rail plus content, as drawn |
-| Tablet, 768 to 1279 | Rail collapses to icons. Records table drops the type column when the filter is a single type |
-| Mobile, under 768 | Rail becomes a bottom bar. Records table becomes stacked rows, title first, date and status beneath. The command palette fills the screen above the input |
+Drawn at two widths. Tablet is described, because it is the width least likely
+to matter first and the two drawn ends bound it.
 
-> Drawn at desktop only. Mobile is described, not designed, because the PRD ships
-> web and does not commit to a phone layout. If phone use matters at launch, that
-> is a design round of its own.
+| Breakpoint | Layout |
+|---|---|
+| Desktop, 1280 and up | Rail plus content, as drawn on the Capture and Records pages |
+| Tablet, 768 to 1279 | Rail collapses to icons. The records table drops the type column when a single type is filtered. Not drawn |
+| Mobile, under 768 | Drawn at 390 x 844. Rail becomes a bottom bar of three tabs. The records table becomes stacked rows, title first, type and date beneath, status on the right. The three-up field card stacks to labelled rows. The command list sits directly above the input and is tap-first, so the highlighted row is a default rather than a cursor |
+
+**What is deliberately not drawn on the phone.** No status bar and no keyboard.
+Both are painted by the device on top of the layout, and a drawn copy reads as
+a doubled-up mistake. On `MobileCommands` the empty band below the input is
+exactly the space the real keyboard occupies.
+
+Touch targets are 44 px or taller everywhere, and the bottom bar keeps clear of
+the home indicator.
+
+## 5a. Installed app, PWA
+
+Jarvis installs to a home screen and runs without browser chrome. That adds
+three surfaces a plain web page never has, plus an identity.
+
+| Surface | Behaviour |
+|---|---|
+| Install invitation | Offered once per session, never twice, and dismissible. The browser then asks its own confirmation, which is not ours to draw |
+| Offline | Records saved on the device stay readable, stamped with when they were saved. Capture is refused in the input itself, not after the user commits |
+| Update waiting | A banner, never a forced reload. Anything typed survives it |
+| Identity | Icon as the wordmark, since Jarvis has no logo. 192, 512 and a maskable 512 with a safe zone Android can crop to. Standalone display, warm paper background, dark ink theme colour |
+
+**Offline reads, it does not capture.** Capture needs a model call, so a queued
+offline capture would be a promise Jarvis cannot keep, and would contradict the
+PRD's line that offline capture is out of scope. The input says so plainly
+rather than accepting work it cannot finish.
+
+**No push notification design, on purpose.** The approved decision is in-app and
+email. Installing makes web push cheap to add, which is worth reopening at epic
+002 with reminders, as a decision rather than a side effect.
+
+## 5b. These surfaces exceed the approved PRD
+
+The PRD is approved and locked. Mobile layout is inside it, because the PRD ships
+web and a phone browser is web. **The installed-app surfaces are not**, so they
+need a PRD change before they can be built.
+
+Proposed requirements, for the user to approve or strike:
+
+| Proposed | Requirement |
+|---|---|
+| FR-39 | Jarvis can be installed to a home screen and runs without browser chrome, with an icon, a name and a splash. The invitation appears at most once per session and can be dismissed permanently. |
+| FR-40 | With no connection, records already on the device stay readable and are stamped with when they were saved. Capture is refused before the user commits, and nothing is queued. |
+| FR-41 | When a new version is available, the user is told and chooses when to load it. Anything typed survives the reload. |
+
+Approving these re-opens nothing downstream: no design, build plan or
+implementation plan exists yet for this epic beyond this document.
 
 ## 6. Design system deltas
 
@@ -180,10 +245,14 @@ the set above.
 | Q5 | The transcript keeps history. How far back, and does it survive a reload? The PRD does not say, and it changes the empty state. | user | |
 | Q6 | Should a pending question be answerable from anywhere, or only from the Command Center where it was asked? Only there is drawn. | user | |
 | Q7 | Static mockups are drawn, not a clickable prototype. Is a clickable pass wanted before the build plan? | user | |
-| Q8 | Mobile is described, not drawn. Does phone use matter at launch? | user | |
+| ~~Q8~~ | Mobile is described, not drawn. Does phone use matter at launch? | user | **Drawn 2026-09-09** at 390 x 844, at the user's request. |
+| Q9 | Do you approve proposed FR-39 to FR-41, so the installed app can be built? Without them the PWA artboards are design with no requirement behind them. | user | |
+| Q10 | Offline reads but never captures. Is that the right line, or should an offline capture be held and sent when the connection returns? Holding it means a record that appears minutes later with a date resolved against the wrong moment. | user | |
+| Q11 | Tablet is neither drawn nor decided. Leave it to fall between the two drawn ends? | user | |
 
 ## Change log
 
 | Date | Change | Why | Approved by |
 |---|---|---|---|
 | 2026-09-09 | Created. 18 artboards across four pages. | PRD approved, design stage started | pending |
+| 2026-09-09 | Mobile drawn at 390 x 844, six artboards. Installed app added, four artboards. Responsive section rewritten from described to drawn. Section 5a and 5b added, with FR-39 to FR-41 proposed against the approved PRD. Q8 closed, Q9 to Q11 opened. | User asked for mobile and PWA alongside web | pending |

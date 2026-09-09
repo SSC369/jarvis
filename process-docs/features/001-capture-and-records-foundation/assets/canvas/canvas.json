@@ -15,6 +15,14 @@
     {
       "id": "page-4",
       "name": "Directions"
+    },
+    {
+      "id": "page-5",
+      "name": "Mobile"
+    },
+    {
+      "id": "page-6",
+      "name": "Installed app"
     }
   ],
   "artboards": [
@@ -161,6 +169,86 @@
       "w": 1440,
       "h": 900,
       "page": "page-4"
+    },
+    {
+      "file": "MobileMain.dc.html",
+      "x": 0,
+      "y": 0,
+      "w": 390,
+      "h": 844,
+      "page": "page-5"
+    },
+    {
+      "file": "MobileCommands.dc.html",
+      "x": 510,
+      "y": 0,
+      "w": 390,
+      "h": 844,
+      "page": "page-5"
+    },
+    {
+      "file": "MobileCaptureSuccess.dc.html",
+      "x": 1020,
+      "y": 0,
+      "w": 390,
+      "h": 844,
+      "page": "page-5"
+    },
+    {
+      "file": "MobilePending.dc.html",
+      "x": 1530,
+      "y": 0,
+      "w": 390,
+      "h": 844,
+      "page": "page-5"
+    },
+    {
+      "file": "MobileRecords.dc.html",
+      "x": 2040,
+      "y": 0,
+      "w": 390,
+      "h": 844,
+      "page": "page-5"
+    },
+    {
+      "file": "MobileRecordDetail.dc.html",
+      "x": 2550,
+      "y": 0,
+      "w": 390,
+      "h": 844,
+      "page": "page-5"
+    },
+    {
+      "file": "PWAInstall.dc.html",
+      "x": 0,
+      "y": 0,
+      "w": 390,
+      "h": 844,
+      "page": "page-6"
+    },
+    {
+      "file": "PWAOffline.dc.html",
+      "x": 510,
+      "y": 0,
+      "w": 390,
+      "h": 844,
+      "page": "page-6"
+    },
+    {
+      "file": "PWAUpdate.dc.html",
+      "x": 1020,
+      "y": 0,
+      "w": 390,
+      "h": 844,
+      "page": "page-6"
+    },
+    {
+      "file": "PWAIdentity.dc.html",
+      "x": 1530,
+      "y": 0,
+      "w": 1440,
+      "h": 900,
+      "page": "page-6"
     }
   ],
   "annotations": [
@@ -211,10 +299,42 @@
       "w": 900,
       "page": "page-4",
       "text": "Two directions not taken, kept low-fi so they read as alternatives rather than half-finished screens. The built direction is warm paper, IBM Plex, one blue for action and one amber for commands. Say the word if either of these is closer."
+    },
+    {
+      "id": "n-mobile",
+      "x": 0,
+      "y": -190,
+      "w": 1020,
+      "page": "page-5",
+      "text": "MOBILE\nSame product, same commands, 390x844. The rail becomes a bottom bar, the records table becomes stacked rows, and the three-up field card stacks.\n\nNo fake status bar and no fake keyboard are drawn. On MobileCommands the empty band under the input is exactly where the real keyboard renders."
+    },
+    {
+      "id": "n-mobiletouch",
+      "x": 1530,
+      "y": -190,
+      "w": 1020,
+      "page": "page-5",
+      "text": "Every control is at least 44px tall. The command list is tap-first here rather than arrow-key first, so the highlighted row is a default rather than a cursor."
+    },
+    {
+      "id": "n-pwa",
+      "x": 0,
+      "y": -220,
+      "w": 1020,
+      "page": "page-6",
+      "text": "INSTALLED APP\nThree surfaces a plain web app does not have: the invitation to install, being offline, and a new version waiting.\n\nOffline reads but does not capture. Capture needs a model call, so the input says so plainly instead of queueing work it cannot finish. That keeps the PRD's out-of-scope line on offline capture intact."
+    },
+    {
+      "id": "n-pwapush",
+      "x": 1530,
+      "y": -220,
+      "w": 1440,
+      "page": "page-6",
+      "text": "No push notification design here on purpose. The approved decision is in-app and email, no push. Installing makes web push cheap to add, which is worth reopening at epic 002 with reminders, as a decision rather than a side effect."
     }
   ],
   "launch": {
     "view": "canvas",
-    "page": "page-1"
+    "page": "page-5"
   }
 }

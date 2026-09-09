@@ -248,6 +248,7 @@ capture, undo beyond edit and delete, attachments on records, and any sharing.
 | Date | Change | Why | Approved by |
 |---|---|---|---|
 | 2026-09-08 | Created from the V1 product definition | First epic of V1 | pending |
+| 2026-09-09 | **Change proposed, not applied.** The design adds installed-app surfaces, which this PRD does not cover. FR-39 install, FR-40 offline read, FR-41 update waiting are drafted in [02-design.md](./02-design.md) section 5b and need approval before they are requirements. Mobile layout needs no change: this PRD ships web, and a phone browser is web. Nothing here is stale meanwhile. | User asked for mobile and PWA designs | pending |
 | 2026-09-09 | Epic 000 added as a dependency after approval. No requirement changed: FR-4 and FR-5 already needed a model call, and FR-35 already described the refusal. The gateway is now where those happen. Nothing downstream is stale. | User supplied the AI API key architecture | user |
 | 2026-09-09 | **PRD approved.** Pending questions confirmed non-blocking: FR-8 rewritten, FR-36 to FR-38 added, US-10 added. Q9 closed. | User approved the PRD and settled the pending-question behaviour | user |
 | 2026-09-08 | Reminders split out into epic 002. FR-27 to FR-34 and NFR-6 removed from this epic, US-8 moved. Settings added as FR-27 and FR-28 for timezone. FR-35 rewritten to refuse honestly on quota exhaustion. Q8, Q11, Q12, Q13 closed. | User split the epic and settled the stack | user |
