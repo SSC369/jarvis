@@ -1,5 +1,5 @@
 ---
-doc: context
+doc: epic
 feature: 000-ai-gateway
 title: AI Gateway and Usage
 stage: 0
@@ -11,10 +11,17 @@ approved_on: 2026-09-09
 supersedes: null
 ---
 
-# Intake — AI Gateway and Usage
+# Epic — AI Gateway and Usage
+
+> Written on 2026-09-09 as `00-context.md`, under the old intake contract: record
+> the requirement, interpret it in the PRD. The stage 0 contract changed on
+> 2026-09-09 to require pros, cons, best practices and alternatives. This
+> document was renamed, not retrofitted, because the feature is already past this
+> gate and through an approved PRD. New features use
+> [the epic template](../templates/00-epic.template.md).
 
 Full source as supplied:
-[AI API Key Architecture](../../product/intake/2026-09-09-ai-api-key-architecture.md).
+[AI API Key Architecture](../product/intake/2026-09-09-ai-api-key-architecture.md).
 Nothing is restated here that lives there.
 
 ## Requirement as stated

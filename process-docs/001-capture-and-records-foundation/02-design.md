@@ -256,10 +256,10 @@ cost, because a set where only the favourite gets defended is not a choice.
 
 > **Settled: the product is Slashit**, chosen 2026-09-09 after Slash was found to
 > collide. Three rounds and fourteen candidates ran; they stay on the canvas as
-> the record. See [decision 0003](../../product/decisions/0003-product-name-and-mark.md).
+> the record. See [the product doc](../product/product.md#11-name-and-mark).
 
 **Chosen: Slashit**, on 2026-09-09, recorded as
-[decision 0003](../../product/decisions/0003-product-name-and-mark.md). My
+[the product doc](../product/product.md#11-name-and-mark). My
 recommendation had been Magpie, on ownability. Slashit wins on a different axis and
 it is a real one: no other candidate explains the whole product in one glyph.
 

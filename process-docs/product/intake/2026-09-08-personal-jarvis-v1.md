@@ -17,10 +17,10 @@ Supplied by the user on 2026-09-08 as "Personal Jarvis — V1 Product Requiremen
 Document". Transcribed below as given.
 
 > **The product was renamed to Slashit on 2026-09-09**, per
-> [decision 0003](../decisions/0003-product-name-and-mark.md). This document is
+> [the product doc](../product.md#11-name-and-mark). This document is
 > left exactly as it was supplied, because intake records the user's own words.
 > Every other document uses the new name. This is the source document for
-[the product brief](../product-brief.md) and [the V1 epic map](../v1-epic-map.md).
+[the product doc](../product.md) and [V1 features](../v1-features.md).
 
 Nothing in this file is edited for style. Interpretation happens in the PRDs.
 

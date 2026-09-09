@@ -15,7 +15,7 @@ supersedes: null
 
 > **Approved** by @user on 2026-09-09. Locked — changes require a change record (§7 of the rules).
 
-Context: [Intake](./00-context.md) · [Product brief](../../product/product-brief.md) · [V1 epic map](../../product/v1-epic-map.md)
+Context: [Epic](./00-epic.md) · [Product](../product/product.md) · [V1 features](../product/v1-features.md)
 
 ## 1. Problem
 
@@ -193,14 +193,14 @@ made unavoidable, not a disappointing result.
 |---|---|---|---|
 | Web as the V1 surface | product | user | Settled 2026-09-08 |
 | In-app and email notifications | product | user | Settled 2026-09-08 |
-| Gemini Flash, paid tier, shared key in server env | vendor | user | Settled 2026-09-09, see [decision 0006](../../product/decisions/0006-model-provider-gemini-paid-tier.md) |
+| Gemini Flash, paid tier, shared key in server env | vendor | user | Settled 2026-09-09, see [the tech stack](../tech-stack.md) |
 | [Epic 000, the AI Gateway](../000-ai-gateway/) | internal | user | Added 2026-09-09. This epic makes no model call of its own. FR-4, FR-5 and FR-35 are served through the gateway |
 | Gemini paid-tier rate limits, read from the provider's current documentation | vendor | Claude | Not started, needed before the build plan sets NFR-11 |
 | Gemini paid-tier data handling terms | vendor | user | Not read. Blocks launch, not the build. See Q10 |
 | Email delivery and a background job runner | vendor | user | Settled 2026-09-09. Used by epic 002, not by this epic |
 | One account per user | platform | user | Settled 2026-09-08 |
-| Platform stack | platform | user | Settled 2026-09-09, see [decision 0004](../../product/decisions/0004-v1-technology-stack-revised.md) |
-| An identity provider, so records have an owner | platform | user | Settled 2026-09-09, see [decision 0005](../../product/decisions/0005-auth-supabase-and-data-isolation.md) |
+| Platform stack | platform | user | Settled 2026-09-09, see [the tech stack](../tech-stack.md) |
+| An identity provider, so records have an owner | platform | user | Settled 2026-09-09, see [the tech stack](../tech-stack.md) |
 | Labelled evaluation set for extraction and classification | internal | Claude, with user-supplied phrasings | Not started, needed before build plan approval |
 | Numeric targets for the hypotheses | product | user | Deferred by decision, 2026-09-08. Not a blocker |
 

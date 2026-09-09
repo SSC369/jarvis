@@ -12,7 +12,7 @@
 
 | Stage | Doc | Status | Approved |
 |---|---|---|---|
-| 0 Intake | [00-context.md](./00-context.md) | approved | 2026-09-09 |
+|  0 Epic | [00-epic.md](./00-epic.md) | approved | 2026-09-09 |
 | 1 PRD | [01-prd.md](./01-prd.md) | approved | 2026-09-09 |
 | 2 Design | — | not applicable, no user-facing surface | — |
 | 3 Build plan | 03-build-plan.md | not started | |

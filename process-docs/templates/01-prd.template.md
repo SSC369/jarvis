@@ -13,7 +13,7 @@ supersedes: null
 
 # Epic PRD — <Feature Name>
 
-Context: [Intake](./00-context.md) · [Product brief](../../product/product-brief.md)
+Context: [Epic](./00-epic.md) · [Product](../product/product.md)
 
 ## 1. Problem
 <Two to four sentences. Who hurts, how often, what it costs them today.>

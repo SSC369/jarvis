@@ -2,7 +2,7 @@
 
 | Field | Value |
 |---|---|
-| Stage | 0 Intake |
+| Stage |  0 Epic |
 | Status | draft |
 | Started | YYYY-MM-DD |
 | Owner | user |
@@ -10,7 +10,7 @@
 ## Documents
 | Stage | Doc | Status | Approved |
 |---|---|---|---|
-| 0 Intake | [00-context.md](./00-context.md) | draft | |
+|  0 Epic | [00-epic.md](./00-epic.md) | draft | |
 | 1 PRD | [01-prd.md](./01-prd.md) | not started | |
 | 2 Design | [02-design.md](./02-design.md) | not started | |
 | 3 Build plan | [03-build-plan.md](./03-build-plan.md) | not started | |

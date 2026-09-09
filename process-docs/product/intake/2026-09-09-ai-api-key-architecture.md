@@ -16,10 +16,10 @@ supersedes: null
 Supplied by the user on 2026-09-09. Transcribed as given.
 
 > **The product was renamed to Slashit on 2026-09-09**, per
-> [decision 0003](../decisions/0003-product-name-and-mark.md). This document is
+> [the product doc](../product.md#11-name-and-mark). This document is
 > left exactly as it was supplied, because intake records the user's own words.
 > Every other document uses the new name. Source document for
-[epic 000, the AI Gateway](../../features/000-ai-gateway/).
+[epic 000, the AI Gateway](../../000-ai-gateway/).
 
 ---
 
@@ -206,7 +206,7 @@ Recorded so the differences are visible rather than resolved silently.
 
 | Point in the source | What is already settled | Reading |
 |---|---|---|
-| `OPENAI_API_KEY`, "OpenAI/Anthropic" | [Decision 0001](../decisions/0001-model-provider-gemini-free-tier.md) sets Google Gemini free tier | The examples are illustrative. The gateway is provider-agnostic by design and V1 configures Gemini |
+| `OPENAI_API_KEY`, "OpenAI/Anthropic" | [The tech stack](../../tech-stack.md) sets Google Gemini Flash, paid tier | The examples are illustrative. The gateway is provider-agnostic by design and V1 configures Gemini |
 | "Chat request", "user sends a message" | V1 capture is commands-only | The gateway serves field extraction inside a command, not open chat. The shape of the flow is unchanged |
 | `estimated_cost` tracking | The free tier is not billed | Cost is an estimate against zero spend. The number that matters in V1 is requests against the shared quota |
 | `plan` on `users`, free and pro limits | Not charging in V1 | The column exists with one value. Tiering is post-V1 |

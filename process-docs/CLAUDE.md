@@ -16,9 +16,22 @@ Context is cumulative. A later doc never restates an earlier one — it links to
 it. If a fact changes, it is changed **in the doc that owns it**, and the change
 is logged.
 
+Three documents hold standing context that every feature inherits:
+
+| Document | Owns |
+|---|---|
+| [`product/product.md`](./product/product.md) | Product truth. What Slashit is, who it serves, pillars, principles, non-goals, success criteria, name, business model |
+| [`product/v1-features.md`](./product/v1-features.md) | What V1 ships, how it breaks into epics, what is deferred, and what later versions might hold |
+| [`tech-stack.md`](./tech-stack.md) | Technical truth. The stack, the reasoning behind each choice, standing technical rules, cost envelope |
+
+**Product documents never name a technology.** No framework, no vendor, no
+hosting choice, no stack table. Those live in `tech-stack.md` and nowhere else.
+A product document that names FastAPI has to be edited every time infrastructure
+changes; one that does not survives a stack change untouched.
+
 ---
 
-## 2. The five stages
+## 2. The six stages
 
 Every feature moves through the same gates, in order. Each stage produces one
 document. A stage cannot start until the previous one is **Approved** by the
@@ -26,8 +39,8 @@ user.
 
 | # | Stage | Document | Owner of the decision | Locks |
 |---|-------|----------|----------------------|-------|
-| 0 | Intake | `00-context.md` | User supplies, Claude records | Nothing |
-| 1 | Epic PRD | `01-prd.md` | User approves | Scope, users, requirements, success criteria |
+| 0 | Epic | `00-epic.md` | User approves | Nothing. It is where the argument happens |
+| 1 | PRD | `01-prd.md` | User approves | Scope, users, requirements, success criteria |
 | 2 | Design | `02-design.md` | User approves after Claude Design work | Screens, flows, states, design-system tokens |
 | 3 | Build Plan (HLD) | `03-build-plan.md` | User approves | High-level architecture, boundaries, data model, tech choices |
 | 4 | Implementation Plan (LLD) | `04-implementation-plan.md`, split into `04.N-*.md` when large | User approves | File-level plan, contracts, task breakdown, test plan |
@@ -55,29 +68,33 @@ process-docs/
 ├── CLAUDE.md                    ← these rules
 ├── README.md                    ← human-readable overview of the process
 ├── index.md                     ← registry of every feature and its stage
+├── tech-stack.md                ← the stack, and why each choice won
 ├── product/
-│   ├── product-brief.md         ← what Slashit is, who it serves, pillars
-│   ├── glossary.md              ← one definition per domain term
-│   ├── v1-epic-map.md           ← how a release breaks into epics
-│   ├── intake/                  ← product-level requirements as supplied
-│   │   └── YYYY-MM-DD-<slug>.md
-│   └── decisions/               ← product- and platform-wide decision records
-│       └── NNNN-<slug>.md
+│   ├── product.md               ← what Slashit is, who it serves, pillars
+│   ├── v1-features.md           ← V1 scope, the epic list, later versions
+│   └── intake/                  ← product-level requirements as supplied
+│       └── YYYY-MM-DD-<slug>.md
 ├── templates/                   ← copy these, never edit in place
-└── features/
-    └── NNN-<feature-slug>/
-        ├── 00-context.md
-        ├── 01-prd.md
-        ├── 02-design.md
-        ├── 03-build-plan.md
-        ├── 04-implementation-plan.md    ← index when split
-        ├── 04.1-<slice-slug>.md         ← sub-plans, only if split
-        ├── 05-dev-log.md
-        └── assets/              ← exports, screenshots, canvas links
+└── NNN-<feature-slug>/          ← one folder per feature, directly here
+    ├── 00-epic.md
+    ├── 01-prd.md
+    ├── 02-design.md
+    ├── 03-build-plan.md
+    ├── 04-implementation-plan.md    ← index when split
+    ├── 04.1-<slice-slug>.md         ← sub-plans, only if split
+    ├── 05-dev-log.md
+    └── assets/                  ← exports, screenshots, canvas links
 ```
 
-Feature folders are numbered in creation order, three digits, zero padded.
-Slugs are lowercase kebab-case and describe the feature, not the ticket.
+Feature folders sit directly under `process-docs/`. They are numbered in
+creation order, three digits, zero padded. Slugs are lowercase kebab-case and
+describe the feature, not the ticket. Copy stage documents from `templates/` and
+drop `.template` from the name.
+
+There is no decisions folder. A decision that binds more than one feature is
+written into the document that owns the fact: `tech-stack.md` for a technical
+choice, `product/product.md` for a product one. Both keep the alternatives and
+why they lost, so the reasoning survives without a separate record.
 
 ---
 
@@ -87,7 +104,7 @@ Every document starts with this block. No exceptions.
 
 ```yaml
 ---
-doc: prd | design | build-plan | implementation-plan | dev-log | context
+doc: epic | prd | design | build-plan | implementation-plan | dev-log
 feature: 003-workspace-memory
 title: Workspace Memory
 stage: 1
@@ -146,18 +163,31 @@ Good: `NFR-3. Assistant streams the first token within 800 ms at p95.`
 Use the matching file in `templates/`. Sections marked required must exist even
 when the answer is "none".
 
-### 00-context.md — Intake
-Raw capture of what the user asked for. When the user supplies a product-level
-document covering several epics, it is transcribed once into `product/intake/`
-and each feature's `00-context.md` cites the sections that define that epic
-rather than copying them.
+### 00-epic.md — Epic
 
-Their words, lightly organised. Product
-details, constraints, references, links, competitor notes. This is the only doc
-where unresolved mess is allowed. Never edit the user's stated requirement into
-something cleaner. Record it, then interpret it in the PRD.
+The stage where the feature gets argued out. Nothing is locked here, which is
+the point: this is the only stage where a bad idea is cheap.
 
-### 01-prd.md — Epic PRD
+Required: As supplied, Problem, What this feature is, Requirements in detail,
+Pros, Cons, Best practices and prior art, Alternatives considered, Risks and
+unknowns, Open questions, What this is not.
+
+Rules:
+- **Open with "As supplied", quoting the user verbatim.** Never edit the user's
+  stated requirement into something cleaner. Record it, then interpret it below.
+  Where the user supplied a product-level document covering several epics, it is
+  transcribed once into `product/intake/` and cited here rather than copied.
+- Requirements are discussed here, not numbered. Numbering happens in the PRD,
+  because a number implies a lock.
+- **Pros and cons are required and must both be non-empty.** A feature with no
+  cons has not been thought about.
+- Best practices means how comparable products solve this, and what they learned.
+  Name the product. An assertion about prior art without a name is an opinion.
+- Alternatives means other shapes this feature could take, including not building
+  it. Say what each would cost and what it would give up.
+- This is the one stage where unresolved mess is allowed.
+
+### 01-prd.md — PRD
 Required: Problem, Users and jobs, Goals, Non-goals, User stories, Functional
 requirements (FR-n), Non-functional requirements (NFR-n), Success metrics,
 Dependencies, Risks, Open questions, Out of scope.
@@ -165,8 +195,13 @@ Dependencies, Risks, Open questions, Out of scope.
 Rules:
 - No solutions. The PRD says what and why, never how.
 - No screen names, no component names, no table names, no framework names.
+- **Dependencies name capabilities, never vendors.** "An identity provider, so
+  records have an owner" is a dependency. "Supabase Auth" is a technology, and it
+  belongs in `tech-stack.md`. Cite the tech stack once if the reader needs it.
 - Every goal has a metric. Every metric has a number and a source.
 - The Non-goals section is mandatory and must not be empty.
+- Requirements here come from the approved epic. A requirement that appears in
+  the PRD without having been argued in the epic is a gate skipped.
 
 ### 02-design.md — Design
 Required: Design intent, Screen inventory, Flows, States per screen (empty,
@@ -194,14 +229,18 @@ Rules:
   `Questions for the user` section covering direction, trade-offs, and anything
   with more than one defensible answer. Ask before choosing, when the choice is
   expensive to reverse.
+- Read [`tech-stack.md`](./tech-stack.md) first. The stack is already chosen, and
+  its standing technical rules T1 to T8 bind this document. A build plan that
+  contradicts one of them says so explicitly and argues for it.
 - Every significant choice lists at least one alternative and why it lost.
 - For anything calling a model: name the model, the token budget, the fallback
   and the cost per call. Guessed numbers are labelled `estimate`.
 - Multi-tenancy, authorisation and data isolation are addressed explicitly on
   every feature that touches user data. "Same as the rest of the app" is not an
   answer; state the rule.
-- HLD is locked on approval. Every locked decision is copied into
-  `product/decisions/` if it affects more than this feature.
+- HLD is locked on approval. A locked decision that affects more than this
+  feature is copied into `tech-stack.md` or `product/product.md`, whichever owns
+  that kind of fact, in the same commit.
 
 ### 04-implementation-plan.md — LLD
 Required: Scope recap, File-by-file plan, Interfaces and contracts, Data
@@ -281,25 +320,30 @@ An approved doc is a contract. To change it:
    changed, why, who approved.
 2. If the change alters scope, architecture or a locked design, say plainly
    which downstream docs are now stale and list them.
-3. Re-run the gate. A PRD change re-opens design, build plan and implementation
-   plan for review, in that order. Do not carry on building against a stale
-   plan.
+3. Re-run the gate. An epic change re-opens the PRD, design, build plan and
+   implementation plan for review, in that order. A PRD change re-opens the
+   three below it. Do not carry on building against a stale plan.
 4. If a doc is replaced wholesale, set the old one to `superseded` and point
    `supersedes` on the new one at it. Never delete an approved doc.
+
+Standing documents change the same way. `tech-stack.md`, `product/product.md`
+and `product/v1-features.md` each carry a change log, and a change to any of
+them names the features it makes stale.
 
 ---
 
 ## 8. Working rules for Claude
 
-1. **Ask before you draft, once.** Read `00-context.md` and the product brief.
-   List the questions you actually need answered, at most a handful, grouped.
-   Then draft. Do not interview the user one question at a time.
+1. **Ask before you draft, once.** Read [`product/product.md`](./product/product.md)
+   and, before a build plan, [`tech-stack.md`](./tech-stack.md). List the
+   questions you actually need answered, at most a handful, grouped. Then draft.
+   Do not interview the user one question at a time.
 2. **Never advance a gate on your own.** Approval is a user action, in words.
    Silence is not approval. "Looks good" is approval; record it with the date.
 3. **State assumptions inline.** Any gap you filled yourself is marked
    `> Assumption:` in place, so the user can strike it during review.
 4. **Keep the registry current.** Every stage change updates
-   `process-docs/index.md` in the same commit.
+   [`index.md`](./index.md) in the same commit.
 5. **One doc per commit where practical.** Commit message:
    `docs(<feature-slug>): <stage> <verb>`, for example
    `docs(workspace-memory): prd approved`.
@@ -307,10 +351,14 @@ An approved doc is a contract. To change it:
 7. **Cite the source of every number.** Benchmark, vendor page, measurement, or
    `estimate`.
 8. **Product-wide learnings graduate.** Anything true beyond one feature moves
-   into `product/product-brief.md`, `product/glossary.md`, or a decision record.
-9. **Do not write code during stages 0 to 4.** Sketches inside the doc are
-   fine. Files in the repo are not.
-10. **Report honestly.** If a plan cannot be delivered as approved, say it in
+   into `product/product.md` if it is product truth, or `tech-stack.md` if it is
+   technical. Keep the alternatives and why they lost when it moves.
+9. **Keep technology out of product documents.** No framework, vendor or hosting
+   name in `product/`, in an epic, or in a PRD. This is rule 1 of §1 and it is
+   the one most likely to erode.
+10. **Do not write code during stages 0 to 4.** Sketches inside the doc are
+    fine. Files in the repo are not.
+11. **Report honestly.** If a plan cannot be delivered as approved, say it in
     the dev log the day it becomes true.
 
 ---
@@ -323,6 +371,6 @@ and it links correctly to the previous stage.
 
 **A feature is done when:** the dev log records every task in the
 implementation plan, and in every sub-plan when it was split, as shipped or
-explicitly dropped, deviations are logged, the
-design matches what was approved or a change record explains why not, and
-`index.md` shows the feature as `shipped`.
+explicitly dropped, deviations are logged, the design matches what was approved
+or a change record explains why not, and `index.md` shows the feature as
+`shipped`.

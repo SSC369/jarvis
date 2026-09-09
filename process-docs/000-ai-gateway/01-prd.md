@@ -15,7 +15,7 @@ supersedes: null
 
 > **Approved** by @user on 2026-09-09. Locked — changes require a change record (§7 of the rules).
 
-Context: [Intake](./00-context.md) · [Product brief](../../product/product-brief.md) · [Decision 0001](../../product/decisions/0001-model-provider-gemini-free-tier.md) · [Decision 0002](../../product/decisions/0002-v1-technology-stack.md)
+Context: [Epic](./00-epic.md) · [Product](../product/product.md) · [Tech stack](../tech-stack.md)
 
 > **This is a platform epic and it breaks the vertical-slice rule on purpose.**
 > Every other epic ends with something a person can do. This one ends with
@@ -157,10 +157,10 @@ Instrumented from launch, no targets.
 
 | Dependency | Type | Owner | Status |
 |---|---|---|---|
-| Google Gemini Flash, paid tier | vendor | user | Settled, [decision 0006](../../product/decisions/0006-model-provider-gemini-paid-tier.md) |
+| Google Gemini Flash, paid tier | vendor | user | Settled, [the tech stack](../tech-stack.md) |
 | The actual API key, and a billing account behind it | vendor | user | Supplied at implementation. A paid tier also needs a payment method and a provider-side spend cap |
-| Supabase Auth, so `user_id` exists | platform | user | Settled, [decision 0005](../../product/decisions/0005-auth-supabase-and-data-isolation.md) |
-| FastAPI, GraphQL, PostgreSQL on Supabase, managed hosting | platform | user | Settled, [decision 0004](../../product/decisions/0004-v1-technology-stack-revised.md) |
+| Supabase Auth, so `user_id` exists | platform | user | Settled, [the tech stack](../tech-stack.md) |
+| FastAPI, GraphQL, PostgreSQL on Supabase, managed hosting | platform | user | Settled, [the tech stack](../tech-stack.md) |
 | Gemini paid-tier rate limits, read from current documentation | vendor | Claude | Not started, needed for the build plan |
 | Gemini paid-tier data handling terms | vendor | user | Not read. Blocks launch, per Q10 of the product brief |
 
@@ -185,7 +185,7 @@ Instrumented from launch, no targets.
 | Q4 | How long are `ai_usage` rows kept? They are small, they accumulate per capture, and they are the record that proves attribution. | FR-11, HLD | user | |
 | Q5 | Does the operator read usage through a screen, a query, or a periodic report? A query is free, a screen is an epic. | FR-14 | user | |
 | Q6 | When the shared quota is exhausted, epic 001 refuses honestly. Should the gateway also alert the operator, and how? | FR-18 | user | |
-| ~~Q7~~ | Which auth provider, since `user_id` originates there? | — | — | **Answered 2026-09-09: Supabase Auth, [decision 0005](../../product/decisions/0005-auth-supabase-and-data-isolation.md).** |
+| ~~Q7~~ | Which auth provider, since `user_id` originates there? | — | — | **Answered 2026-09-09: Supabase Auth, [the tech stack](../tech-stack.md).** |
 | Q8 | The tier moved from free to paid on 2026-09-09, so a runaway user now costs money rather than exhausting a shared quota. Do the per-user caps of FR-8 and FR-10 keep the same numbers, or does a spend ceiling replace the request ceiling? | FR-8, FR-10, HLD | user | |
 
 ## 12. Out of scope
@@ -208,7 +208,7 @@ HTTP rate limiting.
 > user per day" is framed against a shared quota. The risk row on cost estimation
 > giving false comfort assumes a tier that bills nothing, and Q3 asks how to cost
 > a tier that bills nothing. All four now have a different answer. See
-> [decision 0006](../../product/decisions/0006-model-provider-gemini-paid-tier.md),
+> [the tech stack](../tech-stack.md),
 > which lists the shifts. Rewriting an approved PRD is the user's call, not
 > Claude's, so it waits for that call.
 | 2026-09-09 | **PRD approved.** Seven open questions carried to the build plan; none blocked approval. | User said proceed | user |

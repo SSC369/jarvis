@@ -68,7 +68,7 @@ State the actual rule. "Same as elsewhere" is not an answer.
 | | | | | cheap / costly |
 
 ## 8. Architecture decisions to lock
-| # | Decision | Status | Graduates to product/decisions |
+| # | Decision | Status | Graduates to tech-stack.md or product.md |
 |---|---|---|---|
 | AD-1 | | proposed / locked | yes / no |
 

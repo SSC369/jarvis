@@ -1,5 +1,5 @@
 ---
-doc: context
+doc: epic
 feature: 001-capture-and-records-foundation
 title: Capture and Records Foundation
 stage: 0
@@ -11,11 +11,18 @@ approved_on: 2026-09-08
 supersedes: null
 ---
 
-# Intake — Capture and Records Foundation
+# Epic — Capture and Records Foundation
+
+> Written on 2026-09-08 as `00-context.md`, under the old intake contract: record
+> the requirement, interpret it in the PRD. The stage 0 contract changed on
+> 2026-09-09 to require pros, cons, best practices and alternatives. This
+> document was renamed, not retrofitted, because the feature is already past this
+> gate and into design. New features use
+> [the epic template](../templates/00-epic.template.md).
 
 This epic draws from the product-level intake. The full source, as the user
 supplied it, is
-[the V1 product definition](../../product/intake/2026-09-08-personal-jarvis-v1.md).
+[the V1 product definition](../product/intake/2026-09-08-personal-jarvis-v1.md).
 Nothing is restated here that lives there.
 
 ## Requirement as stated

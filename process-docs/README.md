@@ -9,17 +9,18 @@ The rules Claude follows when writing anything here are in
 
 ## The flow
 
-Every feature moves through five gates, in order. Each gate needs the user's
+Every feature moves through six gates, in order. Each gate needs the user's
 approval before the next one starts.
 
 ```
 User states the requirement
         │
         ▼
-  0  Intake            00-context.md            raw requirement and product details
-        │
+  0  Epic              00-epic.md               the feature argued  → user approves
+        │                                       out: detail, pros,
+        │                                       cons, alternatives
         ▼
-  1  Epic PRD          01-prd.md                what and why        → user approves
+  1  PRD               01-prd.md                what and why        → user approves
         │
         ▼
   2  Design            02-design.md             screens, flows,     → user approves
@@ -48,10 +49,13 @@ never layers, are in [CLAUDE.md](./CLAUDE.md).
 
 ## Starting a feature
 
-1. Copy `templates/` into `features/NNN-<slug>/`, dropping the `.template`
-   from each filename.
-2. Fill `00-context.md` from what the user said. Do not tidy their words.
-3. Draft the PRD. Ask the questions you need in one grouped pass.
+1. Copy `templates/` into `NNN-<slug>/`, dropping the `.template` from each
+   filename.
+2. Write `00-epic.md`. Open by quoting what the user said, unedited, then argue
+   the feature out: requirements in detail, pros, cons, best practices,
+   alternatives.
+3. Once the epic is approved, draft the PRD. Ask the questions you need in one
+   grouped pass.
 4. Add the feature to `index.md`.
 
 Then work the gates. Do not start a stage while the previous one is unapproved.
@@ -62,8 +66,12 @@ Then work the gates. Do not start a stage while the previous one is unapproved.
 |---|---|
 | `CLAUDE.md` | Binding rules for writing these docs |
 | `index.md` | Every feature, its stage and status |
-| `product/product-brief.md` | What Slashit is, who it serves, the pillars |
-| `product/glossary.md` | One definition per domain term |
-| `product/decisions/` | Decisions that bind more than one feature |
+| `tech-stack.md` | The stack, and why each choice won |
+| `product/product.md` | What Slashit is, who it serves, the pillars, the name |
+| `product/v1-features.md` | What V1 ships, the epic list, later versions |
+| `product/intake/` | Product-level requirements exactly as supplied |
 | `templates/` | Copy these, never edit in place |
-| `features/` | One folder per feature, six docs each |
+| `NNN-<slug>/` | One folder per feature, six docs each |
+
+Technology is named in `tech-stack.md` and nowhere else. Product documents and
+PRDs never mention a framework, a vendor or a hosting choice.

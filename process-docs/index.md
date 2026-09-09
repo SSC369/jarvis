@@ -3,22 +3,21 @@
 Every feature, its current gate, and where it stands. Updated in the same commit
 as any stage change.
 
-Product context: [product brief](./product/product-brief.md) ·
-[V1 epic map](./product/v1-epic-map.md) ·
-[V1 intake](./product/intake/2026-09-08-personal-jarvis-v1.md) ·
-[decisions](./product/decisions/)
+Product context: [product](./product/product.md) ·
+[V1 features](./product/v1-features.md) ·
+[tech stack](./tech-stack.md) ·
+[V1 intake](./product/intake/2026-09-08-personal-jarvis-v1.md)
 
-Settled: named Slashit ([decision 0003](./product/decisions/0003-product-name-and-mark.md)), web, one account per user, commands-only capture, in-app and email
-notifications, no charging in V1, no deadline. The stack, auth and model
-provider are [decisions 0004, 0005 and 0006](./product/decisions/), which
-supersede 0002 and 0001.
+Settled: named Slashit, web, one account per user, commands-only capture, in-app
+and email notifications, no charging in V1, no deadline. The stack, auth and
+model provider are in [the tech stack](./tech-stack.md).
 
 ## Legend
 
 | Stage | Meaning |
 |---|---|
-| 0 Intake | Requirement captured, not yet interpreted |
-| 1 PRD | Epic PRD drafted or approved |
+| 0 Epic | Feature argued out: requirements, pros, cons, alternatives |
+| 1 PRD | Requirements locked |
 | 2 Design | Screens and design system in progress or fixed |
 | 3 Build plan | HLD drafted or locked |
 | 4 Implementation plan | LLD drafted or approved |
@@ -32,12 +31,12 @@ Status values: `draft`, `in-review`, `approved`, `blocked`, `shipped`,
 
 | # | Feature | Priority | Stage | Status | Waiting on | Updated |
 |---|---|---|---|---|---|---|
-| 000 | [AI Gateway and Usage](./features/000-ai-gateway/) | P0, platform | 3 Build plan | PRD approved 2026-09-09, no design stage | Build plan | 2026-09-09 |
-| 001 | [Capture and Records Foundation](./features/001-capture-and-records-foundation/) | P0 | 2 Design | in-review | User review of the design canvas | 2026-09-09 |
+| 000 | [AI Gateway and Usage](./000-ai-gateway/) | P0, platform | 3 Build plan | PRD approved 2026-09-09, no design stage | Build plan | 2026-09-09 |
+| 001 | [Capture and Records Foundation](./001-capture-and-records-foundation/) | P0 | 2 Design | in-review | User review of the design canvas | 2026-09-09 |
 
 ## Planned
 
-Confirmed in the [V1 epic map](./product/v1-epic-map.md), not yet opened.
+Confirmed in [V1 features](./product/v1-features.md), not yet opened.
 
 | # | Epic | Priority | Depends on |
 |---|---|---|---|
