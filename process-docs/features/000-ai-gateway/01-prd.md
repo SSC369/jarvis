@@ -3,15 +3,17 @@ doc: prd
 feature: 000-ai-gateway
 title: AI Gateway and Usage
 stage: 1
-status: in-review
+status: approved
 owner: user
 created: 2026-09-09
 updated: 2026-09-09
-approved_on: null
+approved_on: 2026-09-09
 supersedes: null
 ---
 
 # Epic PRD — AI Gateway and Usage
+
+> **Approved** by @user on 2026-09-09. Locked — changes require a change record (§7 of the rules).
 
 Context: [Intake](./00-context.md) · [Product brief](../../product/product-brief.md) · [Decision 0001](../../product/decisions/0001-model-provider-gemini-free-tier.md) · [Decision 0002](../../product/decisions/0002-v1-technology-stack.md)
 
@@ -195,4 +197,5 @@ HTTP rate limiting.
 
 | Date | Change | Why | Approved by |
 |---|---|---|---|
-| 2026-09-09 | Created from the AI API key architecture | User supplied the architecture and asked for it as an epic | pending |
+| 2026-09-09 | Created from the AI API key architecture | User supplied the architecture and asked for it as an epic | user |
+| 2026-09-09 | **PRD approved.** Seven open questions carried to the build plan; none blocked approval. | User said proceed | user |

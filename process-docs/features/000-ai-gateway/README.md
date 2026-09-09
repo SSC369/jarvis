@@ -3,8 +3,8 @@
 | Field | Value |
 |---|---|
 | Priority | P0, platform |
-| Stage | 1 PRD |
-| Status | in-review |
+| Stage | 3 Build plan |
+| Status | PRD approved, no design stage |
 | Started | 2026-09-09 |
 | Owner | user |
 
@@ -13,8 +13,8 @@
 | Stage | Doc | Status | Approved |
 |---|---|---|---|
 | 0 Intake | [00-context.md](./00-context.md) | approved | 2026-09-09 |
-| 1 PRD | [01-prd.md](./01-prd.md) | in-review | |
-| 2 Design | 02-design.md | not started | |
+| 1 PRD | [01-prd.md](./01-prd.md) | approved | 2026-09-09 |
+| 2 Design | — | not applicable, no user-facing surface | — |
 | 3 Build plan | 03-build-plan.md | not started | |
 | 4 Implementation plan | 04-implementation-plan.md | not started | |
 | 5 Dev | 05-dev-log.md | not started | |
