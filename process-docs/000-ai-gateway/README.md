@@ -4,7 +4,7 @@
 |---|---|
 | Priority | P0, platform |
 | Stage | 3 Build plan |
-| Status | PRD approved, no design stage |
+| Status | Build plan drafted, awaiting review |
 | Started | 2026-09-09 |
 | Owner | user |
 
@@ -15,7 +15,7 @@
 |  0 Epic | [00-epic.md](./00-epic.md) | approved | 2026-09-09 |
 | 1 PRD | [01-prd.md](./01-prd.md) | approved | 2026-09-09 |
 | 2 Design | — | not applicable, no user-facing surface | — |
-| 3 Build plan | 03-build-plan.md | not started | |
+| 3 Build plan | [03-build-plan.md](./03-build-plan.md) | draft, 6 questions in section 10 | |
 | 4 Implementation plan | 04-implementation-plan.md | not started | |
 | 5 Dev | 05-dev-log.md | not started | |
 

@@ -16,6 +16,13 @@ Settled: named Slashit, web, one account per user, commands-only capture, in-app
 and email notifications, no charging in V1, no deadline. The stack, auth and
 model provider are in [the tech stack](./tech-stack.md).
 
+Deferred out of V1 on 2026-09-10, recorded here because each removes a defence
+rather than a feature: per-user rate limits, any spend ceiling, and Row Level
+Security. The consequences are in
+[the 000 PRD](./000-ai-gateway/01-prd.md#6-functional-requirements),
+[T2 of the tech stack](./tech-stack.md#4-standing-technical-rules) and risks R-1
+and R-2 of [the 000 build plan](./000-ai-gateway/03-build-plan.md#9-risks).
+
 ## Legend
 
 | Stage | Meaning |
@@ -35,7 +42,7 @@ Status values: `draft`, `in-review`, `approved`, `blocked`, `shipped`,
 
 | # | Feature | Priority | Stage | Status | Waiting on | Updated |
 |---|---|---|---|---|---|---|
-| 000 | [AI Gateway and Usage](./000-ai-gateway/) | P0, platform | 3 Build plan | PRD approved 2026-09-09, no design stage | Build plan | 2026-09-09 |
+| 000 | [AI Gateway and Usage](./000-ai-gateway/) | P0, platform | 3 Build plan | draft | User review of [the build plan](./000-ai-gateway/03-build-plan.md), 6 questions in section 10 | 2026-09-10 |
 | 001 | [Capture and Records Foundation](./001-capture-and-records-foundation/) | P0 | 2 Design | in-review | User review of the design canvas | 2026-09-09 |
 
 ## Planned
