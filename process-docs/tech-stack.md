@@ -4,7 +4,7 @@ title: Slashit Technical Stack
 status: current
 owner: user
 created: 2026-09-09
-updated: 2026-09-09
+updated: 2026-09-10
 ---
 
 # Slashit — Technical Stack
@@ -30,7 +30,7 @@ choice changes, it changes here, and the change log at the bottom records it.
 | Database | PostgreSQL, hosted by Supabase |
 | Vector search | pgvector, in the same database |
 | Auth | Supabase Auth |
-| Data isolation | PostgreSQL Row Level Security |
+| Data isolation | Application-layer scoping by `user_id`. Row Level Security deferred, see T2 |
 | In-app notification transport | GraphQL subscriptions over WebSockets |
 | Background jobs | Procrastinate, backed by PostgreSQL |
 | Frontend | React, built with Vite |
@@ -100,9 +100,14 @@ REST path.
 
 **What it buys.** Identity lives in `auth.users`, in Slashit's own database, so
 no synchronisation exists to break. One database serves relational records,
-full-text search, semantic search through pgvector, and the job queue. Row Level
-Security makes principle 7 of the product doc a database guarantee rather than a
-code-review guarantee.
+full-text search, semantic search through pgvector, and the job queue.
+
+Row Level Security was the fourth thing it bought, and it is the one being
+declined. It would have made principle 7 of the product doc a database
+guarantee rather than a code-review guarantee. Deferred on 2026-09-10, see T2.
+The option stays available: enabling RLS later is a migration per table, not a
+rewrite, because the `user_id` column it needs is on every table from the
+start.
 
 **What it costs.** Auth and the database are now the same vendor, so one outage
 takes both. Free-tier projects pause after a period of inactivity, which a
@@ -207,8 +212,8 @@ explicitly and argues for it.
 | # | Rule |
 |---|---|
 | T1 | One door in. The browser reaches data only through the GraphQL endpoint, never through a Supabase data API |
-| T2 | Row Level Security is enabled, with a policy, in the same migration that creates any table holding user data. A table without a policy is a defect, not a default |
-| T3 | The service-role key never reaches the browser, and never serves a request made on behalf of a user unless the resolver has already established ownership. It is for migrations and background jobs |
+| T2 | Every read and write of user data is scoped by `user_id` in the repository layer. **Row Level Security is deferred out of V1** by the user's decision of 2026-09-10, so application code is the only isolation there is. A repository method that queries a user table without a `user_id` predicate is a defect |
+| T3 | The database credential never reaches the browser. Rule T1 is what keeps it there: the browser holds a Supabase Auth token and nothing else, and every read and write goes through the GraphQL endpoint |
 | T4 | The model provider stays behind a boundary. Nothing above it knows which provider is in use, so a tier or vendor change is configuration, not a rewrite |
 | T5 | DataLoader from the first resolver, not retrofitted after the N+1 appears |
 | T6 | Prompt content never reaches the usage or analytics tables. Passports and finances do not belong in an observability store |
@@ -242,14 +247,15 @@ month costs about one cent. This is why the free tier was not worth its terms.
 
 | # | Question | Blocks |
 |---|---|---|
-| T-Q1 | Render or Railway for the backend? | epic 000 build plan |
-| T-Q2 | How does the authenticated user's identity reach the database connection so RLS applies: `set_config` per transaction on a pooled connection, or a role switch per request? Getting this wrong disables isolation with no error | epic 000 build plan |
+| T-Q1 | Render or Railway for the backend? Still open. It blocks the deploy step of epic 000's stage 4, not its architecture | epic 000 stage 4 |
+| ~~T-Q2~~ | How does the authenticated user's identity reach the database connection so RLS applies? | **Answered 2026-09-10: it does not. RLS is deferred, see T2.** |
 | T-Q3 | What backplane carries GraphQL subscriptions when there is more than one API instance? One instance hides this until it does not | epic 002 |
 | T-Q4 | What are the query depth and complexity limits, as numbers? | public launch |
 | T-Q5 | Vercel or Cloudflare Pages for the frontend? | epic 001 build plan |
 | T-Q6 | Supabase free-tier projects pause after inactivity. What is the current threshold, and on what date does the project move to Pro? | launch |
 | T-Q7 | Does the GraphQL schema stay one graph as epics land, or split by domain? | epic 004 |
-| T-Q8 | The model tier moved from free to paid, so a runaway user now costs money rather than exhausting a shared quota. Do epic 000's per-user caps keep request ceilings, or gain a spend ceiling? | epic 000 build plan |
+| ~~T-Q8~~ | Do epic 000's per-user caps keep request ceilings, or gain a spend ceiling? | **Answered 2026-09-10: neither. No caps in V1.** See [the 000 PRD](./000-ai-gateway/01-prd.md#11-open-questions) |
+| T-Q9 | The provider-side spend cap of section 7 is now the only thing standing between a retry loop and a bill. On what date is it set, and at what figure? | before the first API call | opened 2026-09-10 |
 
 ---
 
@@ -311,6 +317,25 @@ Seven files sit there: decisions 0001 to 0006 and their README. Decisions 0004,
 | 2026-09-09 | Created, absorbing decision records 0004, 0005 and 0006 | User removed the decisions folder and asked for one technical document | user |
 | 2026-09-09 | Server state moved from TanStack Query to Apollo Client. The pillar P2 objection to a normalised cache is preserved by making MobX stores the source of truth and Apollo a transport | User direction while drafting the repository rulesets | user |
 | 2026-09-09 | Repository layout moved from `apps/api`, `apps/web`, `packages/` to `backend/` and `frontend/`. Each folder now owns a `rules/repo-rules.md` | User direction | user |
+| 2026-09-10 | **Row Level Security deferred out of V1.** T2 rewritten from a database guarantee to an application-layer rule, T3 rewritten because it described a boundary that no longer exists in that form, and the Data isolation row changed to match. T-Q2 and T-Q8 closed, T-Q9 opened on the provider spend cap | User answered T-Q2 with "no need RLS for now" while closing epic 000's build-plan questions | user |
+
+**Downstream documents made stale by the 2026-09-10 RLS deferral, listed as rule 7
+of the process requires.**
+
+| Document | What is stale | Handled |
+|---|---|---|
+| [`backend/rules/repo-rules.md`](../backend/rules/repo-rules.md) §10 | The whole section is written as "Row Level Security, as a build rule" | Rewritten 2026-09-10 in the same commit |
+| [`backend/CLAUDE.md`](../backend/CLAUDE.md) rule 5 | States RLS is enabled in the creating migration | Rewritten 2026-09-10 in the same commit |
+| Epic 001's build plan | Not written yet, so it inherits the new T2 rather than being made stale | No action |
+
+**What this costs, stated plainly.** Principle 7 of
+[the product doc](./product/product.md) was a database guarantee and is now a
+code-review guarantee. The failure mode is a repository method that forgets its
+`user_id` predicate: it returns another user's rows, it raises nothing, and no
+test catches it unless rule T7's boundary test exists for that feature. That
+test moves from advisable to mandatory.
+
+---
 
 **Downstream documents made stale by the two 2026-09-09 revisions: none.** Rule 7
 of the process requires this to be stated rather than assumed. The stack is

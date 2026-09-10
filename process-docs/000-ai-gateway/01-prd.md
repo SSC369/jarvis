@@ -6,7 +6,7 @@ stage: 1
 status: approved
 owner: user
 created: 2026-09-09
-updated: 2026-09-09
+updated: 2026-09-10
 approved_on: 2026-09-09
 supersedes: null
 ---
@@ -106,15 +106,23 @@ No targets, consistent with the product brief. Instrument and read.
 |---|---|---|---|
 | FR-6 | Every model call is made on behalf of exactly one authenticated user, identified by `user_id`. | must | US-3 |
 | FR-7 | An unauthenticated request never reaches a provider. | must | — |
-| FR-8 | Each model call is checked against that user's limit before the provider is called, not after. | must | US-4 |
-| FR-9 | A user over their limit is refused with an honest message saying they are over their limit and when it resets. The refusal is distinguishable from a provider outage and from an exhausted shared quota. | must | US-2 |
-| FR-10 | The per-user limit is configurable without a code change or a deploy. | should | US-4 |
+| ~~FR-8~~ | Each model call is checked against that user's limit before the provider is called, not after. | **deferred 2026-09-10** | US-4 |
+| ~~FR-9~~ | A user over their limit is refused with an honest message saying they are over their limit and when it resets. The refusal is distinguishable from a provider outage and from an exhausted shared quota. | **deferred 2026-09-10** | US-2 |
+| ~~FR-10~~ | The per-user limit is configurable without a code change or a deploy. | **deferred 2026-09-10** | US-4 |
+
+> **FR-8, FR-9 and FR-10 are deferred out of V1 by the user's answer to Q1 and
+> Q8 on 2026-09-10.** There is no per-user limit, so there is nothing to check
+> before a call and nothing to configure. Goal G3 and story US-4 keep no
+> mechanism behind them. Nothing in V1 stops one user consuming the credential
+> for everyone, and the provider-side spend cap named in
+> [the tech stack](../tech-stack.md) section 7 is the only remaining defence.
+> The `user_limit_reached` outcome of FR-18 is not emitted in V1.
 
 ### Usage
 
 | id | Requirement | Priority | Story |
 |---|---|---|---|
-| FR-11 | Every model call records: user, provider, model, input tokens, output tokens, total tokens, estimated cost, and when it happened. | must | US-3 |
+| FR-11 | Every model call records: user, provider, model, input tokens, output tokens, total tokens, and when it happened. Estimated cost is **not computed in V1**, per Q3. Token counts are stored, so a cost figure is derivable later from a rate card without a backfill. | must | US-3 |
 | FR-12 | A usage record never contains prompt content, response content, or any part of the user's captured text. Counts only. | must | US-3 |
 | FR-13 | A call that fails is recorded too, with its outcome, so failures are visible rather than absent. | must | US-3 |
 | FR-14 | The operator can read usage per user and in total, over a period, including requests against the provider's own limit. | must | US-3 |
@@ -179,14 +187,19 @@ Instrumented from launch, no targets.
 
 | # | Question | Blocks | Owner | Answer |
 |---|---|---|---|---|
-| Q1 | What is the per-user limit, and over what window: requests per day, per hour, tokens per month? | FR-8, FR-10 | user | |
-| Q2 | Is streaming needed in V1? Extraction returns a record, not prose, so there may be nothing to stream. Dropping it removes real complexity from the gateway. | FR-16, scope | user | |
-| Q3 | How is estimated cost computed on a tier that bills nothing: the paid-tier rate card as a shadow price, or zero? A shadow price tells you what the product would cost if it grew. Zero tells you nothing. | FR-11 | user | |
-| Q4 | How long are `ai_usage` rows kept? They are small, they accumulate per capture, and they are the record that proves attribution. | FR-11, HLD | user | |
-| Q5 | Does the operator read usage through a screen, a query, or a periodic report? A query is free, a screen is an epic. | FR-14 | user | |
-| Q6 | When the shared quota is exhausted, epic 001 refuses honestly. Should the gateway also alert the operator, and how? | FR-18 | user | |
+| ~~Q1~~ | What is the per-user limit, and over what window: requests per day, per hour, tokens per month? | FR-8, FR-10 | user | **Answered 2026-09-10: none.** No per-user rate limit in V1. FR-8, FR-9 and FR-10 deferred. |
+| ~~Q2~~ | Is streaming needed in V1? | FR-16, scope | user | **Answered 2026-09-10: no.** An extraction is one request and one response. |
+| ~~Q3~~ | How is estimated cost computed on a tier that bills nothing? | FR-11 | user | **Answered 2026-09-10: neither.** No cost figure is computed in V1. Token counts are stored, so cost is derivable later. Pricing and limits are planned once the product works. |
+| ~~Q4~~ | How long are `ai_usage` rows kept? | FR-11, HLD | user | **Answered 2026-09-10: indefinitely.** No deletion and no retention job in V1. |
+| ~~Q5~~ | Does the operator read usage through a screen, a query, or a periodic report? | FR-14 | user | **Answered 2026-09-10: a screen.** Where that screen is drawn is Q1 of [the build plan](./03-build-plan.md), because epic 000 has no design stage. |
+| ~~Q6~~ | When the shared quota is exhausted, should the gateway also alert the operator, and how? | FR-18 | user | **Answered 2026-09-10: yes.** With no per-user limit, provider quota exhaustion is the only exhaustion left, so it is the one the gateway watches and reports. Mechanism in [the build plan](./03-build-plan.md) section 6. |
 | ~~Q7~~ | Which auth provider, since `user_id` originates there? | — | — | **Answered 2026-09-09: Supabase Auth, [the tech stack](../tech-stack.md).** |
-| Q8 | The tier moved from free to paid on 2026-09-09, so a runaway user now costs money rather than exhausting a shared quota. Do the per-user caps of FR-8 and FR-10 keep the same numbers, or does a spend ceiling replace the request ceiling? | FR-8, FR-10, HLD | user | |
+| ~~Q8~~ | Do the per-user caps of FR-8 and FR-10 keep the same numbers, or does a spend ceiling replace the request ceiling? | FR-8, FR-10, HLD | user | **Answered 2026-09-10: neither.** No per-user cap and no spend ceiling in the application. The provider-side spend cap is the only remaining defence, and it is not set yet. |
+
+**All eight are now closed. None was answered in a way that adds a mechanism;
+six of them removed one.** That is a deliberate choice to reach a working
+product before spending effort on limits and pricing, and it is recorded here so
+the missing defences are visible rather than forgotten.
 
 ## 12. Out of scope
 
@@ -212,3 +225,9 @@ HTTP rate limiting.
 > which lists the shifts. Rewriting an approved PRD is the user's call, not
 > Claude's, so it waits for that call.
 | 2026-09-09 | **PRD approved.** Seven open questions carried to the build plan; none blocked approval. | User said proceed | user |
+| 2026-09-10 | **Q1 to Q6 and Q8 answered, closing every open question.** FR-8, FR-9 and FR-10 deferred out of V1, leaving G3 and US-4 with no mechanism. FR-11 drops the cost figure and keeps token counts. FR-14 resolves to a screen. Retention is indefinite. Streaming is out. | User answered the build-plan questions and directed that limits and pricing wait until the product works | user |
+
+**Downstream documents made stale by the 2026-09-10 change: none exist yet.**
+Section 7 of the process rules requires this to be stated rather than assumed.
+The build plan is the first document below this one and it is drafted against
+these answers, not against the superseded requirements.

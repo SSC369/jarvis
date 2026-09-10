@@ -32,9 +32,11 @@ These seven survive a skipped link. Everything else is in the ruleset.
 4. **Business failures are typed data, not exceptions on the wire.** Every
    mutation returns a union of one success type and its named error types. A
    raised exception that reaches the client is a defect.
-5. **Row Level Security is enabled, with a policy, in the same migration that
-   creates any table holding user data.** This is rule T2 of the tech stack. A
-   table without a policy is a defect, not a default.
+5. **Every repository method that touches a user table filters by `user_id`.**
+   This is rule T2 of the tech stack, rewritten on 2026-09-10 when Row Level
+   Security was deferred out of V1. Application code is now the only isolation,
+   so a query without a `user_id` predicate is a defect and the boundary test of
+   rule T7 is mandatory on every feature touching user data.
 6. **Authentication at the endpoint is not authorisation.** Every field declares
    its permission class. There is no ambient trust past the token check.
 7. **One domain reaches another only through a published service, a port the

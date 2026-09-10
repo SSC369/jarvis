@@ -5,7 +5,7 @@ title: Backend Repository Structure and Patterns
 status: current
 owner: user
 created: 2026-09-09
-updated: 2026-09-09
+updated: 2026-09-10
 ---
 
 # Backend — Repository Structure and Patterns
@@ -39,20 +39,23 @@ The rows that shape this folder:
 | API framework          | FastAPI                               |
 | GraphQL server         | Strawberry                            |
 | Database               | PostgreSQL, hosted by Supabase        |
-| Data isolation         | Row Level Security                    |
+| Data isolation         | Application scoping by `user_id`. §10 |
 | Auth                   | Supabase Auth                         |
 | Background jobs        | Procrastinate, backed by PostgreSQL   |
 | Vector search          | pgvector                              |
 | Notification transport | GraphQL subscriptions over WebSockets |
 
 Standing rules T1 to T8 of the tech stack are binding here and are not restated.
-T2, T3, T5 and T7 have direct structural consequences, in §10, §10, §5 and §15.
+T2, T5 and T7 have direct structural consequences, in §10, §5 and §15.
 
-**One supersession.** The tech stack's Repository row reads
-`apps/web`, `apps/api`, `packages/`. The user replaced it on 2026-09-09 with
-`backend/` and `frontend/` at the repository root. That decision holds and this
-document follows it. `process-docs/tech-stack.md` has not been updated to match
-and should be.
+**One former supersession, now closed.** The tech stack's Repository row once
+read `apps/web`, `apps/api`, `packages/`. The user replaced it on 2026-09-09
+with `backend/` and `frontend/` at the repository root, and the tech stack now
+records that layout. The two documents agree and this folder supersedes nothing.
+
+**One contradiction, named as rule T2 requires.** Row Level Security is deferred
+out of V1, so §10 describes application-layer scoping rather than a database
+policy. The tech stack owns that decision and logged it on 2026-09-10.
 
 ## 3. Directory tree
 
@@ -68,7 +71,7 @@ backend/
 │   ├── main.py                  ← FastAPI app, mounts /graphql, health
 │   ├── core/                    ← infrastructure, owned by no domain
 │   │   ├── settings.py          ← pydantic-settings. The only reader of os.environ
-│   │   ├── db.py                ← engine, session, per-transaction RLS identity
+│   │   ├── db.py                ← engine and session. See §10
 │   │   ├── auth.py              ← Supabase JWT verification
 │   │   ├── context.py           ← request context: user_id, session, loaders
 │   │   ├── errors.py            ← DomainError base
@@ -85,7 +88,7 @@ backend/
 │   │   ├── error_mapping.py     ← the @map_errors decorator. See §8
 │   │   ├── loaders.py           ← DataLoader registry. Rule T5
 │   │   └── scalars.py
-│   └── migrations/              ← Alembic. RLS policy in the creating migration
+│   └── migrations/              ← Alembic. Every user table gets user_id. §10
 └── tests/
     ├── unit/                    ← per domain, fake repositories
     ├── integration/             ← resolver through to database
@@ -556,23 +559,40 @@ can fake cleanly in a test.
 root for its REST views and inline construction in its GraphQL resolvers. Two
 wiring strategies in one repository means neither is enforced.
 
-## 10. Row Level Security
+## 10. Tenant isolation
 
 Rule T2 of the tech stack, as a build rule.
 
-1. **The `CREATE TABLE` migration enables RLS and adds the policy.** Same
-   migration, same file. Not a follow-up.
-2. **A table holding user data without a policy fails review.** Add a migration
-   test that asserts `relrowsecurity` on every table in the user schema.
-3. **The service-role connection bypasses every policy silently.** Rule T3. It
-   is for migrations and background jobs. It never serves a user request.
-4. **Identity must reach the connection or RLS does nothing.** The mechanism is
-   open question T-Q2 of the tech stack and is not settled here. Whichever wins,
-   it lives in `app/core/db.py` and nowhere else, and it is covered by the
-   boundary test of rule T7.
+**Row Level Security is deferred out of V1** by the user's decision of
+2026-09-10, which also closed T-Q2. This section previously described RLS as the
+second lock behind application scoping. There is no second lock now. What
+follows is the whole of it.
 
-RLS is the second lock, not the first. Resolvers and interactors still scope
-every read by `user_id`. RLS is what catches the day one of them forgets.
+1. **Every user table carries a non-nullable `user_id`.** It is added by the
+   `CREATE TABLE` migration, not later. This is what makes enabling RLS a
+   migration rather than a rewrite on the day it is wanted.
+2. **Every repository method reading or writing a user table filters by
+   `user_id`.** No exception. A method that takes no `user_id` and touches a
+   user table fails review.
+3. **The `user_id` comes from the verified token, never from client input.** It
+   is read off `Context`, which `app/core/auth.py` populates from the Supabase
+   JWT. A `user_id` argument arriving in a GraphQL input on a user-scoped field
+   is a defect.
+4. **Interactors check ownership before acting on a row they were handed by id.**
+   Fetching by primary key and then acting is the shape that leaks. Fetch scoped
+   by owner, or fetch and compare before the write.
+5. **The boundary test of rule T7 is mandatory, not advisory.** One per feature
+   touching user data: resolver called as user A, requesting user B's row,
+   asserting nothing comes back. It is the only automated defence remaining.
+
+**What was lost, stated plainly.** The failure mode is one forgotten `WHERE
+user_id = ...`. It returns another user's rows, it raises nothing, it logs
+nothing, and no type checker sees it. Under RLS the database refused that query.
+Now only rule 5 above catches it, and only for the paths a test covers.
+
+**Enabling RLS later.** Rule 1 keeps the door open. It is one migration per
+table, plus the identity-on-connection mechanism that T-Q2 asked about, which
+would live in `app/core/db.py` and nowhere else.
 
 ## 11. Schema assembly
 
@@ -635,7 +655,7 @@ calls that are not user-facing, embedding generation, exports.
 | Kind        | Location               | Against                                     | Covers                                      |
 | ----------- | ---------------------- | ------------------------------------------- | ------------------------------------------- |
 | Unit        | `tests/unit/<domain>/` | Interactors, with fakes from `tests/fakes/` | Every business rule and every raised error  |
-| Integration | `tests/integration/`   | Resolver through to a real database         | The union mapping, permissions, RLS         |
+| Integration | `tests/integration/`   | Resolver through to a real database         | The union mapping, permissions, scoping     |
 | Boundary    | `tests/integration/`   | Resolver as user A requesting user B's row  | Rule T7. One per feature touching user data |
 
 Fakes are in-memory Protocol implementations, not `unittest.mock.patch` chains.
@@ -688,7 +708,7 @@ Inherited from `process-docs/tech-stack.md` §7 and not answered here.
 
 | #    | Question                                                    | Blocks                                         |
 | ---- | ----------------------------------------------------------- | ---------------------------------------------- |
-| T-Q2 | How identity reaches the database connection so RLS applies | The shape of `app/core/db.py`                  |
+| ~~T-Q2~~ | How identity reaches the database connection so RLS applies | **Closed 2026-09-10. RLS deferred, see §10** |
 | T-Q3 | Subscription backplane for more than one instance           | `graphql/subscriptions.py` beyond one instance |
 | T-Q4 | Query depth and complexity limits, as numbers               | A guard in `main.py` before public launch      |
 | T-Q7 | One graph or a split schema as epics land                   | `graphql/schema.py` composition                |
@@ -697,4 +717,4 @@ One question this document raises on its own:
 
 | #    | Question                                                                                                                                | Owner |
 | ---- | --------------------------------------------------------------------------------------------------------------------------------------- | ----- |
-| B-Q1 | `process-docs/tech-stack.md` still names `apps/api` as the backend root. It needs updating to `backend/`, or this folder needs renaming | user  |
+| ~~B-Q1~~ | `process-docs/tech-stack.md` still names `apps/api` as the backend root | **Closed 2026-09-10. The tech stack records `backend/` and `frontend/`. No action needed** |
