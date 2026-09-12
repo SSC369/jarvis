@@ -1,0 +1,172 @@
+---
+doc: dev-log
+feature: 000-ai-gateway
+title: AI Gateway and Usage
+stage: 5
+status: draft
+owner: user
+created: 2026-09-12
+updated: 2026-09-12
+approved_on: null
+supersedes: null
+---
+
+# Dev Log — AI Gateway and Usage
+
+Context: [Index](./04-implementation-plan.md) · [04.1](./04.1-api-skeleton.md)
+
+What actually happened. Deviations from the approved plan are recorded the day
+they happen, per rule 5 of the root ruleset.
+
+## Slice 1 — API Skeleton
+
+Started and largely completed 2026-09-12.
+
+### Tasks
+
+| # | Task | Status | Note |
+|---|---|---|---|
+| T-1.1 | Layout, virtual environment, install, pin versions | **done** | Versions below |
+| T-1.2 | `core/settings.py`, `.env.example`, `.gitignore` | **done** | |
+| T-1.3 | `core/logging.py` with redaction | **done** | |
+| T-1.4 | `app/main.py`, `/health`, middleware, exception handler | **done** | |
+| T-1.5 | `graphql/schema.py`, mounted | **done** | |
+| T-1.6 | `Dockerfile`, confirm the image starts | **partial** | Written. **Not verified**, see deviation D-1 |
+| T-1.7 | CI: ruff, mypy, pytest, secret scan | **partial** | Written. **Not verified**, see deviation D-2 |
+
+### Resolved dependency versions
+
+Pinned from PyPI on 2026-09-12, per T-1.1. Rule 7 of the process: these are read
+from the install, not from memory.
+
+| Package | Version | | Package | Version |
+|---|---|---|---|---|
+| fastapi | 0.141.1 | | pytest | 9.1.1 |
+| uvicorn | 0.52.4 | | pytest-asyncio | 1.4.0 |
+| strawberry-graphql | 0.327.7 | | httpx | 0.28.1 |
+| pydantic-settings | 2.15.0 | | ruff | 0.16.7 |
+| structlog | 26.1.0 | | mypy | 2.3.1 |
+
+43 packages resolved in total, including transitive. Python 3.12.10.
+
+### Verification
+
+| Check | Result |
+|---|---|
+| `pytest` | **13 passed** |
+| `ruff check .` | All checks passed |
+| `ruff format --check .` | 15 files already formatted |
+| `mypy app` (strict) | No issues in 7 source files |
+| `uvicorn` then `GET /health` | `200 {"status":"ok"}` |
+| `uvicorn` then `POST /graphql` | `200 {"data":{"apiVersion":"0.1.0"}}` |
+
+Section 1 of 04.1 is demonstrably true: the server starts and answers both
+endpoints over real HTTP.
+
+### Deviations
+
+| # | Deviation | Why | Consequence |
+|---|---|---|---|
+| D-1 | T-1.6's acceptance check, `docker run` then curl, was **not performed** | Docker is not installed on this machine, or its daemon is not running | The `Dockerfile` is unverified. It is plausible and conventional, and it has never been built. Must be run before slice 1 is called done |
+| D-2 | T-1.7's acceptance checks were **not performed**: CI has never run, and the secret scan has never been proven to fail on a planted key | The workflow cannot run until the branch is pushed, and nothing has been pushed | The second check is the one that matters. A secret scan that has never failed has never been tested |
+| D-3 | 20 files created, against 17 planned | Package markers `tests/integration/__init__.py` and `app/__init__.py` were not itemised in the plan, and the settings and redaction tests were split into two files at `tests/` root rather than sitting under `tests/integration/` | None. They are unit tests and do not belong under `integration/` |
+| D-4 | `.github/workflows/ci.yml` sits at the repository root, not under `backend/` | CI covers the whole repository, and the frontend will add a job to the same file | None. The plan's path was written as if the backend owned it |
+
+### Not done, and why
+
+Slice 1 is **not complete**. D-1 and D-2 are open acceptance checks, not
+cosmetic gaps. The definition of done in 04.1 section 9 requires both, and it is
+not met.
+
+What remains:
+
+1. Build the image and confirm it answers `/health`.
+2. Push the branch, confirm CI runs green.
+3. Commit a fake key on a throwaway branch and confirm the secret scan fails.
+
+## Change log
+
+| Date | Change | Why | Approved by |
+|---|---|---|---|
+| 2026-09-12 | Created. Slice 1 tasks T-1.1 to T-1.5 done, T-1.6 and T-1.7 partial | Slice 1 development began | — |
+
+## Slice 2 — Identity and Isolation
+
+Built 2026-09-12.
+
+### Tasks
+
+| # | Task | Status | Note |
+|---|---|---|---|
+| T-2.1 | Packages added and pinned | **done** | Versions below |
+| T-2.2 | Settings additions, `.env.example`, password redaction | **done** | |
+| T-2.3 | `core/db.py`, engine, `user_transaction` | **done** | |
+| T-2.4 | `core/auth.py`, JWKS verification | **done** | |
+| T-2.5 | `context.py`, `errors.py`, `deps.py` | **done** | Contract change, see below |
+| T-2.6 | Alembic and `0001_ai_usage` | **done** | |
+| T-2.7 | `0002_ai_user_limit` | **done** | |
+| T-2.8 | `IsAuthenticated`, `@map_errors`, context wired | **done** | |
+| T-2.9 | Boundary tests | **done** | Including the negative proof |
+| T-2.10 | Readiness check | **done** | `/ready`, separate from `/health` |
+
+### Resolved dependency versions
+
+| Package | Version |
+|---|---|
+| sqlalchemy | 2.0.52 |
+| asyncpg | 0.31.0 |
+| alembic | 1.20.0 |
+| pyjwt | 2.14.0 |
+| cryptography | 50.0.1 |
+
+### Verification
+
+| Check | Result |
+|---|---|
+| `pytest` | **33 passed** |
+| `ruff check .` | All checks passed |
+| `mypy app` (strict) | No issues in 18 source files |
+| `alembic upgrade head` | Both migrations applied |
+| `alembic downgrade base` | Both reversed, no enum left behind |
+| `GET /health` | `200 {"status":"ok"}` |
+| `GET /ready` | `200 {"status":"ok","database":"ok"}` against the live database |
+| `{ apiVersion }` without a token | `200`, resolves |
+| `{ me }` without a token | Refused, `Not authenticated` |
+| Both tables | RLS enabled, forced, one policy, granted to `authenticated` |
+
+**T-2.7 was seen to fail.** With `SET LOCAL ROLE` removed, it reported "no-identity
+transaction saw 2 rows. Row Level Security is not binding". The definition of
+done required this, and it is the only reason the test is worth having.
+
+### Defects found and fixed during the slice
+
+| # | Defect | How it surfaced | Fix |
+|---|---|---|---|
+| B-1 | `sa.Enum` re-issues `CREATE TYPE` inside `create_table`, colliding with the explicit statement | Migration failed on first apply | Use `postgresql.ENUM` with `create_type=False`, which is the only form that honours it |
+| B-2 | Alembic passes the URL through `configparser`, which treats `%` as interpolation. A percent-encoded password raises, **and the raise renders the whole DSN including the password** | `alembic current` failed | `env.py` passes the URL straight to the engine, bypassing `configparser`. Comment left at the line |
+| B-3 | The lifespan never opened the connection pool | `/ready` returned 503 and `{ me }` returned 500 against a running server | The edit that added it had silently no-op'd. Restored, and `test_lifespan_populates_application_state` now guards it |
+
+**B-3 is the one worth remembering.** Every test passed while the server could
+not serve a single GraphQL request, because the client fixture sets `app.state`
+by hand and papered over the missing lifespan. A fixture that supplies what the
+application should build itself will hide the application failing to build it.
+
+### Deviations
+
+| # | Deviation | Why | Consequence |
+|---|---|---|---|
+| D-5 | `Context` is not frozen, against the index's contract | Strawberry accepts only `BaseContext` or a dictionary, and writes `request` and `response` onto it at runtime | Change record filed in the index section 4. FR-6 is unaffected |
+| D-6 | 22 paths touched, against 21 planned | `app/models/__init__.py` needed a package directory, and `tests/integration/test_graphql_auth.py` was added | None |
+| D-7 | Strawberry logs a full traceback at error level when a permission class refuses | Its own behaviour, not ours | Noisy logs on every unauthenticated call. Worth suppressing before production. Not a security issue: the client still receives only "Not authenticated" |
+
+### Security note
+
+The database password was printed in full in a terminal traceback during B-2,
+before the fix. **It must be rotated**, and the `.env` value replaced with the
+percent-encoded form of the new password.
+
+## Change log
+
+| Date | Change | Why | Approved by |
+|---|---|---|---|
+| 2026-09-12 | Slice 2 recorded. All ten tasks done, three defects found and fixed, three deviations | Slice 2 development completed | — |

@@ -3,8 +3,8 @@
 | Field | Value |
 |---|---|
 | Priority | P0, platform |
-| Stage | 4 Implementation plan |
-| Status | Implementation plan index in review |
+| Stage | 5 Dev |
+| Status | Slices 1 and 2 built |
 | Started | 2026-09-09 |
 | Owner | user |
 
@@ -17,8 +17,9 @@
 | 2 Design | — | not applicable, no user-facing surface | — |
 | 3 Build plan | [03-build-plan.md](./03-build-plan.md) | approved | 2026-09-12 |
 | 4 Implementation plan | [04-implementation-plan.md](./04-implementation-plan.md) | index drafted, split into 3 slices | |
-| 4.1 | [04.1-api-skeleton.md](./04.1-api-skeleton.md) | drafted | |
-| 5 Dev | 05-dev-log.md | not started | |
+| 4.1 | [04.1-api-skeleton.md](./04.1-api-skeleton.md) | approved | 2026-09-12 |
+| 4.2 | [04.2-identity-and-isolation.md](./04.2-identity-and-isolation.md) | approved, amends AD-7 | 2026-09-12 |
+| 5 Dev | [05-dev-log.md](./05-dev-log.md) | slice 1 in progress | |
 
 ## One-line summary
 

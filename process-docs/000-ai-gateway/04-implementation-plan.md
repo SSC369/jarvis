@@ -3,16 +3,18 @@ doc: implementation-plan
 feature: 000-ai-gateway
 title: AI Gateway and Usage
 stage: 4
-status: draft
+status: approved
 owner: user
 created: 2026-09-12
 updated: 2026-09-12
-approved_on: null
+approved_on: 2026-09-12
 supersedes: null
 split: true
 ---
 
 # Implementation Plan (LLD) — AI Gateway and Usage
+
+> **Approved** by @user on 2026-09-12. Locked — changes require a change record (§7).
 
 Context: [PRD](./01-prd.md) · [Build plan](./03-build-plan.md)
 
@@ -50,7 +52,7 @@ exception to the vertical-slice rule.
 | # | Sub-plan | What works when it lands | Depends on | Status |
 |---|---|---|---|---|
 | 1 | [04.1-api-skeleton.md](./04.1-api-skeleton.md) | `GET /health` returns 200 from a running app that loaded its configuration from `.env`, and `/graphql` serves an empty schema | — | drafted |
-| 2 | `04.2-identity-and-isolation.md` | An authenticated request resolves to a `user_id`, opens a transaction carrying that identity, and a test proves user A reading user B's row gets nothing | 1 | not started |
+| 2 | [04.2-identity-and-isolation.md](./04.2-identity-and-isolation.md) | An authenticated request resolves to a `user_id`, opens a transaction carrying that identity, and a test proves user A reading user B's row gets nothing | 1 | drafted |
 | 3 | `04.3-the-gateway.md` | A call to `extract()` is allowance-checked, sent to Gemini under a timeout, recorded in `ai_usage`, and returns a typed union member | 2 | not started |
 
 Each slice ends in something a person can run. Slice 1 is thin on purpose: it
@@ -73,12 +75,20 @@ sub-plan.
 ### Request context, slice 2 to slice 3
 
 ```python
-@dataclass(frozen=True)
-class Context:
+@dataclass
+class Context(BaseContext):       # strawberry.fastapi.BaseContext
     user_id: UUID | None          # None on an unauthenticated request
     session: AsyncSession         # already carries SET LOCAL identity
     request_id: str
 ```
+
+> **Changed 2026-09-12, during slice 2.** Originally `@dataclass(frozen=True)`
+> and inheriting nothing. Strawberry accepts only `BaseContext` or a plain
+> dictionary as a resolver context, and it assigns `request` and `response` onto
+> that object at runtime, which a frozen dataclass rejects. Immutability was
+> never the mechanism behind FR-6: the guarantee is that `user_id` is set only
+> in `build_context`, from a verified token, and no code path takes it from
+> caller input. Slice 3 is unaffected; it reads `user_id` and does not write it.
 
 Slice 2 builds it. Slice 3 consumes it and never reads `user_id` from anywhere
 else, which is the mechanism behind FR-6.
@@ -212,4 +222,4 @@ There is no design to match. This epic had no stage 2.
 
 | Date | Change | Why | Approved by | Sub-plans re-opened |
 |---|---|---|---|---|
-| 2026-09-12 | Created as an index, split into 3 slices | All five split thresholds crossed, 52 files against a threshold of 25 | pending | — |
+| 2026-09-12 | Created as an index, split into 3 slices | All five split thresholds crossed, 52 files against a threshold of 25 | user | — |

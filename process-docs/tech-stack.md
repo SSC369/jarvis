@@ -185,11 +185,29 @@ nothing here.
 Settled by [epic 000's build plan](./000-ai-gateway/03-build-plan.md) on
 2026-09-12, decision AD-7.
 
-**`SET LOCAL request.jwt.claims` inside the transaction that does the work.**
-`SET LOCAL` is scoped to the transaction and unsets on commit, so a pooled
-connection cannot carry one user's identity into the next request. This is why a
-model call's usage row is written in the caller's transaction rather than its
-own.
+**Two statements inside the transaction that does the work, in this order:**
+
+```sql
+SELECT set_config('request.jwt.claims', '{"sub":"<user_id>"}', true);
+SET LOCAL ROLE authenticated;
+```
+
+Both are `LOCAL`, so neither survives the transaction and a pooled connection
+cannot carry one user's identity into the next request. This is why a model
+call's usage row is written in the caller's transaction rather than its own.
+
+**The role switch is not optional, and omitting it leaks every row.** The
+application connects as `postgres`, which on Supabase is not a superuser but does
+carry `rolbypassrls`. That privilege outranks `FORCE ROW LEVEL SECURITY`, so the
+policy is never evaluated and every query returns every user's rows, with no
+error. `authenticated` does not carry the privilege. Measured on 2026-09-12
+against the live database; the evidence is in
+[epic 000 sub-plan 2](./000-ai-gateway/04.2-identity-and-isolation.md) section 6.
+
+Every table therefore also needs `GRANT SELECT, INSERT, UPDATE, DELETE ... TO
+authenticated`, because after the switch the connection holds only what that role
+is granted. A table created without the grant fails with a permission error
+rather than leaking, which is the right way round.
 
 Rule T2 makes Row Level Security a database guarantee. This is the mechanism that
 makes the guarantee bind, and getting it wrong disables isolation with no error,
@@ -281,7 +299,7 @@ month costs about one cent. This is why the free tier was not worth its terms.
 | # | Question | Blocks |
 |---|---|---|
 | T-Q1 | Render or Railway for the backend? | epic 000 build plan |
-| ~~T-Q2~~ | How the authenticated user's identity reaches the database connection so RLS applies | **Answered 2026-09-12**, section 3. `SET LOCAL` inside the work transaction |
+| ~~T-Q2~~ | How the authenticated user's identity reaches the database connection so RLS applies | **Answered 2026-09-12**, section 3. `SET LOCAL` claims plus `SET LOCAL ROLE authenticated`. Claims alone are not sufficient |
 | T-Q3 | What backplane carries GraphQL subscriptions when there is more than one API instance? One instance hides this until it does not | epic 002 |
 | T-Q4 | What are the query depth and complexity limits, as numbers? | public launch |
 | T-Q5 | Vercel or Cloudflare Pages for the frontend? | epic 001 build plan |
@@ -348,6 +366,7 @@ Seven files sit there: decisions 0001 to 0006 and their README. Decisions 0004,
 |---|---|---|---|
 | 2026-09-09 | Created, absorbing decision records 0004, 0005 and 0006 | User removed the decisions folder and asked for one technical document | user |
 | 2026-09-09 | Server state moved from TanStack Query to Apollo Client. The pillar P2 objection to a normalised cache is preserved by making MobX stores the source of truth and Apollo a transport | User direction while drafting the repository rulesets | user |
+| 2026-09-12 | Corrected the T-Q2 answer. The claim alone leaks every row because `postgres` carries `rolbypassrls`; `SET LOCAL ROLE authenticated` is mandatory alongside it. Stale downstream: none, no code had been written against the earlier answer | Measured against the live database while planning epic 000 slice 2 | user |
 | 2026-09-12 | Added ORM, database driver, migrations and a Python version. Named `gemini-2.5-flash` as the V1 model. Recorded the `SET LOCAL` answer to T-Q2 and that there is no mirrored users table | Decisions AD-2 to AD-7 and AD-9 locked by epic 000's approved build plan, graduated here per rule 6 of the process | user |
 | 2026-09-09 | Repository layout moved from `apps/api`, `apps/web`, `packages/` to `backend/` and `frontend/`. Each folder now owns a `rules/repo-rules.md` | User direction | user |
 

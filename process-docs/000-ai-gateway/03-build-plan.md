@@ -220,6 +220,14 @@ write shares the caller's transaction rather than opening its own.
 
 ## 8. Architecture decisions to lock
 
+> **AD-7 was amended on 2026-09-12, after approval.** The original decision named
+> `SET LOCAL request.jwt.claims` alone. Measured against the live database, that
+> leaks every row: the `postgres` role carries `rolbypassrls`, which outranks
+> `FORCE ROW LEVEL SECURITY`, so the policy is never evaluated. The corrected
+> decision adds `SET LOCAL ROLE authenticated`, which drops the bypass privilege
+> for the transaction. Evidence and the corrected design are in
+> [04.2](./04.2-identity-and-isolation.md) section 6.
+
 | # | Decision | Status | Graduates to tech-stack.md |
 |---|---|---|---|
 | AD-1 | The gateway is an in-process domain with no GraphQL field | locked | no |
@@ -228,7 +236,7 @@ write shares the caller's transaction rather than opening its own.
 | AD-4 | Migrations are Alembic, RLS policy in the creating migration | locked | **yes, no row exists** |
 | AD-5 | Driver is asyncpg | locked | **yes, no row exists** |
 | AD-6 | Python 3.12 | locked | **yes, no row exists** |
-| AD-7 | Identity reaches the connection by `SET LOCAL` inside the work transaction | locked | yes, closes T-Q2 |
+| AD-7 | Identity reaches the connection by `SET LOCAL` claims **and** `SET LOCAL ROLE authenticated`, both inside the work transaction | **amended 2026-09-12** | yes, closes T-Q2 |
 | AD-8 | Usage is written in the caller's transaction, not a job | locked | no |
 | AD-9 | No mirrored `users` table. `auth.users` is the only identity store | locked | yes |
 
@@ -342,6 +350,7 @@ not lost.
 | 2026-09-10 | Real rate limits recorded: RPM 5, TPM 250K, RPD 20. These are free-tier numbers. Q1 suspended behind Q7, and a severe risk added | User read the AI Studio dashboard | pending |
 | 2026-09-10 | All ten questions answered, user said go with the recommendations | User direction | user |
 | 2026-09-10 | Section 11 added: three plan tiers and a pricing model | User asked for free, plus and pro tiers | pending |
+| 2026-09-12 | **AD-7 amended after approval.** `SET LOCAL` claims alone leak every row, because `postgres` carries `rolbypassrls`. The role switch to `authenticated` is now mandatory. Stale downstream: none, no code had been written against AD-7. `tech-stack.md` section 3 updated in the same change | Measured against the live database while planning slice 2 | user |
 | 2026-09-12 | **Build plan approved.** AD-1 to AD-9 locked. AD-2 to AD-7 and AD-9 graduated to `tech-stack.md` in the same commit, per rule 6 of the process. Q11 carried to epic 001, which owns capture | User said proceed | user |
 | 2026-09-10 | Model cost figures removed throughout: the per-call cost, the rate-card comparison, the spend projections and the promotional-pricing risk. Rate limits and Google tier qualification thresholds kept | User direction | user |
 | 2026-09-10 | Tiers and pricing dropped. One flat limit of 20 calls per user per day. Section 11 keeps the capacity and escalation arithmetic. No PRD non-goal is reversed any more. Q11 repurposed to the input-length cap | User direction: pricing not needed now, 20 commands per day for everyone | user |
