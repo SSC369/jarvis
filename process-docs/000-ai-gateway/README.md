@@ -3,8 +3,8 @@
 | Field | Value |
 |---|---|
 | Priority | P0, platform |
-| Stage | 3 Build plan |
-| Status | PRD approved, no design stage |
+| Stage | 4 Implementation plan |
+| Status | Build plan approved, no design stage |
 | Started | 2026-09-09 |
 | Owner | user |
 
@@ -15,8 +15,8 @@
 |  0 Epic | [00-epic.md](./00-epic.md) | approved | 2026-09-09 |
 | 1 PRD | [01-prd.md](./01-prd.md) | approved | 2026-09-09 |
 | 2 Design | — | not applicable, no user-facing surface | — |
-| 3 Build plan | 03-build-plan.md | not started | |
-| 4 Implementation plan | 04-implementation-plan.md | not started | |
+| 3 Build plan | [03-build-plan.md](./03-build-plan.md) | approved | 2026-09-12 |
+| 4 Implementation plan | 04-implementation-plan.md | next | |
 | 5 Dev | 05-dev-log.md | not started | |
 
 ## One-line summary

@@ -26,8 +26,11 @@ choice changes, it changes here, and the change log at the bottom records it.
 | API medium | GraphQL |
 | GraphQL server | Strawberry, mounted on FastAPI |
 | API framework | FastAPI |
-| Language | Python |
+| Language | Python 3.12 |
 | Database | PostgreSQL, hosted by Supabase |
+| ORM | SQLAlchemy 2.x, async |
+| Database driver | asyncpg |
+| Migrations | Alembic |
 | Vector search | pgvector, in the same database |
 | Auth | Supabase Auth |
 | Data isolation | PostgreSQL Row Level Security |
@@ -43,7 +46,7 @@ choice changes, it changes here, and the change log at the bottom records it.
 | Backend hosting | Managed container host. Render or Railway, undecided |
 | Frontend hosting | Static host. Vercel or Cloudflare Pages, undecided |
 | Email | Resend |
-| Model provider | Google Gemini Flash, paid tier |
+| Model provider | Google Gemini Flash, paid tier. `gemini-2.5-flash` in V1 |
 | LLM observability | Langfuse |
 
 ---
@@ -161,6 +164,41 @@ that has to be enforced rather than assumed: a component reading a query result
 directly instead of a store silently reintroduces the second store. The rule is
 written down in `frontend/rules/repo-rules.md` section 7.
 
+### Data layer: SQLAlchemy 2.x async, asyncpg, Alembic
+
+Settled by [epic 000's build plan](./000-ai-gateway/03-build-plan.md) on
+2026-09-12, decisions AD-3 to AD-6. No row existed for any of these before, and
+they block every backend file.
+
+| Alternative | Why it lost |
+|---|---|
+| SQLModel instead of SQLAlchemy | Thinner, and by FastAPI's author. It lags SQLAlchemy on async and on complex queries, and the backend has a repository layer that wants full query power |
+| Raw asyncpg, no ORM | Fast, but every repository hand-rolls its mapping and Alembic has nothing to read |
+| psycopg3 instead of asyncpg | Both work. asyncpg is faster and is what SQLAlchemy's async documentation assumes |
+| Supabase CLI SQL migrations instead of Alembic | Attractive, because Row Level Security policies are SQL. Two migration histories over one database is the problem it appears to solve. Alembic runs raw SQL for policies |
+
+**Python 3.12**, not 3.13, because the ecosystem lag on a new minor version buys
+nothing here.
+
+### Identity on the connection, answering T-Q2
+
+Settled by [epic 000's build plan](./000-ai-gateway/03-build-plan.md) on
+2026-09-12, decision AD-7.
+
+**`SET LOCAL request.jwt.claims` inside the transaction that does the work.**
+`SET LOCAL` is scoped to the transaction and unsets on commit, so a pooled
+connection cannot carry one user's identity into the next request. This is why a
+model call's usage row is written in the caller's transaction rather than its
+own.
+
+Rule T2 makes Row Level Security a database guarantee. This is the mechanism that
+makes the guarantee bind, and getting it wrong disables isolation with no error,
+which is why it is written down rather than left to a connection helper.
+
+**There is no mirrored `users` table** (AD-9). Identity lives only in
+`auth.users`. A second copy would need synchronising, which is the failure this
+document rejected Clerk over.
+
 ### Repository: plain folders
 
 Two folders at the repository root, `backend/` and `frontend/`, set by the user
@@ -243,7 +281,7 @@ month costs about one cent. This is why the free tier was not worth its terms.
 | # | Question | Blocks |
 |---|---|---|
 | T-Q1 | Render or Railway for the backend? | epic 000 build plan |
-| T-Q2 | How does the authenticated user's identity reach the database connection so RLS applies: `set_config` per transaction on a pooled connection, or a role switch per request? Getting this wrong disables isolation with no error | epic 000 build plan |
+| ~~T-Q2~~ | How the authenticated user's identity reaches the database connection so RLS applies | **Answered 2026-09-12**, section 3. `SET LOCAL` inside the work transaction |
 | T-Q3 | What backplane carries GraphQL subscriptions when there is more than one API instance? One instance hides this until it does not | epic 002 |
 | T-Q4 | What are the query depth and complexity limits, as numbers? | public launch |
 | T-Q5 | Vercel or Cloudflare Pages for the frontend? | epic 001 build plan |
@@ -310,6 +348,7 @@ Seven files sit there: decisions 0001 to 0006 and their README. Decisions 0004,
 |---|---|---|---|
 | 2026-09-09 | Created, absorbing decision records 0004, 0005 and 0006 | User removed the decisions folder and asked for one technical document | user |
 | 2026-09-09 | Server state moved from TanStack Query to Apollo Client. The pillar P2 objection to a normalised cache is preserved by making MobX stores the source of truth and Apollo a transport | User direction while drafting the repository rulesets | user |
+| 2026-09-12 | Added ORM, database driver, migrations and a Python version. Named `gemini-2.5-flash` as the V1 model. Recorded the `SET LOCAL` answer to T-Q2 and that there is no mirrored users table | Decisions AD-2 to AD-7 and AD-9 locked by epic 000's approved build plan, graduated here per rule 6 of the process | user |
 | 2026-09-09 | Repository layout moved from `apps/api`, `apps/web`, `packages/` to `backend/` and `frontend/`. Each folder now owns a `rules/repo-rules.md` | User direction | user |
 
 **Downstream documents made stale by the two 2026-09-09 revisions: none.** Rule 7
