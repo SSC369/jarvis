@@ -49,7 +49,7 @@ exception to the vertical-slice rule.
 
 | # | Sub-plan | What works when it lands | Depends on | Status |
 |---|---|---|---|---|
-| 1 | `04.1-api-skeleton.md` | `GET /health` returns 200 from a running app that loaded its configuration from `.env`, and `/graphql` serves an empty schema | — | not started |
+| 1 | [04.1-api-skeleton.md](./04.1-api-skeleton.md) | `GET /health` returns 200 from a running app that loaded its configuration from `.env`, and `/graphql` serves an empty schema | — | drafted |
 | 2 | `04.2-identity-and-isolation.md` | An authenticated request resolves to a `user_id`, opens a transaction carrying that identity, and a test proves user A reading user B's row gets nothing | 1 | not started |
 | 3 | `04.3-the-gateway.md` | A call to `extract()` is allowance-checked, sent to Gemini under a timeout, recorded in `ai_usage`, and returns a typed union member | 2 | not started |
 

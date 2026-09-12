@@ -17,6 +17,7 @@
 | 2 Design | — | not applicable, no user-facing surface | — |
 | 3 Build plan | [03-build-plan.md](./03-build-plan.md) | approved | 2026-09-12 |
 | 4 Implementation plan | [04-implementation-plan.md](./04-implementation-plan.md) | index drafted, split into 3 slices | |
+| 4.1 | [04.1-api-skeleton.md](./04.1-api-skeleton.md) | drafted | |
 | 5 Dev | 05-dev-log.md | not started | |
 
 ## One-line summary

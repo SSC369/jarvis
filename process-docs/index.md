@@ -35,7 +35,7 @@ Status values: `draft`, `in-review`, `approved`, `blocked`, `shipped`,
 
 | # | Feature | Priority | Stage | Status | Waiting on | Updated |
 |---|---|---|---|---|---|---|
-| 000 | [AI Gateway and Usage](./000-ai-gateway/) | P0, platform | 4 Implementation plan | index in review, split into 3 slices | User approval of the [index](./000-ai-gateway/04-implementation-plan.md), then sub-plan 1 | 2026-09-12 |
+| 000 | [AI Gateway and Usage](./000-ai-gateway/) | P0, platform | 4 Implementation plan | index and sub-plan 1 in review | User approval of both, then slice 1 dev | 2026-09-12 |
 | 001 | [Capture and Records Foundation](./001-capture-and-records-foundation/) | P0 | 2 Design | in-review | User review of the design canvas | 2026-09-09 |
 
 ## Planned
