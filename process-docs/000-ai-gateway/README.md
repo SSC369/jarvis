@@ -4,7 +4,7 @@
 |---|---|
 | Priority | P0, platform |
 | Stage | 4 Implementation plan |
-| Status | Build plan approved, no design stage |
+| Status | Implementation plan index in review |
 | Started | 2026-09-09 |
 | Owner | user |
 
@@ -16,7 +16,7 @@
 | 1 PRD | [01-prd.md](./01-prd.md) | approved | 2026-09-09 |
 | 2 Design | — | not applicable, no user-facing surface | — |
 | 3 Build plan | [03-build-plan.md](./03-build-plan.md) | approved | 2026-09-12 |
-| 4 Implementation plan | 04-implementation-plan.md | next | |
+| 4 Implementation plan | [04-implementation-plan.md](./04-implementation-plan.md) | index drafted, split into 3 slices | |
 | 5 Dev | 05-dev-log.md | not started | |
 
 ## One-line summary
