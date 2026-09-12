@@ -1,18 +1,20 @@
 ---
 name: backend-code-review
-description: Review backend Python changes against backend/.claude/rules/repo-rules.md. Use when the user asks for a code review, a PR review, an audit of a domain, or a check on new resolvers, interactors, repositories, adapters, migrations or jobs under backend/.
+description: Review backend Python changes against backend/.claude/rules/repo-rules.md and backend/.claude/rules/code-rules.md. Use when the user asks for a code review, a PR review, an audit of a domain, or a check on new resolvers, interactors, repositories, adapters, migrations or jobs under backend/.
 tools: Read, Grep, Glob, Bash
 model: inherit
 ---
 
 # Backend Code Review
 
-Review Python under `backend/` against the binding ruleset in
-[`../rules/repo-rules.md`](../rules/repo-rules.md). That document is the
-authority; this one is the order you walk it in. Every finding names a file, a
-line range, the rule section it breaks, and the concrete fix.
+Review Python under `backend/` against the binding rulesets in
+[`../rules/repo-rules.md`](../rules/repo-rules.md) and
+[`../rules/code-rules.md`](../rules/code-rules.md). Repo-rules is where code
+goes. Code-rules is how a method is written. This file is the order you walk
+them in. Every finding names a file, a line range, the rule section it breaks,
+and the concrete fix.
 
-Read the ruleset before reviewing. Cite sections by number so the author can
+Read both rulesets before reviewing. Cite sections by number so the author can
 check you.
 
 ## Before you start
@@ -44,7 +46,7 @@ violation makes every finding below it provisional: the fix moves the code.
 6. Data     §10 RLS in the creating migration
 7. Access   §12 permission class per field, ownership in the interactor
 8. Tests    §15 every union member, fakes not patches, boundary test
-9. Craft    §16 type hints, docstrings, naming, magic values
+9. Craft    §16 plus code-rules.md: types, keyword-only, interactor, names
 10. Rot     §17 the named anti-patterns
 ```
 
@@ -193,14 +195,21 @@ non-user-facing model calls, embedding generation, exports.
   chains. A patch chain usually means the interactor news up its own
   collaborators, which is a §9 finding wearing a test's clothes.
 
-## 10. Craft (§16)
+## 10. Craft (§16 and code-rules.md)
+
+Walk [`../rules/code-rules.md`](../rules/code-rules.md) here, then the remainder
+of repo-rules §16.
 
 | Rule | Flag |
 |---|---|
-| Type hints on every public function | Any untyped parameter or return |
+| Types on every argument and return, including private methods (code-rules §1) | Any untyped parameter or return. Untyped `*args` / `**kwargs` in domain code |
+| Keyword-only after `self` (code-rules §2) | A project method without `*` in the signature, or a call site passing positionals to project code |
+| Interactor orchestrates (code-rules §3) | Validation branches inline in the public method. A check that is not its own `_validate_*` or `_ensure_*` |
+| Storage is SQL only (code-rules §4, repo-rules §4) | A repository deciding a limit, outcome, retry, or whether a call counts |
+| Names describe the action (code-rules §5) | `_record`, `_check`, `_ok`, or any name that needs the body to explain it |
+| Variables are contextual (code-rules §6) | `a`, `e`, `x`, `this`, `that`, `data`, `obj`, `tmp`, `val`, `info` (except Strawberry `info: Info`) |
 | Docstrings on interactors | Missing `Raises:`, or one that disagrees with the union |
 | No magic values | A literal limit, TTL or default outside `constants.py` |
-| Concrete names | `data`, `info`, `obj`, `tmp`, `mgr`, `helper` |
 | Size | Over 30 lines, or over 4 parameters. More parameters means a DTO |
 | Imports | Wildcards, or out of stdlib, third-party, first-party order |
 | Comments | A comment restating the line below it. Keep the ones explaining why |
@@ -251,7 +260,7 @@ Group by severity. File path, line range, rule section, concrete fix.
 | Severity | Means |
 |---|---|
 | Blocking | Missing RLS policy, a leaked credential, a layer or domain boundary violation, a cycle, a field with no permission class, a business failure raised as a GraphQL error, code ahead of its stage 4 approval |
-| Should fix | An untested union member, a missing type hint or `Raises:`, an untyped collaborator, a magic value, a function past 30 lines |
+| Should fix | An untested union member, a missing type hint or `Raises:`, an untyped collaborator, a magic value, a function past 30 lines, positional project calls, validation inline in an interactor public method |
 | Nit | Naming, ordering, comment polish |
 
 A finding with no concrete fix is not a finding. Say what to write instead.

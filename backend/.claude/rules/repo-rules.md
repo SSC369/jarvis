@@ -5,16 +5,18 @@ title: Backend Repository Structure and Patterns
 status: current
 owner: user
 created: 2026-09-09
-updated: 2026-09-09
+updated: 2026-09-12
 ---
 
 # Backend — Repository Structure and Patterns
 
 The binding ruleset for every file under `backend/`. It answers one question:
-where does this code go, and what shape is it in.
+where does this code go, and what shape is it in. How a method is written
+(types, keyword calls, interactor orchestration, names) lives in
+[`code-rules.md`](./code-rules.md).
 
-Read it before writing code here. A change that contradicts it says so in the
-feature's dev log, per root `CLAUDE.md` rule 5.
+Read both before writing code here. A change that contradicts them says so in
+the feature's dev log, per root `CLAUDE.md` rule 5.
 
 ## 1. Where these rules came from
 
@@ -60,7 +62,8 @@ and should be.
 backend/
 ├── CLAUDE.md
 ├── rules/
-│   └── repo-rules.md            ← this file
+│   ├── repo-rules.md            ← this file
+│   └── code-rules.md            ← types, keyword calls, names. See code-rules.md
 ├── pyproject.toml
 ├── .env.example                 ← every variable, no values
 ├── Dockerfile
@@ -647,13 +650,14 @@ error type the frontend's exhaustiveness check will meet first in production.
 
 ## 16. Conventions
 
-- **Type hints on every public function.** No untyped parameters, ever.
+Types, keyword-only calls, interactor orchestration, storage purity, and
+naming are owned by [`code-rules.md`](./code-rules.md). Do not restate them
+here.
+
 - **Docstrings on interactors** with `Raises:` listing every domain error. The
   union in the resolver must match it.
 - **No magic values.** Limits, TTLs and defaults live in the domain's
   `constants.py`.
-- **Names are concrete.** `record_dto`, `user_id`, `occurred_at`. Not `data`,
-  `info`, `obj`, `tmp`.
 - **Functions under 30 lines, under 4 parameters.** More parameters means a DTO.
 - **Imports** in order: stdlib, third party, first party. No wildcards.
 - **Comments explain why.** A comment restating the line below it is deleted.

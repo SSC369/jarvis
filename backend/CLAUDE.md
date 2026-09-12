@@ -8,18 +8,21 @@ does.
 ## The binding ruleset
 
 **Before writing any code in this folder, read
-[`rules/repo-rules.md`](./rules/repo-rules.md).** It owns the directory layout,
-the layer contract, how an API is written end to end, error handling, dependency
-injection, testing, and naming.
+[`.claude/rules/repo-rules.md`](./.claude/rules/repo-rules.md) and
+[`.claude/rules/code-rules.md`](./.claude/rules/code-rules.md).** Repo-rules
+owns the directory layout, the layer contract, how an API is written end to
+end, error handling, dependency injection, and testing. Code-rules owns how a
+method is written: types, keyword-only calls, interactor orchestration, storage
+purity, and names.
 
 The standing stack lives in
 [`process-docs/tech-stack.md`](../process-docs/tech-stack.md) and is not
 restated here. Where this folder contradicts it, the contradiction is named in
-`rules/repo-rules.md` §2 rather than left for a reader to find.
+`.claude/rules/repo-rules.md` §2 rather than left for a reader to find.
 
 ## Rules that bind, stated in full
 
-These seven survive a skipped link. Everything else is in the ruleset.
+These eight survive a skipped link. Everything else is in the ruleset.
 
 1. **Dependencies point one way.** Resolver depends on interactor, interactor on
    repository protocol, repository on model. Never the reverse, never sideways
@@ -41,6 +44,10 @@ These seven survive a skipped link. Everything else is in the ruleset.
    consumer owns, and an adapter in the consumer.** Nothing else crosses. A
    domain's `public.py` is its whole contract, and the dependency graph between
    domains stays acyclic.
+8. **Every method is typed, and project calls are keyword-only.** The public
+   interactor method orchestrates; each validation is a private method. Storage
+   methods run SQL and map DTOs. Names say what the method does. Details in
+   `.claude/rules/code-rules.md`.
 
 ## Committing
 
