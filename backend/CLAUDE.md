@@ -42,6 +42,12 @@ These seven survive a skipped link. Everything else is in the ruleset.
    domain's `public.py` is its whole contract, and the dependency graph between
    domains stays acyclic.
 
+## Committing
+
+Never run `git commit` here until the user asks for it. Finish the work, leave it
+in the working tree, and report what changed. Root [`CLAUDE.md`](../CLAUDE.md)
+rule 7.
+
 ## Gate reminder
 
 Root [`CLAUDE.md`](../CLAUDE.md) rule 1 stands: no code before that feature's

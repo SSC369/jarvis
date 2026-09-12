@@ -41,6 +41,12 @@ These six survive a skipped link. Everything else is in the ruleset.
 6. **No raw colour and no arbitrary Tailwind value in a feature.** Every visual
    value comes from a token. A hex code outside the token file is a defect.
 
+## Committing
+
+Never run `git commit` here until the user asks for it. Finish the work, leave it
+in the working tree, and report what changed. Root [`CLAUDE.md`](../CLAUDE.md)
+rule 7.
+
 ## Gate reminder
 
 Root [`CLAUDE.md`](../CLAUDE.md) rule 1 stands: no code before that feature's

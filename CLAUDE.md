@@ -45,6 +45,11 @@ standing product context. Before drafting a build plan, also read
 6. **Keep technology out of product documents.** Frameworks, vendors and hosting
    choices live in `process-docs/tech-stack.md` and nowhere else. A product
    document or a PRD never names one.
+7. **Never commit until asked.** Finish the work, leave it in the working tree,
+   and say what changed. The user reads the diff and decides when it becomes a
+   commit. This binds even where a rule reads "in the same commit": that says
+   what belongs together, not that you may create it. The same applies to
+   branching, pushing and opening pull requests.
 
 ## Layout
 
