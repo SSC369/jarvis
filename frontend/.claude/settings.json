@@ -1,0 +1,53 @@
+{
+  "$schema": "https://json.schemastore.org/claude-code-settings.json",
+  "permissions": {
+    "allow": [
+      "Bash(pnpm install)",
+      "Bash(pnpm install --frozen-lockfile)",
+      "Bash(pnpm build)",
+      "Bash(pnpm lint)",
+      "Bash(pnpm typecheck)",
+      "Bash(pnpm codegen)",
+      "Bash(pnpm test:*)",
+      "Bash(pnpm list:*)",
+      "Bash(pnpm why:*)",
+      "Bash(pnpm outdated:*)",
+      "Bash(pnpm exec tsc --noEmit:*)",
+      "Bash(pnpm exec vitest run:*)",
+      "Bash(pnpm exec eslint:*)",
+      "Bash(pnpm exec prettier --check:*)",
+      "Bash(pnpm exec graphql-codegen:*)",
+      "Bash(pnpm exec vite build:*)",
+      "Bash(pnpm --version)",
+      "Bash(node --version)",
+      "Bash(npx tsc --noEmit:*)",
+      "Bash(git status:*)",
+      "Bash(git diff:*)",
+      "Bash(git log:*)",
+      "Bash(git show:*)",
+      "Bash(git blame:*)",
+      "Bash(git ls-files:*)",
+      "Bash(git rev-parse:*)",
+      "Bash(git remote -v)",
+      "Bash(git branch --show-current)",
+      "Bash(git stash list)",
+      "Bash(ls:*)",
+      "Bash(cat:*)",
+      "Bash(head:*)",
+      "Bash(tail:*)",
+      "Bash(sed -n:*)",
+      "Bash(wc:*)",
+      "Bash(file:*)",
+      "Bash(du:*)",
+      "Bash(diff:*)",
+      "Bash(find:*)",
+      "Bash(grep:*)",
+      "Bash(rg:*)",
+      "Bash(tree:*)",
+      "Bash(python3 -m json.tool:*)"
+    ],
+    "deny": [
+      "Read(//Users/saicharan/Desktop/jarvis/frontend/.env)"
+    ]
+  }
+}

@@ -134,6 +134,14 @@ knowledge and none of the conversation.
 
 - Lead with the decision or the answer. Reasoning goes underneath it.
 - One idea per sentence. Around twenty words. Every sentence has a verb.
+- Say a thing once. If two sections would carry the same fact, one of them links
+  to the other.
+- Cut any sentence that survives being deleted. Restating the problem, easing
+  into a section, or summarising what the reader just read are all cuts.
+- No section preamble. A heading is followed by content, not by a sentence
+  explaining what the section is about.
+- Justify a decision in one or two sentences. Reasoning that runs longer than
+  the decision it supports belongs in the epic, or nowhere.
 - Prefer a table or a list to a paragraph for anything parallel: requirements,
   states, options, tasks, risks.
 - No em-dashes, no arrows, no parenthetical asides stacked mid-sentence.
@@ -155,6 +163,27 @@ carry a number.
 
 Bad: `The assistant should respond quickly.`
 Good: `NFR-3. Assistant streams the first token within 800 ms at p95.`
+
+**Length.** A document is judged on whether it is complete and reviewable, not on
+how much of it there is. A reviewer who stops reading half way has not approved
+anything. These are budgets, not limits: go over when the feature genuinely needs
+it, and say why in the doc.
+
+| Document | Budget |
+|---|---|
+| `00-epic.md` | 150 lines |
+| `01-prd.md` | 150 lines |
+| `02-design.md` | 200 lines |
+| `03-build-plan.md` | 250 lines |
+| `04-implementation-plan.md`, whole or index | 250 lines. Past 500 it splits, see §6 |
+| `04.N-*.md` sub-plan | 250 lines |
+| `05-dev-log.md` | no budget. It grows as the work does |
+| `product/product.md`, `product/v1-features.md`, `tech-stack.md` | 350 lines |
+
+Over budget, the fix is almost never a smaller feature. It is removing repeated
+context, collapsing prose into a table, or moving reasoning to the stage that
+owns it. Padding a document to look thorough is a defect, the same as leaving a
+required section out.
 
 ---
 
@@ -367,7 +396,8 @@ them names the features it makes stale.
 
 **A doc is ready for review when:** front matter is complete, every required
 section exists, no `TBD` remains outside Open Questions, every claim is sourced,
-and it links correctly to the previous stage.
+it links correctly to the previous stage, and it is inside its length budget in
+§5 or says in one line why it is not.
 
 **A feature is done when:** the dev log records every task in the
 implementation plan, and in every sub-plan when it was split, as shipped or
