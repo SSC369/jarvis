@@ -1,0 +1,44 @@
+# --- Installed packages and virtual environments ---
+# Nothing pip downloads is ever committed. requirements.txt is the source of
+# truth; the packages themselves are rebuilt from it.
+.venv/
+venv/
+env/
+ENV/
+.env-venv/
+*.venv/
+site-packages/
+pip-wheel-metadata/
+*.egg-info/
+*.egg
+.eggs/
+pip-log.txt
+pip-delete-this-directory.txt
+
+# --- Python bytecode and build output ---
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+build/
+dist/
+
+# --- Tool caches ---
+.pytest_cache/
+.mypy_cache/
+.ruff_cache/
+.coverage
+.coverage.*
+htmlcov/
+.tox/
+
+# --- Secrets ---
+# Never commit. The credential rule of FR-1 depends on these lines.
+.env
+.env.*
+!.env.example
+
+# --- Editor and OS ---
+.DS_Store
+.idea/
+.vscode/

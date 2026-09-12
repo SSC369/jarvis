@@ -1,0 +1,31 @@
+# Tool configuration only. This is not a build target and the backend is not
+# packaged; it is deployed as a container. Dependencies live in requirements.txt.
+
+[tool.ruff]
+line-length = 88
+target-version = "py312"
+# Never lint what pip installed, and never reformat documentation.
+# `ruff format .` rewrites Python code blocks inside Markdown, which
+# silently edited backend/rules/repo-rules.md once.
+extend-exclude = [".venv", "venv", "env", "*.md", "rules"]
+
+[tool.ruff.lint]
+select = ["E", "F", "I", "N", "UP", "B", "A", "C4", "SIM", "RUF"]
+
+[tool.ruff.lint.isort]
+known-first-party = ["app"]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+asyncio_mode = "auto"
+addopts = "-q --strict-markers"
+
+[tool.mypy]
+python_version = "3.12"
+strict = true
+warn_unreachable = true
+plugins = ["pydantic.mypy"]
+
+[[tool.mypy.overrides]]
+module = ["tests.*"]
+disallow_untyped_defs = false

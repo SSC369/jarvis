@@ -1,0 +1,24 @@
+# Runtime dependencies for the Slashit backend.
+# Versions resolved from PyPI on 2026-09-12 and pinned. See 04.1 task T-1.1.
+# Slices 2 and 3 append to this file; they do not rewrite it.
+
+# API and GraphQL
+fastapi==0.141.1
+uvicorn[standard]==0.52.4
+strawberry-graphql[fastapi]==0.327.7
+
+# Configuration
+pydantic-settings==2.15.0
+
+# Logging
+structlog==26.1.0
+
+# --- Added by slice 2 (identity and isolation), 2026-09-12 ---
+
+# Database. Decisions AD-3, AD-5, AD-4 in the tech stack.
+sqlalchemy[asyncio]==2.0.52
+asyncpg==0.31.0
+alembic==1.20.0
+
+# Supabase JWT verification against the JWKS endpoint.
+pyjwt[crypto]==2.14.0
