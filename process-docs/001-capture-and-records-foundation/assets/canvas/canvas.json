@@ -546,7 +546,7 @@
       "y": -150,
       "w": 760,
       "page": "page-1",
-      "text": "Only four commands exist in epic 001, because tasks are the only record type. The filter artboard shows /add matching one command, not six. The palette is built to group as the list grows."
+      "text": "Only four commands are real in epic 001, because tasks are the only record type built. The other twelve here are synthetic placeholders from later epics (002 to 008), added 2026-09-13 to prove discovery and filtering hold at a realistic scale, per Q2 in 02-design.md. The palette scrolls past six rows; /add now matches seven, not one."
     },
     {
       "id": "n-pending",
@@ -634,7 +634,7 @@
       "y": -200,
       "w": 1200,
       "page": "page-9",
-      "text": "THEME TOGGLE\nThree choices, not two: System, Light, Dark. System is the default and follows the device through the day.\n\nThe two preview tiles are the point. A segmented control alone makes you switch the whole app to find out what you are choosing.\n\nThis needs proposed FR-42 approved. Without it the app follows the system and there is nothing to toggle."
+      "text": "THEME TOGGLE\nDeclined 2026-09-13, Q13 in 02-design.md: the app follows the system setting only, no override. This page is kept as the record of the direction considered and not taken. The Settings artboards no longer draw this control."
     },
     {
       "id": "n-names2",

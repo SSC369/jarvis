@@ -6,7 +6,7 @@ stage: 0
 status: approved
 owner: user
 created: 2026-09-08
-updated: 2026-09-08
+updated: 2026-09-13
 approved_on: 2026-09-08
 supersedes: null
 ---
@@ -89,3 +89,33 @@ Carried into the PRD as open questions.
 | U3 | Whether ₹ is the only currency, which matters once expenses arrive |
 | U4 | What accuracy of classification and extraction counts as good enough |
 | U5 | Whether project and goal links on a task are in scope here, given those epics land later |
+
+## Addendum, 2026-09-13: task lateness
+
+This doc predates the pros/cons/alternatives contract (see the note under the
+title), so this is argued here directly rather than retrofitted into a section
+that does not exist above.
+
+The design (`02-design.md`, records list) drew overdue styling on the task list
+before this was argued anywhere. The user approved adding it, so the argument
+is made now, after the fact, rather than left unrecorded.
+
+**Pro.** A task past its due date and undone is exactly the information a
+records view exists to surface (per the epic's own line: "if Slashit can record
+it, the user can see it"). It costs nothing to store: overdue is derived from a
+due date and a status Slashit already has, not a new field.
+
+**Con.** The PRD explicitly scoped a task down to title, due date and status,
+cutting priority and recurrence (§4, non-goals). Lateness is adjacent scope
+creep on a deliberately minimal entity, and it implies a visual state (a color,
+a label) that needs its own accessibility treatment, per `02-design.md` §7.
+
+**Decision.** In scope, as `FR-43` in `01-prd.md`. The con is accepted because
+the cost is purely presentational: no new stored field, no new command, no new
+extraction behaviour.
+
+## Change log
+
+| Date | Change | Why | Approved by |
+|---|---|---|---|
+| 2026-09-13 | Addendum added, arguing task lateness after the design drew it. `01-prd.md` FR-43 added in the same change | User approved overdue styling while reviewing the design canvas | user |

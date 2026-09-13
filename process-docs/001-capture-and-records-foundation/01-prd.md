@@ -6,7 +6,7 @@ stage: 1
 status: approved
 owner: user
 created: 2026-09-08
-updated: 2026-09-08
+updated: 2026-09-13
 approved_on: 2026-09-09
 supersedes: null
 ---
@@ -153,6 +153,29 @@ build targets, not success bets.
 |---|---|---|---|
 | FR-35 | When a capture cannot be completed because the model is unavailable or the shared quota is exhausted, Slashit refuses the capture, says plainly why and that it is temporary, and preserves what the user typed. Nothing is recorded half-formed. | must | US-1 |
 
+### Installed app
+
+Added 2026-09-13. Proposed in [02-design.md](./02-design.md) §5b against the
+design's PWA artboards, approved by the user against Q9 in that document's §9.
+
+| id | Requirement | Priority | Story |
+|---|---|---|---|
+| FR-39 | Slashit can be installed to a home screen and runs without browser chrome, with an icon, a name and a splash. The invitation appears at most once per session and can be dismissed permanently. | should | — |
+| FR-40 | With no connection, records already on the device stay readable and are stamped with when they were saved. Capture is refused before the user commits, and nothing is queued. | should | — |
+| FR-41 | When a new version is available, the user is told and chooses when to load it. Anything typed survives the reload. | should | — |
+
+### Tasks, lateness
+
+Added 2026-09-13. Overdue styling was drawn in the design (02-design.md,
+records list) before being argued here. Recorded as a gate exception: the
+requirement is added to the PRD directly, and [00-epic.md](./00-epic.md) is
+updated in the same change to carry the argument this normally requires
+before a PRD entry exists.
+
+| id | Requirement | Priority | Story |
+|---|---|---|---|
+| FR-43 | A task past its due date and not done is shown as overdue in the records view and on `/tasks`, distinctly from pending and done. | should | US-6 |
+
 ## 7. Non-functional requirements
 
 | id | Requirement | Number | How it is measured |
@@ -247,6 +270,7 @@ capture, undo beyond edit and delete, attachments on records, and any sharing.
 
 | Date | Change | Why | Approved by |
 |---|---|---|---|
+| 2026-09-13 | FR-39 to FR-41 added (installed app), applying the 2026-09-09 proposal in `02-design.md` §5b now that the user approved it against Q9. FR-43 added (task lateness), argued in `00-epic.md`'s 2026-09-13 addendum in the same change, per Q4. FR-42 (theme override) considered and declined, per Q13: not added | User answered the design's open questions | user |
 | 2026-09-08 | Created from the V1 product definition | First epic of V1 | pending |
 | 2026-09-09 | **Change proposed, not applied.** FR-42, theme following the system with a user override, is drafted in [02-design.md](./02-design.md) section 5b. Dark theme itself needs no requirement: it is how the approved surfaces look, not new behaviour. The override is behaviour, so it needs one. | User asked for a dark theme | pending |
 | 2026-09-09 | **Change proposed, not applied.** The design adds installed-app surfaces, which this PRD does not cover. FR-39 install, FR-40 offline read, FR-41 update waiting are drafted in [02-design.md](./02-design.md) section 5b and need approval before they are requirements. Mobile layout needs no change: this PRD ships web, and a phone browser is web. Nothing here is stale meanwhile. | User asked for mobile and PWA designs | pending |

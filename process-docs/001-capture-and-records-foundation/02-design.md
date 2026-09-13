@@ -228,17 +228,12 @@ white on a mid blue.
 `DarkTokens` carries every pair, token by token, with its role. Nothing in the
 dark theme is a new decision about layout, spacing or type. Only colour changes.
 
-**How the theme is chosen.** Three options, not two: System, Light, Dark. System
-is the default and follows the device through the day, so a user who switches at
-sunset does not have to switch twice.
-
-The control carries two preview tiles beside it, one light and one dark, showing
-a card, some text and a button in each. Without them a segmented control makes
-you change the whole application to find out what you are choosing. The tiles
-appear on the phone as well, where switching back and forth costs more.
-
-The override is a setting the PRD does not currently have. It is proposed as
-FR-42 below.
+**How the theme is chosen.** Following the device only. **Declined 2026-09-13,
+Q13:** a three-way System/Light/Dark override control with preview tiles was
+drawn here and on the four Settings artboards. FR-42 was not approved, so
+there is no override to control. The control is removed from `Settings`,
+`DarkSettings`, `MobileSettings` and `DarkMobileSettings`. The `Theme toggle`
+canvas page is kept as the record of the direction considered and not built.
 
 ## 5d. Name and logo
 
@@ -374,7 +369,7 @@ the set above.
 | # | Question | Owner | Answer |
 |---|---|---|---|
 | ~~Q1~~ | Is the direction right? Two alternatives sit on the Directions page. | user | **Answered 2026-09-13.** Yes, the built direction is right. Directions B and C stay on the canvas as the record, not taken. |
-| ~~Q2~~ | Four commands exist in this epic, so `/add` filters to one result. Does the discovery design need proving against a longer list now, or when the list grows? | user | **Answered 2026-09-13.** Prove it now. **Follow-up:** add a longer synthetic command list to `CommandPalette`/`CommandFilter` before stage 2 closes, so the filtering design is validated against more than four commands. |
+| ~~Q2~~ | Four commands exist in this epic, so `/add` filters to one result. Does the discovery design need proving against a longer list now, or when the list grows? | user | **Answered 2026-09-13.** Prove it now. **Done 2026-09-13:** `CommandPalette` now lists 16 commands (4 real, 12 synthetic placeholders from epics 002 to 008, muted and marked "not yet built") in a scrolling list; `CommandFilter` shows `/add` matching 7 of them, not 1. Annotation `n-cmdcount` updated to match. |
 | ~~Q3~~ | The records type filter shows All and Tasks only. Should the other types appear disabled so the shape is visible, or stay absent until they exist? Absent is drawn. | user | **Answered 2026-09-13.** Stay absent, as drawn. No change. |
 | ~~Q4~~ | Overdue styling is drawn on the task list. The PRD does not mention lateness. In or out? | user | **Answered 2026-09-13.** In scope. **Follow-up:** lateness was not argued in `00-epic.md` and is not an `01-prd.md` requirement. Per root ruleset rule 3 and `process-docs/CLAUDE.md` §6, this needs a change record adding it to the epic and PRD before the design can rely on it, not a silent addition here. |
 | ~~Q5~~ | The transcript keeps history. How far back, and does it survive a reload? The PRD does not say, and it changes the empty state. | user | **Answered 2026-09-13.** Survives reload, kept indefinitely, same durability as records. |
@@ -385,31 +380,35 @@ the set above.
 | ~~Q10~~ | Offline reads but never captures. Is that the right line, or should an offline capture be held and sent when the connection returns? Holding it means a record that appears minutes later with a date resolved against the wrong moment. | user | **Answered 2026-09-13.** Offline reads only, as drawn. Consistent with FR-40 as proposed. |
 | ~~Q11~~ | Tablet is neither drawn nor decided. Leave it to fall between the two drawn ends? | user | **Answered 2026-09-13.** Yes, interpolate. No dedicated tablet artboard. |
 | ~~Q12~~ | Which name? Magpie is recommended. Keeping Slashit is a decision to make knowingly, given the trademark question. | user | **Settled 2026-09-09**, recorded in §5d: the product is Slashit, chosen knowingly against the recommendation and the trademark risk. This row was left open in error; closed here to match §5d. |
-| ~~Q13~~ | Does the theme override belong in epic 001, as proposed FR-42, or does following the system setting suffice for V1? Following only is cheaper and removes a setting. | user | **Answered 2026-09-13.** Following the system setting only. FR-42 is not added. **Follow-up:** `Settings`, `DarkSettings`, `MobileSettings` and `DarkMobileSettings` currently draw a three-way override control (§5c). That control needs removing from those artboards, since there is no override to control. |
+| ~~Q13~~ | Does the theme override belong in epic 001, as proposed FR-42, or does following the system setting suffice for V1? Following only is cheaper and removes a setting. | user | **Answered 2026-09-13.** Following the system setting only. FR-42 is not added. **Done 2026-09-13:** the override control removed from `Settings`, `DarkSettings`, `MobileSettings` and `DarkMobileSettings`. §5c rewritten. Annotation `n-theme` updated. |
 | ~~Q14~~ | If the name changes, when? | user | **Done 2026-09-09**, before any code existed. The GitHub repository is still named `jarvis` and is the one loose end. |
 | ~~Q15~~ | Renaming the GitHub repository breaks every existing clone and remote. Do it now while there is one clone, or leave it? | user | **Answered 2026-09-13.** Rename now, to `slashit`. |
 | ~~Q16~~ | The command-centre tab is renamed Capture, because a tab called Slashit inside Slashit says nothing. Agreed? | user | **Answered 2026-09-13.** Agreed, as already drawn. |
 
 ### What today's answers still leave open
 
-Every question above has an answer, but four answers create new work rather than
-closing outright. Stage 2 is not ready to approve until these are resolved:
+Four answers created new work rather than closing outright. Done as of
+2026-09-13, except where noted:
 
-1. **Q2, Q6, Q7** need canvas work: a longer command list proven against
-   discovery, a way to answer a pending question from outside the Command
-   Center, and a clickable pass over the key flows.
-2. **Q13** needs canvas work in the other direction: the override control drawn
-   in four Settings artboards must come out, since FR-42 was declined.
-3. **Q4 and Q9** need a change record against `00-epic.md` and `01-prd.md`
-   before this design can rely on overdue styling or the PWA requirements,
-   per root ruleset rule 3.
-4. **Q15** is an infrastructure action (the GitHub repository), tracked outside
-   this document.
+1. **Q2, done.** `CommandPalette` and `CommandFilter` now prove discovery and
+   filtering against a 16-command list.
+2. **Q13, done.** The theme-override control is removed from the four Settings
+   artboards.
+3. **Q6, Q7 still open.** These need canvas work not yet done: a way to answer
+   a pending question from outside the Command Center, and a clickable pass
+   over the key flows. Scope for the clickable pass (which flows, how much of
+   the canvas) needs agreeing before it is built.
+4. **Q4 and Q9, done.** `00-epic.md` carries the lateness argument and
+   `01-prd.md` carries FR-39 to FR-41 and FR-43, added 2026-09-13.
+5. **Q15, done.** The GitHub repository is renamed to `slashit`.
+
+Stage 2 is not ready to approve until Q6 and Q7 are resolved.
 
 ## Change log
 
 | Date | Change | Why | Approved by |
 |---|---|---|---|
+| 2026-09-13 | Q2 and Q13 done: `CommandPalette`/`CommandFilter` now prove discovery against 16 commands (12 synthetic); the theme-override control removed from the four Settings artboards. §5c rewritten, two annotations updated. Canvas republished as version 8. Q6 and Q7 remain, scope to be agreed | User asked to act on the open-question follow-ups | pending |
 | 2026-09-13 | All sixteen open questions answered. §2's stale "Name and logo candidates" table removed (superseded by §5d, and referenced a non-existent artboard). Four answers open new work: canvas additions for Q2, Q6, Q7; a canvas removal for Q13; change records against the epic and PRD for Q4 and Q9. Not yet approved: those four items are still outstanding | User reviewed the canvas and went through §9 | pending |
 | 2026-09-09 | Created. 18 artboards across four pages. | PRD approved, design stage started | pending |
 | 2026-09-09 | Name settled as Slashit. Logo system drawn, six sheets. Product renamed across every artboard and document. Wordmark set as `slash.it`, and the lowercase misread documented as a permanent constraint on the wordmark. Section 5e added. Q12 closed, Q17 opened. | User chose Slashit and asked for a proper logo | pending |
