@@ -1,6 +1,15 @@
 # Runtime dependencies for the Slashit backend.
+#
+# THIS FILE IS WHAT SHIPS. The Dockerfile installs it and nothing else, so every
+# line here is weight in the deployed image. Keep it to what application code
+# actually imports.
+#
+# The LangChain and machine-learning toolkit lives in `requirements-ai.txt`,
+# which is installed locally and never by the image. A package graduates from
+# there to here when code imports it, with the reason in the dev log.
+#
 # Versions resolved from PyPI on 2026-09-12 and pinned. See 04.1 task T-1.1.
-# Slices 2 and 3 append to this file; they do not rewrite it.
+# Each slice appends; none rewrites.
 
 # API and GraphQL
 fastapi==0.141.1
@@ -22,3 +31,13 @@ alembic==1.20.0
 
 # Supabase JWT verification against the JWKS endpoint.
 pyjwt[crypto]==2.14.0
+
+# --- Added by slice 3 (the gateway), 2026-09-12 ---
+
+# The model framework. Sits below the gateway's ModelProvider Protocol and is
+# imported by app/domains/gateway/adapters/ and nowhere else.
+# The full `langchain` package is deliberately NOT here: it carries agents,
+# chains and memory that this gateway does not use. The wider AI toolkit lives
+# in requirements-ai.txt and is never installed into the image.
+langchain-core==1.6.3
+langchain-google-genai==4.4.0

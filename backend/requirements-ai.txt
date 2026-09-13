@@ -1,0 +1,47 @@
+# The AI toolkit. Available in the development environment, NOT in the image.
+#
+# `requirements.txt` is what the Dockerfile installs and therefore what ships.
+# This file is separate because installing it costs 1.4 GB and 104 packages,
+# almost all of it torch, transformers, onnxruntime and a Kubernetes client that
+# arrives with Chroma. Paying that per deploy for packages nothing imports yet is
+# the thing this split exists to prevent.
+#
+# Graduation rule: when application code actually imports one of these, move that
+# line into `requirements.txt` and record why in the feature's dev log. Nothing
+# here is deployed until it does.
+#
+# Versions resolved from PyPI on 2026-09-12, per rule 7 of the process.
+
+-r requirements.txt
+
+# --- The model layer. Epic 000 slice 3 uses these two, and only these two ---
+langchain-core==1.6.3
+langchain-google-genai==4.4.0
+
+# --- Wider LangChain surface. Not used by any approved plan yet ---
+langchain==1.4.0
+langchain-community==0.4.2
+langchain-text-splitters==1.1.2
+
+# --- Google SDK, underneath langchain-google-genai ---
+# Also the source of the provider exceptions that FR-18's six outcomes are
+# unwrapped from. See 04.3 section 6.2.
+google-genai==2.23.0
+
+# --- Retrieval. Both of these carry an unsettled decision ---
+# tech-stack.md chose pgvector, in the same database, so there is one store
+# rather than two. Chroma is a second store, with its own backup, migration and
+# consistency story. Installed, not adopted.
+langchain-chroma==1.1.0
+
+# Local embeddings, on your own hardware, where the stack assumes Gemini.
+# This is what pulls torch, 583 MB of the 1.4 GB.
+sentence-transformers==6.0.1
+langchain-huggingface==1.2.2
+
+# --- Tools ---
+# Web search. Needs its own vendor and its own API key, named in no epic.
+langchain-tavily==0.2.18
+
+# PDF text extraction.
+pypdf==6.18.1

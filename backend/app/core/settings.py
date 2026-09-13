@@ -29,6 +29,12 @@ class Settings(BaseSettings):
     debug: bool = False
     log_level: Literal["CRITICAL", "ERROR", "WARNING", "INFO", "DEBUG"] = "INFO"
 
+    # --- Slice 3: the gateway ---
+    gemini_api_key: str
+    gemini_model: str = "gemini-3.6-flash"
+    # Kill switch. False refuses every extraction without calling out.
+    gateway_enabled: bool = True
+
     # --- Slice 2: identity and isolation ---
     database_url: str
     supabase_url: str
@@ -60,18 +66,23 @@ class Settings(BaseSettings):
     def secret_values(self) -> frozenset[str]:
         """Every secret this process holds, for the log redactor.
 
-        The database password is here because a connection error renders the
-        DSN, and the DSN carries the password. Both the encoded and decoded
-        forms are included: the DSN carries one and an exception may carry the
-        other.
+        Requirement FR-3 says no application log records the provider
+        credential, at any level. This set is what makes that true: the
+        structlog processor strips every value in it before anything renders.
 
-        Slice 3 adds the provider credential. A secret added to ``Settings``
-        without being added here is a defect.
+        **A secret added to ``Settings`` without being added here is a defect.**
         """
+        secrets = {self.gemini_api_key}
+
+        # A connection error renders the DSN, and the DSN carries the password.
+        # Both encoded and decoded forms: the DSN carries one, an exception may
+        # carry the other.
         password = urlsplit(self.database_url).password
-        if not password:
-            return frozenset()
-        return frozenset({password, unquote(password)})
+        if password:
+            secrets.update({password, unquote(password)})
+
+        # An empty string would redact every character of every log line.
+        return frozenset(s for s in secrets if s)
 
 
 @lru_cache

@@ -2,9 +2,7 @@
 
 The only place a repository, an adapter or a service is constructed, and the
 only module allowed to import from more than one domain, because wiring is its
-whole job. See backend/rules/repo-rules.md section 9.
-
-Slice 2 wires nothing beyond the request context. Slice 3 adds the gateway.
+whole job. See backend/.claude/rules/repo-rules.md section 9.
 """
 
 import uuid
@@ -15,6 +13,10 @@ from app.core.auth import extract_bearer_token, verify_token
 from app.core.context import Context
 from app.core.errors import AuthenticationError
 from app.core.settings import Settings
+from app.domains.gateway.interactors.extract import ExtractInteractor
+from app.domains.gateway.repositories.usage_repository import SqlUsageRepository
+from app.domains.gateway.services.allowance_service import AllowanceService
+from app.domains.gateway.services.langchain_provider import LangChainGeminiProvider
 
 
 async def build_context(
@@ -42,4 +44,24 @@ async def build_context(
         user_id=user_id,
         session=session_factory(),
         request_id=request_id,
+    )
+
+
+def build_extraction_service(
+    session_factory: async_sessionmaker[AsyncSession], settings: Settings
+) -> ExtractInteractor:
+    """Wire the gateway.
+
+    This is the only place the provider credential is read, and the only place
+    LangChain is named outside the adapter itself. Requirement FR-5: no other
+    component holds the key or calls a provider.
+    """
+    usage_repository = SqlUsageRepository(session_factory)
+    return ExtractInteractor(
+        provider=LangChainGeminiProvider(
+            api_key=settings.gemini_api_key, model=settings.gemini_model
+        ),
+        usage_repository=usage_repository,
+        allowance_service=AllowanceService(usage_repository),
+        settings=settings,
     )
