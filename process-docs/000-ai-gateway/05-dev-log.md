@@ -276,7 +276,8 @@ true.
 Slice 3's own definition of done (04.3 section 10) is not fully met:
 
 1. **A provider-side spend cap and billing alert in the Google console are
-   unverified**, and blocked on D-12 below.
+   unverified.** D-12 (below), which blocked this, is now closed — a budget
+   alert still needs to be set at a real threshold.
 2. Langfuse (04.3 §6.3, Q3: wire without content capture) is not implemented.
 
 D-1 and D-2 from slice 1 are resolved or deferred as of 2026-09-13, see slice
@@ -322,12 +323,27 @@ numbers are confirmed again. The spend cap and billing alert (item 1 above)
 stay deferred alongside D-1, for the same reason: there is no billing account
 to cap while unlinked.
 
+**D-12 closed, 2026-09-13.** Billing is re-linked; the console now reads RPM
+1,000 / RPD 10,000 / TPM 2,000,000 for `gemini-3.6-flash`. `03-build-plan.md`
+is updated to match, and the correction turned up something else: the
+2026-09-10 reading had RPM and RPD transposed, so the real shared ceiling was
+always meant to be 10,000, ten times the 1,000 the build plan's capacity
+tables were built against. Every number moves in the safe direction. The
+gateway is fine for more than one user again; `DEFAULT_REQUESTS_PER_DAY = 20`
+is now a small fraction of the project ceiling, as originally intended.
+
+The spend cap and billing alert (item 1) are still open, now unblocked. Tier 1
+already caps total spend at 250 USD (build plan §11.3), which is a ceiling, not
+an alert — nobody is told before it's hit. A billing budget alert at a much
+lower threshold, closer to expected spend, is the piece still missing.
+
 ## Change log
 
 | Date | Change | Why | Approved by |
 |---|---|---|---|
 | 2026-09-13 | Slice 3 recorded. All ten tasks done, keyword-call/naming compliance fixed in `b7efa04`, spend cap and slice 1's CI/Docker gaps still unverified | Slice 3 development completed | — |
 | 2026-09-13 | D-12 opened: billing has come unlinked from the Gemini project, account back on free-tier limits (RPD 20 vs. the paid RPD 1,000 the build plan assumed). Blocks the spend cap confirmation | Found while confirming the spend cap and billing alert | user |
+| 2026-09-13 | D-12 closed: billing re-linked, real limits confirmed as RPM 1,000 / RPD 10,000 / TPM 2,000,000. The 2026-09-10 reading had RPM and RPD transposed. `03-build-plan.md` corrected: capacity tables rescaled 10x, a stray per-user cap of 50 fixed to 20, a stale `gemini-2.5-flash` reference fixed to `gemini-3.6-flash` | User reported updated rate limits | user |
 
 ### The index's five cross-slice cases (section 8)
 

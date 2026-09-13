@@ -35,7 +35,7 @@ Status values: `draft`, `in-review`, `approved`, `blocked`, `shipped`,
 
 | # | Feature | Priority | Stage | Status | Waiting on | Updated |
 |---|---|---|---|---|---|---|
-| 000 | [AI Gateway and Usage](./000-ai-gateway/) | P0, platform | 5 Dev | slices 1, 2 and 3 built, CI green | Deferred per user direction: re-linking billing (D-12, account on free-tier RPD 20 for now, single-user only), spend cap/billing alert, Docker (D-1), a real database for integration tests in CI. Deferred as not yet needed: Langfuse, since nothing calls the gateway until epic 001 builds | 2026-09-13 |
+| 000 | [AI Gateway and Usage](./000-ai-gateway/) | P0, platform | 5 Dev | slices 1, 2 and 3 built, CI green, billing re-linked (RPD 10,000 confirmed) | A billing budget alert at a real spend threshold (Tier 1's built-in 250 USD cap is not an alert). Deferred: Docker (D-1), a real database for integration tests in CI, Langfuse (not needed until epic 001 calls the gateway) | 2026-09-13 |
 | 001 | [Capture and Records Foundation](./001-capture-and-records-foundation/) | P0 | 2 Design | in-review | All 16 open questions answered and their follow-up canvas/doc work done as of 2026-09-13 (Q6 partly: not answerable from Records). Ready for the user's stage 2 approval | 2026-09-13 |
 
 ## Planned

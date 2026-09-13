@@ -6,7 +6,7 @@ stage: 3
 status: approved
 owner: user
 created: 2026-09-09
-updated: 2026-09-12
+updated: 2026-09-13
 approved_on: 2026-09-12
 supersedes: null
 ---
@@ -125,7 +125,7 @@ dashboard, read 2026-09-10.
 
 | Use | Choice | Why | Fallback | Latency budget |
 |---|---|---|---|---|
-| Structured extraction from a capture command | `gemini-2.5-flash` | Google describes it as the best price-performance model for low-latency, high-volume tasks, which is this workload exactly | None in V1. A failure is a typed refusal, per FR-18 | 8 s, then abandon per FR-19 |
+| Structured extraction from a capture command | `gemini-3.6-flash` | Google describes it as the best price-performance model for low-latency, high-volume tasks, which is this workload exactly | None in V1. A failure is a typed refusal, per FR-18 | 8 s, then abandon per FR-19 |
 
 ### Rate limits, read from the account on 2026-09-10
 
@@ -135,20 +135,25 @@ publishes per-tier RPM, TPM and RPD. It states limits depend on usage tier and
 account status, and directs the reader to their own dashboard. The dependency
 moved to the user and was discharged by reading the account.
 
-For `gemini-2.5-flash`, after a billing account was linked on 2026-09-10:
+For `gemini-3.6-flash`, current reading as of 2026-09-13:
 
-| Limit | Free tier, read first | Paid, after billing | Binding? |
-|---|---|---|---|
-| RPM | 5 | 10,000 | No |
-| TPM | 250,000 | 1,000,000 | No. 650 tokens per capture means TPM binds only above ~1,500 captures per minute |
-| RPD | 20 | **1,000** | **Yes. This is the ceiling** |
+| Limit | Free tier, read first | Paid, after billing (2026-09-10) | Paid, re-read (2026-09-13) | Binding? |
+|---|---|---|---|---|
+| RPM | 5 | 10,000 | **1,000** | No |
+| TPM | 250,000 | 1,000,000 | **2,000,000** | No. 650 tokens per capture means TPM binds only above ~5,000 captures per minute |
+| RPD | 20 | 1,000 | **10,000** | **Yes. This is the ceiling** |
 
-> Assumption: RPM 10,000 alongside RPD 1,000 is an unusual pairing, since the
-> day's whole budget could be spent in six seconds. Google's Tier 1 for this
-> model is more commonly RPM 1,000 with RPD 10,000. **Worth re-reading the
-> dashboard to confirm the two are not transposed.** Nothing below changes if
-> they are: RPD is the ceiling either way, and 10,000 would mean more headroom,
-> not less. The conservative figure is used throughout.
+**The 2026-09-10 reading had RPM and RPD transposed**, exactly the possibility
+flagged in this section at the time: "Google's Tier 1 for this model is more
+commonly RPM 1,000 with RPD 10,000." Confirmed by a fresh read on 2026-09-13.
+RPD is ten times higher than the figure section 11 was built against, which is
+more headroom, not less; the TPM increase is unexplained by the transposition
+alone and may reflect a tier change, but it does not bind either way and is not
+chased further here.
+
+Between the two readings, billing came unlinked from the project and the
+account fell back to free-tier limits for a period during development (dev log,
+D-12). That is now resolved; the 2026-09-13 column is what is live.
 
 The free-tier reading is kept in the table because it is the evidence behind
 goal G4. It also confirmed that the project had been running on free-tier terms,
@@ -156,21 +161,22 @@ which is the data-handling risk [the tech stack](../tech-stack.md) rejected when
 it moved to the paid tier. Linking billing closed that, and Google applied the
 new limits immediately as its documentation says it would.
 
-### What 1,000 requests per day supports
+### What 10,000 requests per day supports
 
 Rate limits are per project, not per API key. This is the whole product's daily
-budget.
+budget. Corrected 2026-09-13: the ceiling is 10,000, not the 1,000 first read on
+2026-09-10, which had RPM and RPD transposed (section 5 above).
 
-| Users, each capturing | Project usage per day | Fits in 1,000? |
+| Users, each capturing | Project usage per day | Fits in 10,000? |
 |---|---|---|
-| 10 users at 10 captures | 100 | Yes, 10% of ceiling |
-| 50 users at 10 captures | 500 | Yes, 50% |
-| 20 users at 20 captures | 400 | Yes, 40% |
-| 100 users at 10 captures | 1,000 | At the ceiling |
+| 100 users at 10 captures | 1,000 | Yes, 10% of ceiling |
+| 500 users at 10 captures | 5,000 | Yes, 50% |
+| 200 users at 20 captures | 4,000 | Yes, 40% |
+| 1,000 users at 10 captures | 10,000 | At the ceiling |
 
 Goal G4 of the PRD asks whether the tier carries the load. Answered: **yes, to
-roughly 50 to 100 users at realistic personal-capture volume**, and the operator
-now has the number to watch.
+roughly 500 to 1,000 users at realistic personal-capture volume**, and the
+operator now has the number to watch.
 
 ## 6. Cross-cutting concerns
 
@@ -251,7 +257,7 @@ the reason this document was written before that file.
 | `SET LOCAL` is omitted on a path, silently disabling RLS with no error | severe | Rule T7's boundary test, plus a session-level default that grants nothing | Any new connection path |
 | Counting `ai_usage` rows for the allowance check gets slow | low | Index on `(user_id, created_at)`. At V1 volume this is not a real risk | Sustained four-figure daily calls per user |
 | Langfuse holds prompt content, and prompt content is passports and finances | severe | Rule T6 keeps it out of usage tables. Langfuse is a separate question, Q6 | Before the first real user |
-| The project ceiling of 1,000 requests per day is shared, so growth past ~50 users exhausts it silently | high | The allowance check of FR-8 caps each user at 50. G4's metric is project usage against 1,000, watched by the operator. Tier 2 is the escalation | Sustained days above 60% of ceiling |
+| The project ceiling of 10,000 requests per day is shared, so growth past ~500 users exhausts it silently | high | The allowance check of FR-8 caps each user at 20. G4's metric is project usage against 10,000, watched by the operator. Tier 2 is the escalation | Sustained days above 60% of ceiling |
 | The spend cap is set in the gateway but not at the provider | high | The provider-side cap is the one that works unattended. Named in section 6 and owed per the tech stack section 7 | Before the first real user |
 
 ## 10. Questions for the user
@@ -267,7 +273,7 @@ here as the PRD said they would be.
 | Q4 | How long are `ai_usage` rows kept? PRD Q4 | Forever / 13 months / 90 days | **13 months.** Enough for a year-over-year read, and small: one row per capture is well under a megabyte per user per year | **Answered 2026-09-10.** 13 months |
 | Q5 | How does the operator read usage? PRD Q5 | SQL query / screen / periodic report | **SQL query in V1.** FR-14 says the operator can read it, not that there is a screen. A screen is its own epic | **Answered 2026-09-10.** SQL query |
 | Q6 | When the shared quota is exhausted, should the gateway alert you? PRD Q6 | No / email / log only | **Email through Resend, once per hour at most.** Quota exhaustion breaks capture for everyone, and nobody is watching a log | **Answered 2026-09-10.** Email via Resend, hourly at most |
-| Q7 | Read the account's real rate limits, since Google no longer publishes them | — | **Resolved 2026-09-10.** Billing linked, limits are RPM 10,000, TPM 1,000,000, RPD 1,000. One follow-up only: confirm RPM and RPD are not transposed, per the note in section 5 | **Answered** |
+| Q7 | Read the account's real rate limits, since Google no longer publishes them | — | **Resolved 2026-09-10, corrected 2026-09-13.** RPM and RPD were transposed in the first reading. Current: RPM 1,000, TPM 2,000,000, RPD 10,000. RPD is the ceiling, ten times higher than section 11 was built against | **Answered** |
 | Q8 | Does a spend ceiling replace the request ceiling? PRD Q8 | Requests only / spend only / both | **Both, as in Q1.** Google enforces its own spend limit per 10 minutes, so the concept already exists upstream | **Answered 2026-09-10.** Both ceilings |
 | Q9 | Confirm the asyncpg and Supabase pooler assumption in section 7, or defer it to stage 4 | Confirm now / defer | **Defer to stage 4.** It changes two lines of connection configuration, not the architecture | **Answered 2026-09-10.** Deferred to stage 4 |
 | Q10 | AD-3 to AD-6 add four rows that `tech-stack.md` does not have. Add them there on approval? | Yes / no | **Yes.** They bind every future epic, and rule 8 of the process says a decision beyond one feature graduates | **Answered 2026-09-10.** Yes, graduate them |
@@ -294,22 +300,23 @@ value, and nothing is charged. The exploration is in git history, not here.
 
 ### 11.2 What it supports
 
-The Gemini account allows 1,000 requests per day for the whole product, read from
-the dashboard on 2026-09-10.
+The Gemini account allows 10,000 requests per day for the whole product,
+corrected 2026-09-13 (section 5): the first reading, 1,000, had RPM and RPD
+transposed.
 
 | Users | If every user hit the cap | Share of ceiling |
 |---|---|---|
-| 25 | 500 | 50% |
-| 50 | 1,000 | **100%, the wall** |
-| 60 | 1,200 | Over |
+| 250 | 5,000 | 50% |
+| 500 | 10,000 | **100%, the wall** |
+| 600 | 12,000 | Over |
 
 > Assumption: real usage runs at roughly 40% of cap, which is typical of metered
-> products and is unmeasured here. On that assumption 50 users consume about 400
-> calls a day and the practical ceiling is nearer 120 users. The 50-user figure
-> is the safe one and is used below.
+> products and is unmeasured here. On that assumption 500 users consume about
+> 4,000 calls a day and the practical ceiling is nearer 1,200 users. The
+> 500-user figure is the safe one and is used below.
 
-**Plan for 50 users on the current Gemini tier.** The per-user limit is not what
-binds first; the shared project ceiling is.
+**Plan for 500 users on the current Gemini tier.** The per-user limit is not
+what binds first; the shared project ceiling is.
 
 ### 11.3 Raising the ceiling
 
@@ -327,8 +334,8 @@ spend accrues slowly at this volume, so the practical route is to reach the
 threshold deliberately rather than wait for it. **Tier 2's RPD for this model is
 not published** and must be read from the dashboard after upgrading.
 
-The 50-user wall is therefore a three-day problem if it is seen coming. Trigger
-the upgrade at 30 users, not at 50.
+The 500-user wall is therefore a three-day problem if it is seen coming.
+Trigger the upgrade at 300 users, not at 500.
 
 ### 11.4 The gap this leaves
 
@@ -346,6 +353,7 @@ not lost.
 
 | Date | Change | Why | Approved by |
 |---|---|---|---|
+| 2026-09-13 | Rate limits corrected: RPM and RPD were transposed in the 2026-09-10 reading. Real ceiling is RPD 10,000 (not 1,000), RPM 1,000 (not 10,000), TPM 2,000,000. Section 5's model-name cell and Q7 fixed to match AD-2's 2026-09-12 amendment (`gemini-3.6-flash`, was still showing `gemini-2.5-flash`). Capacity tables in section 5 and 11.2 rescaled 10x, the risk row and upgrade trigger in sections 9 and 11.3 updated, a stray "caps each user at 50" corrected to 20 to match section 11.1 and Q1. No architecture or requirement changes; more headroom throughout, not less | Confirmed against a fresh dashboard read | user |
 | 2026-09-09 | Created | Epic 000 was at stage 3 waiting on it, and it blocks `backend/requirements.txt` | pending |
 | 2026-09-10 | Real rate limits recorded: RPM 5, TPM 250K, RPD 20. These are free-tier numbers. Q1 suspended behind Q7, and a severe risk added | User read the AI Studio dashboard | pending |
 | 2026-09-10 | All ten questions answered, user said go with the recommendations | User direction | user |
