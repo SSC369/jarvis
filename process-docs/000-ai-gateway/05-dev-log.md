@@ -276,18 +276,55 @@ true.
 Slice 3's own definition of done (04.3 section 10) is not fully met:
 
 1. **A provider-side spend cap and billing alert in the Google console are
-   unverified.** 04-implementation-plan.md section 9 says this must exist
-   *before* slice 3's first live call, and T-3.13 has now made that call. This
-   must be confirmed, not assumed.
-2. D-1 and D-2 from slice 1 (Docker image unverified, CI never run) are still
-   open; nothing since slice 1 has closed them.
-3. Langfuse (04.3 §6.3, Q3: wire without content capture) is not implemented.
+   unverified**, and blocked on D-12 below.
+2. Langfuse (04.3 §6.3, Q3: wire without content capture) is not implemented.
+
+D-1 and D-2 from slice 1 are resolved or deferred as of 2026-09-13, see slice
+1's own section above.
 
 The feature-level definition of done in `04-implementation-plan.md` section 11
 is therefore not met, and `index.md` should not be moved to `shipped`.
+
+### D-12 (new) — the account is back on free-tier rate limits
+
+Checked 2026-09-13, prompted by confirming the spend cap. `03-build-plan.md`
+recorded, on 2026-09-10 after billing was linked, paid-tier limits of RPM
+10,000 / RPD 1,000 / TPM 1,000,000 for `gemini-3.6-flash` (build plan §5, Q7).
+That number is what the whole capacity design rests on: a 20-call-per-user
+daily default, a 1,000-request shared project ceiling, and a 50-user cap before
+the ceiling is hit (build plan §5, §11).
+
+The console now shows RPM 5 / RPD 20 / TPM 250,000, the free-tier numbers the
+same section recorded *before* billing was linked. Confirmed operational, not a
+design change: **billing has come unlinked from the project.**
+
+At RPD 20 project-wide, `DEFAULT_REQUESTS_PER_DAY = 20` in
+`app/domains/gateway/constants.py` alone consumes the entire project's daily
+quota for one user. The gateway is not safely usable by more than one person
+until billing is re-linked and the paid-tier limits are confirmed again in the
+console.
+
+**This blocks item 1 above**, since a spend cap is meaningless to set correctly
+while the account is on the wrong tier. Re-link billing first, re-confirm RPM
+10,000 / RPD 1,000 / TPM 1,000,000 (or whatever the console shows once fixed),
+then set the spend cap and billing alert against the real paid-tier numbers.
+The build plan's design itself is not reopened: this is an infrastructure
+fault, not new information about what the design should have assumed.
+
+**User direction 2026-09-13: proceed on the current free-tier limits (RPM 5,
+RPD 20, TPM 250K) for now, rather than fixing billing first.** Consistent with
+deferring Docker and production concerns until after the product is built.
+Consequence, stated plainly: `DEFAULT_REQUESTS_PER_DAY = 20` per user now equals
+the entire project's daily quota, so the gateway only behaves as designed for a
+single active user (the developer, during this build). It is not safe to add a
+second real user of the gateway until billing is re-linked and the paid-tier
+numbers are confirmed again. The spend cap and billing alert (item 1 above)
+stay deferred alongside D-1, for the same reason: there is no billing account
+to cap while unlinked.
 
 ## Change log
 
 | Date | Change | Why | Approved by |
 |---|---|---|---|
 | 2026-09-13 | Slice 3 recorded. All ten tasks done, keyword-call/naming compliance fixed in `b7efa04`, spend cap and slice 1's CI/Docker gaps still unverified | Slice 3 development completed | — |
+| 2026-09-13 | D-12 opened: billing has come unlinked from the Gemini project, account back on free-tier limits (RPD 20 vs. the paid RPD 1,000 the build plan assumed). Blocks the spend cap confirmation | Found while confirming the spend cap and billing alert | user |
