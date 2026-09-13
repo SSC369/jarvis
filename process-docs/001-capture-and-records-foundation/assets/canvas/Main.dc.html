@@ -126,8 +126,7 @@ a{color:#2f5ea8;text-decoration:none} a:hover{color:#24487f}
           <div class="muted" style="font-size:15px;margin-top:12px">Type a command and Slashit records it. Whatever you record, you can find, change and delete afterwards.</div>
           <div style="display:flex;gap:8px;justify-content:center;margin-top:26px">
             <span class="btn sm mono" style="color:#8a5a2b" onClick="{{fillAddTask}}">/add-task</span>
-            <span class="btn sm mono" style="color:#8a5a2b" onClick="{{fillCompleteTask}}">/complete-task</span>
-            <span class="btn sm mono" style="color:#8a5a2b" onClick="{{fillDeleteTask}}">/delete-task</span>
+            <span class="btn sm mono" style="color:#8a5a2b" onClick="{{fillTasks}}">/tasks</span>
           </div>
         </div>
       </div>
@@ -262,8 +261,6 @@ a{color:#2f5ea8;text-decoration:none} a:hover{color:#24487f}
 <script data-dc-script>
 const COMMANDS = [
   { key: 'add-task', name: '/add-task', desc: 'Create a task' },
-  { key: 'complete-task', name: '/complete-task', desc: 'Mark a task done' },
-  { key: 'delete-task', name: '/delete-task', desc: 'Delete a task' },
   { key: 'tasks', name: '/tasks', desc: 'List your open tasks' },
 ];
 const DATE_WORDS = ['tomorrow','today','tonight','monday','tuesday','wednesday','thursday','friday','saturday','sunday','am','pm','next week'];
@@ -298,8 +295,7 @@ class Component extends DCLogic {
   }
 
   fillAddTask() { this.setInput('/add-task '); }
-  fillCompleteTask() { this.setInput('/complete-task '); }
-  fillDeleteTask() { this.setInput('/delete-task '); }
+  fillTasks() { this.setInput('/tasks'); setTimeout(() => this.submit(), 0); }
 
   handleInput(e) {
     this.setInput(e.target.value);
@@ -395,24 +391,6 @@ class Component extends DCLogic {
 
     if (cmdName === '/tasks') {
       this.addTurn({ said: text, isTaskList: true });
-      return;
-    }
-
-    if (cmdName === '/complete-task' || cmdName === '/delete-task') {
-      const id = this.addTurn({ said: text, isLoading: true });
-      setTimeout(() => {
-        if (forced) {
-          this.updateTurn(id, this.refusedPatch(text));
-        } else {
-          this.updateTurn(id, {
-            isLoading: false,
-            isSuccess: true,
-            hasFields: false,
-            successHeading: cmdName === '/complete-task' ? 'Task marked done' : 'Task deleted',
-            footNote: 'Just now · via command',
-          });
-        }
-      }, 1000);
       return;
     }
 
@@ -528,8 +506,7 @@ class Component extends DCLogic {
       handleInput: (e) => this.handleInput(e),
       handleKeyDown: (e) => this.handleKeyDown(e),
       fillAddTask: () => this.fillAddTask(),
-      fillCompleteTask: () => this.fillCompleteTask(),
-      fillDeleteTask: () => this.fillDeleteTask(),
+      fillTasks: () => this.fillTasks(),
       toggleForceRefusal: () => this.toggleForceRefusal(),
       setStreamRef: (el) => { this.streamEl = el; },
     };

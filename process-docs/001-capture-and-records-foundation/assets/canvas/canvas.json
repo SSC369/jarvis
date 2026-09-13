@@ -547,7 +547,7 @@
       "y": -150,
       "w": 760,
       "page": "page-1",
-      "text": "Only four commands are real in epic 001, because tasks are the only record type built. The other twelve here are synthetic placeholders from later epics (002 to 008), added 2026-09-13 to prove discovery and filtering hold at a realistic scale, per Q2 in 02-design.md. The palette scrolls past six rows; /add now matches seven, not one."
+      "text": "Only two commands are real in epic 001: /add-task and /tasks. Completing and deleting a task happens only from the Records view, never by command (FR-24, corrected 2026-09-13). The other fourteen entries here are synthetic placeholders from later epics (002 to 008), added to prove discovery and filtering hold at scale, per Q2 in 02-design.md. The palette scrolls past six rows; /add matches 7 of them, not 1."
     },
     {
       "id": "n-pending",

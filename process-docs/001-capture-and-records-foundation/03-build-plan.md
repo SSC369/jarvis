@@ -3,20 +3,21 @@ doc: build-plan
 feature: 001-capture-and-records-foundation
 title: Capture and Records Foundation
 stage: 3
-status: draft
+status: approved
 owner: user
 created: 2026-09-13
 updated: 2026-09-13
-approved_on: null
+approved_on: 2026-09-13
 supersedes: null
 ---
 
 # Build Plan (HLD) — Capture and Records Foundation
 
+> **Approved** by @user on 2026-09-13. Locked — changes require a change record (§7 of the rules).
+
 Context: [PRD](./01-prd.md) · [Design](./02-design.md) · [Tech stack](../tech-stack.md)
 
-This document locks the high-level architecture. It also asks. Section 10 must
-be answered by the user before approval.
+This document locks the high-level architecture. Section 10 is answered.
 
 > 310 lines against a 250 budget. Two new backend domains, a persisted pending
 > question, and the PWA and dark-theme surfaces the user asked to include now
@@ -92,8 +93,10 @@ table.
 | `settings` | query | `IsAuthenticated` | none | `Settings` | FR-27 |
 | `updateTimezone` | mutation | `IsAuthenticated` | IANA timezone string | `Settings` | FR-28 |
 
-**The command list is a frontend constant, not a query.** Four commands, fixed
-for this epic. A query earns its place when discovery has to reflect something
+**The command list is a frontend constant, not a query.** Two commands,
+`/add-task` and `/tasks`, fixed for this epic. Completing, editing and deleting
+a task are records-view actions only, never commands (FR-24, corrected
+2026-09-13). A query earns its place when discovery has to reflect something
 the server knows that the client does not, which is not true yet.
 
 **No subscription.** `tasks` and `records` re-query after a mutation the same
@@ -128,7 +131,7 @@ No new model or vendor decision. This epic is the gateway's first caller.
 | Data retention and privacy | Tasks and pending captures persist until the user deletes or answers them. No auto-expiry designed for a stale pending capture, see §10 Q6 |
 | PWA offline | Read-only. The service worker caches the last-fetched records list and detail views; capture is refused in the input itself when `navigator.onLine` is false, per FR-40 and design §5a. Nothing is queued |
 
-## 7. The ten-member `CaptureResult` union
+## 7. The nine-member `CaptureResult` union
 
 | Member | Meaning | Source |
 |---|---|---|
@@ -142,11 +145,22 @@ No new model or vendor decision. This epic is the gateway's first caller.
 | `SharedQuotaExhausted` | The project's daily ceiling | Gateway union |
 | `MalformedResult` | The model's answer failed the schema | Gateway union |
 
-**Capture defines its own GraphQL types for the five gateway-sourced members.**
-Rule §6.2 of the backend ruleset forbids a domain's `graphql/` types crossing a
-boundary; `capture`'s `graphql/errors.py` mirrors the shape of the gateway's
-domain errors (which do cross, as exceptions) and is one small file, not a
-second hierarchy, since the mapping is a one-line constructor call per member.
+**Corrected 2026-09-13, caught while drafting `04.1-capture-core.md`.** This
+section originally said capture must mirror the five gateway-sourced members
+into its own `graphql/errors.py`, reasoning that rule §6.2 of the backend
+ruleset forbids a domain's `graphql/` types crossing a boundary. That rule is
+right and the conclusion was wrong: the gateway has no `graphql/` folder. Its
+five outcome types (`Extraction`, `UserLimitReached`, `SharedQuotaExhausted`,
+`ProviderTimeout`, `ProviderUnavailable`, `MalformedResult` — six classes,
+`Extraction` is the success case that capture does not reuse) are
+`@strawberry.type` classes defined in `gateway/errors.py` and re-exported by
+`gateway/public.py`, which is exactly the allowed crossing in §6.2's own table:
+"A published service class, imported from `public.py`." **Capture imports and
+reuses these five types directly.** No mirroring, no second hierarchy, no
+`capture/graphql/errors.py` for them. `capture` still defines its own four
+success-shaped members (`TaskCreated`, `PendingQuestionCreated`,
+`NonCommandGuidance`, `UnrecognisedCommand`), since those are not the
+gateway's to own.
 
 ## 8. Alternatives considered
 
@@ -193,5 +207,6 @@ second hierarchy, since the mapping is a one-line constructor call per member.
 
 | Date | Change | Why | Approved by |
 |---|---|---|---|
+| 2026-09-13 | §7 corrected: the union has nine members, not ten, and capture reuses the gateway's five outcome types directly (they cross via `public.py`, not `graphql/`) instead of mirroring them. No architecture change: same members, same behaviour, only which file defines five of the types | Found while drafting `04.1-capture-core.md` against the real epic 000 code | user |
 | 2026-09-13 | All five questions in section 10 answered, every recommendation accepted | User answered | user |
 | 2026-09-13 | Created | Design approved, stage 3 opened | pending |

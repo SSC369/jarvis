@@ -136,7 +136,7 @@ build targets, not success bets.
 | id | Requirement | Priority | Story |
 |---|---|---|---|
 | FR-23 | A task holds a title, an optional due date, and a status of pending or done. Priority and recurrence are out of V1. | must | US-1 |
-| FR-24 | The user can create, complete, edit and delete a task by command and from the records view, with the same result either way. | must | US-1, US-7 |
+| FR-24 | The user creates a task by command. The user completes, edits and deletes a task only from the records view, never by command. | must | US-1, US-7 |
 | FR-25 | `/tasks` lists the user's open tasks, soonest due first. | must | US-1 |
 | FR-26 | *Withdrawn. Task recurrence is out of V1.* | — | — |
 
@@ -270,6 +270,7 @@ capture, undo beyond edit and delete, attachments on records, and any sharing.
 
 | Date | Change | Why | Approved by |
 |---|---|---|---|
+| 2026-09-13 | **FR-24 narrowed.** Complete, edit and delete are records-view actions only, never commands. Only creation happens by command. Found while drafting the implementation plan: `/complete-task` and `/delete-task` had no way to name their target task, and the answer is that they should not exist as commands at all. Stale downstream: `02-design.md` (drops the two command chips and palette entries), `03-build-plan.md` §4 and §7 (command list, file-by-file plan), `04-implementation-plan.md` and `04.1-capture-core.md` (file-by-file plan, task breakdown), all corrected in the same change | User decided while reviewing slice 1's open question | user |
 | 2026-09-13 | FR-39 to FR-41 added (installed app), applying the 2026-09-09 proposal in `02-design.md` §5b now that the user approved it against Q9. FR-43 added (task lateness), argued in `00-epic.md`'s 2026-09-13 addendum in the same change, per Q4. FR-42 (theme override) considered and declined, per Q13: not added | User answered the design's open questions | user |
 | 2026-09-08 | Created from the V1 product definition | First epic of V1 | pending |
 | 2026-09-09 | **Change proposed, not applied.** FR-42, theme following the system with a user override, is drafted in [02-design.md](./02-design.md) section 5b. Dark theme itself needs no requirement: it is how the approved surfaces look, not new behaviour. The override is behaviour, so it needs one. | User asked for a dark theme | pending |
