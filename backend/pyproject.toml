@@ -10,7 +10,12 @@ target-version = "py312"
 extend-exclude = [".venv", "venv", "env", "*.md", "rules"]
 
 [tool.ruff.lint]
-select = ["E", "F", "I", "N", "UP", "B", "A", "C4", "SIM", "RUF"]
+select = ["E", "F", "I", "N", "UP", "B", "A", "C4", "SIM", "RUF", "ANN"]
+# ANN401 forbids typing.Any itself. Kept out: a handful of framework boundaries
+# (a structlog processor, a Strawberry permission hook, the error-mapping
+# decorator) are typed Any because the framework they satisfy is. ANN still
+# requires a hint be present; this only stops it from rejecting Any as the hint.
+ignore = ["ANN401"]
 
 [tool.ruff.lint.isort]
 known-first-party = ["app"]
@@ -28,6 +33,11 @@ python_version = "3.12"
 strict = true
 warn_unreachable = true
 plugins = ["pydantic.mypy"]
+
+[tool.pyright]
+venvPath = "."
+venv = ".venv"
+pythonVersion = "3.12"
 
 [[tool.mypy.overrides]]
 module = ["tests.*"]

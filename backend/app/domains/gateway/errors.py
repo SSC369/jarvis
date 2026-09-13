@@ -35,7 +35,7 @@ class UserLimitReached:
 class UserLimitReachedError(DomainError):
     gql_type = UserLimitReached
 
-    def __init__(self, limit: int, resets_at: datetime) -> None:
+    def __init__(self, *, limit: int, resets_at: datetime) -> None:
         self.limit = limit
         self.resets_at = resets_at
         super().__init__(f"Daily limit of {limit} reached")

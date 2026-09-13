@@ -15,15 +15,15 @@ class FakeUsageRepository:
         self._used = used
         self.record_should_fail = False
 
-    async def record(self, usage: UsageRecord, occurred_at: datetime) -> None:
+    async def record(self, *, usage: UsageRecord, occurred_at: datetime) -> None:
         if self.record_should_fail:
             raise RuntimeError("simulated write failure")
         self.records.append(usage)
 
-    async def count_since(self, user_id: UUID, since: datetime) -> int:
+    async def count_since(self, *, user_id: UUID, since: datetime) -> int:
         return self._used
 
-    async def limit_for(self, user_id: UUID) -> int | None:
+    async def get_request_limit_for_user(self, *, user_id: UUID) -> int | None:
         return self._limit
 
     @property

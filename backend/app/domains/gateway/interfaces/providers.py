@@ -1,7 +1,7 @@
 """What a model provider must do.
 
-`ExtractionService` depends on this and on nothing concrete. LangChain lives
-below it, inside `adapters/`, and no name from LangChain appears above this line.
+`ExtractInteractor` depends on this and on nothing concrete. LangChain lives
+below it, inside `services/`, and no name from LangChain appears above this line.
 Rule T4 of the tech stack requires the boundary to be ours; moving off LangChain
 is then one file.
 """

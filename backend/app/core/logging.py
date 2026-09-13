@@ -20,35 +20,38 @@ REDACTED = "[redacted]"
 _MAX_REDACTION_DEPTH = 6
 
 
-def _redact(value: Any, secrets: frozenset[str], depth: int = 0) -> Any:
-    """Replace any secret found anywhere inside ``value``.
+def _redact(content: Any, *, secrets: frozenset[str], depth: int = 0) -> Any:
+    """Replace any secret found anywhere inside ``content``.
 
     Walks strings, mappings, and sequences. Depth is bounded because a log event
     should never be deep enough to need more, and an unbounded walk on a cyclic
     structure would hang the logger.
     """
     if depth > _MAX_REDACTION_DEPTH:
-        return value
+        return content
 
-    if isinstance(value, str):
+    if isinstance(content, str):
         for secret in secrets:
-            if secret in value:
-                value = value.replace(secret, REDACTED)
-        return value
+            if secret in content:
+                content = content.replace(secret, REDACTED)
+        return content
 
-    if isinstance(value, MutableMapping):
-        return {k: _redact(v, secrets, depth + 1) for k, v in value.items()}
+    if isinstance(content, MutableMapping):
+        return {
+            field_name: _redact(field_value, secrets=secrets, depth=depth + 1)
+            for field_name, field_value in content.items()
+        }
 
-    if isinstance(value, (list, tuple)):
-        rebuilt = [_redact(v, secrets, depth + 1) for v in value]
-        return type(value)(rebuilt)
+    if isinstance(content, (list, tuple)):
+        rebuilt = [_redact(item, secrets=secrets, depth=depth + 1) for item in content]
+        return type(content)(rebuilt)
 
-    if isinstance(value, BaseException):
+    if isinstance(content, BaseException):
         # A provider error rendered into a traceback is the most common way a
         # credential reaches a log. Redact the message, not the exception type.
-        return _redact(str(value), secrets, depth + 1)
+        return _redact(str(content), secrets=secrets, depth=depth + 1)
 
-    return value
+    return content
 
 
 def build_redactor(
@@ -61,13 +64,13 @@ def build_redactor(
     ) -> MutableMapping[str, Any]:
         if not secrets:
             return event_dict
-        return _redact(event_dict, secrets)  # type: ignore[no-any-return]
+        return _redact(event_dict, secrets=secrets)  # type: ignore[no-any-return]
 
     return redact_secrets
 
 
 def configure_logging(
-    log_level: str, secrets: frozenset[str], json_output: bool
+    *, log_level: str, secrets: frozenset[str], json_output: bool
 ) -> None:
     """Configure structlog for the process. Call once, at startup."""
     logging.basicConfig(

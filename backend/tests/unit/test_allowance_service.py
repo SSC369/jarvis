@@ -11,7 +11,7 @@ async def test_user_under_their_limit_has_capacity() -> None:
     """T-3.2."""
     service = AllowanceService(FakeUsageRepository(limit=20, used=5))
 
-    allowance = await service.allowance_for(uuid.uuid4())
+    allowance = await service.allowance_for(user_id=uuid.uuid4())
 
     assert allowance.has_capacity
     assert allowance.remaining == 15
@@ -21,7 +21,7 @@ async def test_user_at_their_limit_has_none() -> None:
     """T-3.1."""
     service = AllowanceService(FakeUsageRepository(limit=20, used=20))
 
-    allowance = await service.allowance_for(uuid.uuid4())
+    allowance = await service.allowance_for(user_id=uuid.uuid4())
 
     assert not allowance.has_capacity
     assert allowance.remaining == 0
@@ -30,7 +30,7 @@ async def test_user_at_their_limit_has_none() -> None:
 async def test_user_over_their_limit_reports_zero_not_negative() -> None:
     service = AllowanceService(FakeUsageRepository(limit=20, used=25))
 
-    allowance = await service.allowance_for(uuid.uuid4())
+    allowance = await service.allowance_for(user_id=uuid.uuid4())
 
     assert allowance.remaining == 0
 
@@ -42,7 +42,7 @@ async def test_no_limit_row_falls_back_to_the_default() -> None:
     """
     service = AllowanceService(FakeUsageRepository(limit=None, used=0))
 
-    allowance = await service.allowance_for(uuid.uuid4())
+    allowance = await service.allowance_for(user_id=uuid.uuid4())
 
     assert allowance.limit == DEFAULT_REQUESTS_PER_DAY
 
@@ -54,6 +54,6 @@ async def test_reset_time_is_in_the_future() -> None:
     service = AllowanceService(FakeUsageRepository(limit=20, used=20))
     now = datetime.now(UTC)
 
-    allowance = await service.allowance_for(uuid.uuid4(), now=now)
+    allowance = await service.allowance_for(user_id=uuid.uuid4(), now=now)
 
     assert allowance.resets_at > now

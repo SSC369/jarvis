@@ -82,7 +82,7 @@ class Settings(BaseSettings):
             secrets.update({password, unquote(password)})
 
         # An empty string would redact every character of every log line.
-        return frozenset(s for s in secrets if s)
+        return frozenset(secret for secret in secrets if secret)
 
 
 @lru_cache

@@ -22,7 +22,7 @@ class SqlUsageRepository:
     def __init__(self, session_factory: async_sessionmaker[AsyncSession]) -> None:
         self.session_factory = session_factory
 
-    async def record(self, usage: UsageRecord, occurred_at: datetime) -> None:
+    async def record(self, *, usage: UsageRecord, occurred_at: datetime) -> None:
         """Write one row and commit it, in its own transaction."""
         async with (
             self.session_factory() as session,
@@ -43,7 +43,7 @@ class SqlUsageRepository:
                 )
             )
 
-    async def count_since(self, user_id: UUID, since: datetime) -> int:
+    async def count_since(self, *, user_id: UUID, since: datetime) -> int:
         async with (
             self.session_factory() as session,
             user_transaction(session, user_id) as scoped,
@@ -55,14 +55,14 @@ class SqlUsageRepository:
             )
         return int(total or 0)
 
-    async def limit_for(self, user_id: UUID) -> int | None:
+    async def get_request_limit_for_user(self, *, user_id: UUID) -> int | None:
         async with (
             self.session_factory() as session,
             user_transaction(session, user_id) as scoped,
         ):
-            value = await scoped.scalar(
+            requests_per_day = await scoped.scalar(
                 select(AiUserLimit.requests_per_day).where(
                     AiUserLimit.user_id == user_id
                 )
             )
-        return int(value) if value is not None else None
+        return int(requests_per_day) if requests_per_day is not None else None

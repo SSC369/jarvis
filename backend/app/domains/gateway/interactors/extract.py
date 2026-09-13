@@ -56,22 +56,28 @@ class ExtractInteractor:
         self.settings = settings
 
     async def extract(
-        self, user_id: UUID, request: ExtractionRequest
+        self, *, user_id: UUID, request: ExtractionRequest
     ) -> ExtractionResult:
         """Run one extraction on behalf of one user.
 
         ``user_id`` comes from the request context and never from caller input,
-        which is the mechanism behind FR-6.
+        which is the mechanism behind FR-6. Validates first, then orchestrates:
+        both validations run before the provider is ever called.
         """
-        if not self.settings.gateway_enabled:
-            # Kill switch. Refused before the allowance check, because a disabled
-            # gateway should not consume a user's daily count.
-            return cast(ExtractionResult, ProviderUnavailableError().to_gql())
-
-        allowance = await self.allowance_service.allowance_for(user_id)
-        if not allowance.has_capacity:
-            error = UserLimitReachedError(allowance.limit, allowance.resets_at)
-            await self._record(user_id, self.settings.gemini_model, 0, 0, error, None)
+        try:
+            self._validate_gateway_enabled()
+            await self._validate_allowance(user_id=user_id)
+        except ProviderUnavailableError as error:
+            return cast(ExtractionResult, error.to_gql())
+        except UserLimitReachedError as error:
+            await self._record_usage(
+                user_id=user_id,
+                model=self.settings.gemini_model,
+                input_tokens=0,
+                output_tokens=0,
+                error=error,
+                latency_ms=None,
+            )
             return cast(ExtractionResult, error.to_gql())
 
         started = time.perf_counter()
@@ -79,19 +85,24 @@ class ExtractInteractor:
             result = await self.provider.generate(request)
         except DomainError as error:
             elapsed_ms = int((time.perf_counter() - started) * 1000)
-            await self._record(
-                user_id, self.settings.gemini_model, 0, 0, error, elapsed_ms
+            await self._record_usage(
+                user_id=user_id,
+                model=self.settings.gemini_model,
+                input_tokens=0,
+                output_tokens=0,
+                error=error,
+                latency_ms=elapsed_ms,
             )
             return cast(ExtractionResult, error.to_gql())
 
         elapsed_ms = int((time.perf_counter() - started) * 1000)
-        await self._record(
-            user_id,
-            result.model,
-            result.input_tokens,
-            result.output_tokens,
-            None,
-            elapsed_ms,
+        await self._record_usage(
+            user_id=user_id,
+            model=result.model,
+            input_tokens=result.input_tokens,
+            output_tokens=result.output_tokens,
+            error=None,
+            latency_ms=elapsed_ms,
         )
         return Extraction(
             data=cast(JSON, result.data),
@@ -100,8 +111,26 @@ class ExtractInteractor:
             output_tokens=result.output_tokens,
         )
 
-    async def _record(
+    def _validate_gateway_enabled(self) -> None:
+        """Refuse while the kill switch is off.
+
+        Checked first and never recorded on failure: a disabled gateway is our
+        fault, so it must not consume a user's daily count.
+        """
+        if not self.settings.gateway_enabled:
+            raise ProviderUnavailableError()
+
+    async def _validate_allowance(self, *, user_id: UUID) -> None:
+        """Refuse a user who is out of headroom for the window."""
+        allowance = await self.allowance_service.allowance_for(user_id=user_id)
+        if not allowance.has_capacity:
+            raise UserLimitReachedError(
+                limit=allowance.limit, resets_at=allowance.resets_at
+            )
+
+    async def _record_usage(
         self,
+        *,
         user_id: UUID,
         model: str,
         input_tokens: int,
@@ -128,7 +157,9 @@ class ExtractInteractor:
             latency_ms=latency_ms,
         )
         try:
-            await self.usage_repository.record(usage, datetime.now(UTC))
+            await self.usage_repository.record(
+                usage=usage, occurred_at=datetime.now(UTC)
+            )
         except Exception:
             logger.exception(
                 "gateway.usage_not_recorded", user_id=str(user_id), outcome=outcome

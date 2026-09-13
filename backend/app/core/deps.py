@@ -20,6 +20,7 @@ from app.domains.gateway.services.langchain_provider import LangChainGeminiProvi
 
 
 async def build_context(
+    *,
     authorization_header: str | None,
     request_id: str,
     session_factory: async_sessionmaker[AsyncSession],
@@ -47,8 +48,8 @@ async def build_context(
     )
 
 
-def build_extraction_service(
-    session_factory: async_sessionmaker[AsyncSession], settings: Settings
+def build_extract_interactor(
+    *, session_factory: async_sessionmaker[AsyncSession], settings: Settings
 ) -> ExtractInteractor:
     """Wire the gateway.
 

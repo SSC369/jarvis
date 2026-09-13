@@ -58,7 +58,9 @@ async def test_success_returns_extraction_and_records_one_row() -> None:
     repo = FakeUsageRepository(limit=20, used=0)
     provider = FakeProvider(result=SUCCESS)
 
-    result = await _service(provider, repo).extract(uuid.uuid4(), REQUEST)
+    result = await _service(provider, repo).extract(
+        user_id=uuid.uuid4(), request=REQUEST
+    )
 
     assert isinstance(result, Extraction)
     assert result.input_tokens == 500
@@ -70,7 +72,9 @@ async def test_user_at_limit_is_refused_without_calling_the_provider() -> None:
     repo = FakeUsageRepository(limit=20, used=20)
     provider = FakeProvider(result=SUCCESS)
 
-    result = await _service(provider, repo).extract(uuid.uuid4(), REQUEST)
+    result = await _service(provider, repo).extract(
+        user_id=uuid.uuid4(), request=REQUEST
+    )
 
     assert isinstance(result, UserLimitReached)
     assert provider.calls == 0, "the provider was called despite the user being over"
@@ -82,7 +86,7 @@ async def test_refusal_carries_the_limit_and_a_reset_time() -> None:
     repo = FakeUsageRepository(limit=7, used=7)
 
     result = await _service(FakeProvider(result=SUCCESS), repo).extract(
-        uuid.uuid4(), REQUEST
+        user_id=uuid.uuid4(), request=REQUEST
     )
 
     assert isinstance(result, UserLimitReached)
@@ -106,7 +110,7 @@ async def test_each_provider_failure_maps_and_records(
     repo = FakeUsageRepository(limit=20, used=0)
 
     result = await _service(FakeProvider(raises=raised), repo).extract(
-        uuid.uuid4(), REQUEST
+        user_id=uuid.uuid4(), request=REQUEST
     )
 
     assert isinstance(result, expected_type)
@@ -119,7 +123,9 @@ async def test_kill_switch_refuses_without_calling_the_provider() -> None:
     provider = FakeProvider(result=SUCCESS)
     disabled = get_settings().model_copy(update={"gateway_enabled": False})
 
-    result = await _service(provider, repo, disabled).extract(uuid.uuid4(), REQUEST)
+    result = await _service(provider, repo, disabled).extract(
+        user_id=uuid.uuid4(), request=REQUEST
+    )
 
     assert isinstance(result, ProviderUnavailable)
     assert provider.calls == 0
@@ -131,7 +137,7 @@ async def test_kill_switch_does_not_consume_the_users_daily_count() -> None:
     disabled = get_settings().model_copy(update={"gateway_enabled": False})
 
     await _service(FakeProvider(result=SUCCESS), repo, disabled).extract(
-        uuid.uuid4(), REQUEST
+        user_id=uuid.uuid4(), request=REQUEST
     )
 
     assert repo.records == []
@@ -147,7 +153,7 @@ async def test_a_failed_usage_write_still_returns_the_result() -> None:
     repo.record_should_fail = True
 
     result = await _service(FakeProvider(result=SUCCESS), repo).extract(
-        uuid.uuid4(), REQUEST
+        user_id=uuid.uuid4(), request=REQUEST
     )
 
     assert isinstance(result, Extraction)

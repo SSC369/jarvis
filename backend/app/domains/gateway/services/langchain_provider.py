@@ -50,7 +50,7 @@ logger = structlog.get_logger(__name__)
 class LangChainGeminiProvider:
     """Implements ModelProvider over LangChain's Gemini binding."""
 
-    def __init__(self, api_key: str, model: str) -> None:
+    def __init__(self, *, api_key: str, model: str) -> None:
         self._model_name = model
         self._chat = ChatGoogleGenerativeAI(model=model, google_api_key=api_key)
 
@@ -63,39 +63,39 @@ class LangChainGeminiProvider:
                 async with asyncio.timeout(PROVIDER_TIMEOUT_SECONDS):
                     return await self._invoke(request)
 
-            except TimeoutError as exc:
+            except TimeoutError as error:
                 # Never retried. The first attempt may still be running at the
                 # provider, and a retry would double the spend. FR-20.
-                raise ProviderTimeoutError(PROVIDER_TIMEOUT_SECONDS) from exc
+                raise ProviderTimeoutError(PROVIDER_TIMEOUT_SECONDS) from error
 
-            except ModelRateLimitError as exc:
-                raise SharedQuotaExhaustedError() from exc
+            except ModelRateLimitError as error:
+                raise SharedQuotaExhaustedError() from error
 
-            except ModelTimeoutError as exc:
-                raise ProviderTimeoutError(PROVIDER_TIMEOUT_SECONDS) from exc
+            except ModelTimeoutError as error:
+                raise ProviderTimeoutError(PROVIDER_TIMEOUT_SECONDS) from error
 
-            except (ModelAuthenticationError, ModelPermissionDeniedError) as exc:
+            except (ModelAuthenticationError, ModelPermissionDeniedError) as error:
                 # A rejected credential is an operator problem, not a user one.
                 # Logged distinctly, surfaced generically: the caller learns
                 # nothing about our key. FR-2.
-                logger.error("gateway.credential_rejected", reason=type(exc).__name__)
-                raise ProviderUnavailableError() from exc
+                logger.error("gateway.credential_rejected", reason=type(error).__name__)
+                raise ProviderUnavailableError() from error
 
-            except OutputParserException as exc:
-                raise MalformedResultError(reason=str(exc)[:200]) from exc
+            except OutputParserException as error:
+                raise MalformedResultError(reason=str(error)[:200]) from error
 
-            except ModelConnectionError as exc:
+            except ModelConnectionError as error:
                 # The only retryable failure: a connection that never
                 # established, so nothing was charged and nothing ran. FR-20.
-                last_error = exc
+                last_error = error
                 if attempt < MAX_ATTEMPTS:
                     logger.warning("gateway.retrying", attempt=attempt)
                     await asyncio.sleep(RETRY_BACKOFF_SECONDS)
                     continue
-                raise ProviderUnavailableError() from exc
+                raise ProviderUnavailableError() from error
 
-            except ModelAPIError as exc:
-                raise ProviderUnavailableError() from exc
+            except ModelAPIError as error:
+                raise ProviderUnavailableError() from error
 
         raise ProviderUnavailableError() from last_error
 
@@ -114,13 +114,17 @@ class LangChainGeminiProvider:
 
         return ProviderResult(
             data=dict(parsed),
-            input_tokens=self._usage(response, "input_tokens"),
-            output_tokens=self._usage(response, "output_tokens"),
+            input_tokens=self._read_token_count(
+                response=response, field="input_tokens"
+            ),
+            output_tokens=self._read_token_count(
+                response=response, field="output_tokens"
+            ),
             model=self._model_name,
         )
 
     @staticmethod
-    def _usage(response: Any, field: str) -> int:
+    def _read_token_count(*, response: Any, field: str) -> int:
         """Token counts, from the provider rather than estimated. FR-11.
 
         Zero when the provider omits them, which is honest: a recorded zero is

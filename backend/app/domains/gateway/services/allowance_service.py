@@ -20,7 +20,7 @@ class AllowanceService:
         self.usage_repository = usage_repository
 
     async def allowance_for(
-        self, user_id: UUID, now: datetime | None = None
+        self, *, user_id: UUID, now: datetime | None = None
     ) -> AllowanceDTO:
         """How much headroom this user has left in the window.
 
@@ -30,11 +30,13 @@ class AllowanceService:
         now = now or datetime.now(UTC)
         window_start = now - timedelta(hours=LIMIT_WINDOW_HOURS)
 
-        limit = await self.usage_repository.limit_for(user_id)
+        limit = await self.usage_repository.get_request_limit_for_user(user_id=user_id)
         if limit is None:
             limit = DEFAULT_REQUESTS_PER_DAY
 
-        used = await self.usage_repository.count_since(user_id, window_start)
+        used = await self.usage_repository.count_since(
+            user_id=user_id, since=window_start
+        )
 
         return AllowanceDTO(
             limit=limit,
