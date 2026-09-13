@@ -35,7 +35,7 @@ Status values: `draft`, `in-review`, `approved`, `blocked`, `shipped`,
 
 | # | Feature | Priority | Stage | Status | Waiting on | Updated |
 |---|---|---|---|---|---|---|
-| 000 | [AI Gateway and Usage](./000-ai-gateway/) | P0, platform | 5 Dev | slices 1 and 2 built, slice 3 not planned | Sub-plan 3, the gateway itself | 2026-09-12 |
+| 000 | [AI Gateway and Usage](./000-ai-gateway/) | P0, platform | 5 Dev | slices 1, 2 and 3 built | Spend cap/billing alert confirmation, slice 1's CI and Docker verification (D-1, D-2) | 2026-09-13 |
 | 001 | [Capture and Records Foundation](./001-capture-and-records-foundation/) | P0 | 2 Design | in-review | User review of the design canvas | 2026-09-09 |
 
 ## Planned

@@ -6,7 +6,7 @@ stage: 5
 status: draft
 owner: user
 created: 2026-09-12
-updated: 2026-09-12
+updated: 2026-09-13
 approved_on: null
 supersedes: null
 ---
@@ -170,3 +170,75 @@ percent-encoded form of the new password.
 | Date | Change | Why | Approved by |
 |---|---|---|---|
 | 2026-09-12 | Slice 2 recorded. All ten tasks done, three defects found and fixed, three deviations | Slice 2 development completed | — |
+
+## Slice 3 — The Gateway
+
+Built and committed 2026-09-13, commit `4a3d2c0`.
+
+### Tasks
+
+| # | Task | Status | Note |
+|---|---|---|---|
+| T-3.1 | Packages pinned, settings extended, key in `secret_values()` | **done** | Versions below |
+| T-3.2 | `models.py`, `interfaces/`, `constants.py` | **done** | |
+| T-3.3 | `errors.py`, six members and exceptions | **done** | |
+| T-3.4 | `usage_repository.py` | **done** | |
+| T-3.5 | `allowance_service.py` | **done** | |
+| T-3.6 | `langchain_provider.py`, timeout, retry, exception unwrapping | **done** | |
+| T-3.7 | `extraction_service.py` | **done** | Shipped as `ExtractInteractor` in `interactors/`, per the change already logged against 04.3 on 2026-09-12 |
+| T-3.8 | `public.py` and `deps.py` wiring | **done** | |
+| T-3.9 | Fakes and the unit suite | **done** | |
+| T-3.10 | The live test, one real call | **done** | T-3.13 passed against `gemini-3.6-flash` |
+
+### Resolved dependency versions
+
+Pinned from PyPI on 2026-09-13, per rule 7.
+
+| Package | Version |
+|---|---|
+| langchain-core | 1.6.3 |
+| langchain-google-genai | 4.4.0 |
+
+`langchain` itself was not added, per 04.3 section 4.
+
+### Verification
+
+| Check | Result |
+|---|---|
+| `pytest` | **69 passed**, including the live test against the real provider |
+| `ruff check .` | All checks passed |
+| `mypy app` (strict) | No issues in 35 source files |
+| Live call to `gemini-3.6-flash` | Returned an `Extraction`, wrote one `ai_usage` row |
+| `tests/unit/test_layering.py` | Enforces domain boundaries, vendor imports, acyclicity and adapter purity |
+
+The fourteen cases in 04.3 section 8 pass. Section 1 of 04.3 is demonstrably
+true.
+
+### Deviations
+
+| # | Deviation | Why | Consequence |
+|---|---|---|---|
+| D-8 | The Gemini client sits in `services/langchain_provider.py` and the use case in `interactors/extract.py` as `ExtractInteractor`, not `services/extraction_service.py` as 04.3 section 4 planned | User caught the client in the wrong folder during the slice; `adapters/` was removed as the gateway consumes no other domain | Already recorded as a 04.3 change on 2026-09-12. `public.py` exports `ExtractInteractor`, not `ExtractionService` |
+| D-9 | The commit landed with several gateway methods taking positional arguments (`allowance_for(user_id, now)`, `usage_repository.record(usage, occurred_at)`, and others), against the keyword-only-calls rule adopted in commit `22c8c0e`, which predates this commit | The rule was adopted after 04.3 was drafted and the slice was not re-checked against it before committing | Fixed in commit `b7efa04`: every gateway call site and definition made keyword-only, `limit_for` renamed to `get_request_limit_for_user`, `build_extraction_service` renamed to `build_extract_interactor` to match `ExtractInteractor` |
+| D-10 | `pyproject.toml` gained ruff's `ANN` rule set (with `ANN401` ignored at framework boundaries) and a `[tool.pyright]` section; `pyrightconfig.json` and `.vscode/settings.json` added | Needed to catch D-9 mechanically and to support editor type-checking | None functional. Committed alongside D-9's fix in `b7efa04` |
+
+### Not done, and why
+
+Slice 3's own definition of done (04.3 section 10) is not fully met:
+
+1. **A provider-side spend cap and billing alert in the Google console are
+   unverified.** 04-implementation-plan.md section 9 says this must exist
+   *before* slice 3's first live call, and T-3.13 has now made that call. This
+   must be confirmed, not assumed.
+2. D-1 and D-2 from slice 1 (Docker image unverified, CI never run) are still
+   open; nothing since slice 1 has closed them.
+3. Langfuse (04.3 §6.3, Q3: wire without content capture) is not implemented.
+
+The feature-level definition of done in `04-implementation-plan.md` section 11
+is therefore not met, and `index.md` should not be moved to `shipped`.
+
+## Change log
+
+| Date | Change | Why | Approved by |
+|---|---|---|---|
+| 2026-09-13 | Slice 3 recorded. All ten tasks done, keyword-call/naming compliance fixed in `b7efa04`, spend cap and slice 1's CI/Docker gaps still unverified | Slice 3 development completed | — |
