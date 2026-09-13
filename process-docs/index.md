@@ -36,7 +36,7 @@ Status values: `draft`, `in-review`, `approved`, `blocked`, `shipped`,
 | # | Feature | Priority | Stage | Status | Waiting on | Updated |
 |---|---|---|---|---|---|---|
 | 000 | [AI Gateway and Usage](./000-ai-gateway/) | P0, platform | 5 Dev | slices 1, 2 and 3 built, CI green | Deferred per user direction: re-linking billing (D-12, account on free-tier RPD 20 for now, single-user only), spend cap/billing alert, Docker (D-1), a real database for integration tests in CI. Deferred as not yet needed: Langfuse, since nothing calls the gateway until epic 001 builds | 2026-09-13 |
-| 001 | [Capture and Records Foundation](./001-capture-and-records-foundation/) | P0 | 2 Design | in-review | All 16 open questions answered 2026-09-13; four follow-ups before approval: canvas work for discovery-at-scale, answer-from-anywhere, and a clickable pass; canvas removal of the declined theme-override control; change records against the epic/PRD for overdue styling and the PWA requirements | 2026-09-13 |
+| 001 | [Capture and Records Foundation](./001-capture-and-records-foundation/) | P0 | 2 Design | in-review | All 16 open questions answered and their follow-up canvas/doc work done as of 2026-09-13 (Q6 partly: not answerable from Records). Ready for the user's stage 2 approval | 2026-09-13 |
 
 ## Planned
 

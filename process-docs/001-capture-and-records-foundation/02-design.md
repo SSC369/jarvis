@@ -373,8 +373,8 @@ the set above.
 | ~~Q3~~ | The records type filter shows All and Tasks only. Should the other types appear disabled so the shape is visible, or stay absent until they exist? Absent is drawn. | user | **Answered 2026-09-13.** Stay absent, as drawn. No change. |
 | ~~Q4~~ | Overdue styling is drawn on the task list. The PRD does not mention lateness. In or out? | user | **Answered 2026-09-13.** In scope. **Follow-up:** lateness was not argued in `00-epic.md` and is not an `01-prd.md` requirement. Per root ruleset rule 3 and `process-docs/CLAUDE.md` §6, this needs a change record adding it to the epic and PRD before the design can rely on it, not a silent addition here. |
 | ~~Q5~~ | The transcript keeps history. How far back, and does it survive a reload? The PRD does not say, and it changes the empty state. | user | **Answered 2026-09-13.** Survives reload, kept indefinitely, same durability as records. |
-| ~~Q6~~ | Should a pending question be answerable from anywhere, or only from the Command Center where it was asked? Only there is drawn. | user | **Answered 2026-09-13.** Answerable from anywhere. **Follow-up:** not currently drawn; needs new design work (e.g. a way to answer from Records) before stage 2 closes. |
-| ~~Q7~~ | Static mockups are drawn, not a clickable prototype. Is a clickable pass wanted before the build plan? | user | **Answered 2026-09-13.** Yes, wanted before the build plan starts. **Follow-up:** a clickable pass on the canvas is outstanding work, blocking stage 3. |
+| ~~Q6~~ | Should a pending question be answerable from anywhere, or only from the Command Center where it was asked? Only there is drawn. | user | **Answered 2026-09-13.** Answerable from anywhere. **Partly done 2026-09-13:** `Main` now demonstrates a question staying answerable non-blockingly at any point in the Command Center's own transcript (FR-36 to FR-38), including while later captures run. Answering it from the separate Records screen is not built; scope for this pass was the Command Center flow only, per user direction |
+| ~~Q7~~ | Static mockups are drawn, not a clickable prototype. Is a clickable pass wanted before the build plan? | user | **Answered 2026-09-13.** Yes, wanted before the build plan starts, scoped to the Command Center flow. **Done 2026-09-13:** `Main` is now a working prototype covering all four Command Center flows in §3 (clean capture, capture with a gap, input without a command, refusal), including live command discovery and filtering. Verified interactively before publishing (republished as version 9) |
 | ~~Q8~~ | Mobile is described, not drawn. Does phone use matter at launch? | user | **Drawn 2026-09-09** at 390 x 844, at the user's request. |
 | ~~Q9~~ | Do you approve proposed FR-39 to FR-41, so the installed app can be built? Without them the PWA artboards are design with no requirement behind them. | user | **Answered 2026-09-13.** Approved. **Follow-up:** needs a change record adding FR-39 to FR-41 to `01-prd.md`, per §5b. |
 | ~~Q10~~ | Offline reads but never captures. Is that the right line, or should an offline capture be held and sent when the connection returns? Holding it means a record that appears minutes later with a date resolved against the wrong moment. | user | **Answered 2026-09-13.** Offline reads only, as drawn. Consistent with FR-40 as proposed. |
@@ -394,20 +394,22 @@ Four answers created new work rather than closing outright. Done as of
    filtering against a 16-command list.
 2. **Q13, done.** The theme-override control is removed from the four Settings
    artboards.
-3. **Q6, Q7 still open.** These need canvas work not yet done: a way to answer
-   a pending question from outside the Command Center, and a clickable pass
-   over the key flows. Scope for the clickable pass (which flows, how much of
-   the canvas) needs agreeing before it is built.
+3. **Q7, done** for the scope agreed: the Command Center flow only, not the
+   whole canvas. **Q6, partly done** the same way: non-blocking, answerable at
+   any point in the Command Center, but not from Records. See both rows above.
 4. **Q4 and Q9, done.** `00-epic.md` carries the lateness argument and
    `01-prd.md` carries FR-39 to FR-41 and FR-43, added 2026-09-13.
 5. **Q15, done.** The GitHub repository is renamed to `slashit`.
 
-Stage 2 is not ready to approve until Q6 and Q7 are resolved.
+Every question raised in this section now has an answer and, where it created
+follow-up work, that work is either done or its remaining scope is named
+above (Q6's Records surface). Stage 2 is ready for the user's approval.
 
 ## Change log
 
 | Date | Change | Why | Approved by |
 |---|---|---|---|
+| 2026-09-13 | `Main` rebuilt as a working prototype of the Command Center flow, per Q7 scoped to that flow only: live command discovery and filtering, clean capture, capture with a gap (asking and later answering), input without a command, and a simulated refusal with retry. Closes Q7 and most of Q6 (not answering from Records). Verified interactively before publishing; one layout bug found and fixed (the dock collapsed to the top between typing and the first submitted turn). Republished as version 9. Every question in §9 now has an answer; stage 2 is ready for approval | User scoped Q7 to the Command Center flow | pending |
 | 2026-09-13 | Q2 and Q13 done: `CommandPalette`/`CommandFilter` now prove discovery against 16 commands (12 synthetic); the theme-override control removed from the four Settings artboards. §5c rewritten, two annotations updated. Canvas republished as version 8. Q6 and Q7 remain, scope to be agreed | User asked to act on the open-question follow-ups | pending |
 | 2026-09-13 | All sixteen open questions answered. §2's stale "Name and logo candidates" table removed (superseded by §5d, and referenced a non-existent artboard). Four answers open new work: canvas additions for Q2, Q6, Q7; a canvas removal for Q13; change records against the epic and PRD for Q4 and Q9. Not yet approved: those four items are still outstanding | User reviewed the canvas and went through §9 | pending |
 | 2026-09-09 | Created. 18 artboards across four pages. | PRD approved, design stage started | pending |
