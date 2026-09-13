@@ -11,12 +11,18 @@ import strawberry
 from strawberry.types import Info
 
 from app.core.context import Context
+from app.domains.capture.graphql.mutations import CaptureMutations
+from app.domains.identity.graphql.mutations import IdentityMutations
+from app.domains.identity.graphql.queries import IdentityQueries
+from app.domains.records.graphql.mutations import RecordMutations
+from app.domains.records.graphql.queries import RecordQueries
 from app.graphql.permissions import IsAuthenticated
 
 
 @strawberry.type
-class Query:
-    """Root query. Domains extend this as they land."""
+class Query(RecordQueries, IdentityQueries):
+    """Root query. Each domain's queries class becomes a base here as it
+    lands, per section 11: never a hand-maintained field-by-field import."""
 
     @strawberry.field
     def api_version(self) -> str:
@@ -39,4 +45,10 @@ class Query:
         return str(context.user_id)
 
 
-schema = strawberry.Schema(query=Query)
+@strawberry.type
+class Mutation(CaptureMutations, RecordMutations, IdentityMutations):
+    """Root mutation. Each domain's mutations class becomes a base here as it
+    lands, per section 11: never a hand-maintained field-by-field import."""
+
+
+schema = strawberry.Schema(query=Query, mutation=Mutation)

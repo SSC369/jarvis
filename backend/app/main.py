@@ -11,6 +11,7 @@ from contextlib import asynccontextmanager
 
 import structlog
 from fastapi import FastAPI, Request, Response
+from fastapi.middleware.cors import CORSMiddleware
 from fastapi.responses import JSONResponse
 from strawberry.fastapi import GraphQLRouter
 
@@ -61,6 +62,18 @@ def create_app(settings: Settings | None = None) -> FastAPI:
         docs_url="/docs" if settings.environment == "local" else None,
         redoc_url=None,
     )
+
+    if settings.environment == "local":
+        # The Vite dev server's own origin. No production origin is set here;
+        # that is a deploy-time decision for whichever host serves the built
+        # frontend, not a local default.
+        app.add_middleware(
+            CORSMiddleware,
+            allow_origins=["http://localhost:5173", "http://127.0.0.1:5173"],
+            allow_credentials=True,
+            allow_methods=["*"],
+            allow_headers=["*"],
+        )
 
     @app.middleware("http")
     async def request_context(

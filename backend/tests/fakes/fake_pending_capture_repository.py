@@ -1,0 +1,49 @@
+"""An in-memory PendingCaptureRepository."""
+
+import uuid
+from datetime import UTC, datetime
+
+from app.domains.capture.interfaces.dtos import MissingField, PendingCaptureDTO
+
+
+class FakePendingCaptureRepository:
+    def __init__(self) -> None:
+        self.rows: dict[uuid.UUID, PendingCaptureDTO] = {}
+
+    async def create_pending_capture(
+        self,
+        *,
+        user_id: uuid.UUID,
+        command_name: str,
+        known_title: str | None,
+        missing_field: MissingField,
+        question_text: str,
+        original_input: str,
+    ) -> PendingCaptureDTO:
+        pending_capture = PendingCaptureDTO(
+            id=uuid.uuid4(),
+            user_id=user_id,
+            command_name=command_name,
+            known_title=known_title,
+            missing_field=missing_field,
+            question_text=question_text,
+            original_input=original_input,
+            asked_at=datetime.now(UTC),
+        )
+        self.rows[pending_capture.id] = pending_capture
+        return pending_capture
+
+    async def get_pending_capture(
+        self, *, user_id: uuid.UUID, pending_capture_id: uuid.UUID
+    ) -> PendingCaptureDTO | None:
+        pending_capture = self.rows.get(pending_capture_id)
+        if pending_capture is None or pending_capture.user_id != user_id:
+            return None
+        return pending_capture
+
+    async def delete_pending_capture(
+        self, *, user_id: uuid.UUID, pending_capture_id: uuid.UUID
+    ) -> None:
+        pending_capture = self.rows.get(pending_capture_id)
+        if pending_capture is not None and pending_capture.user_id == user_id:
+            del self.rows[pending_capture_id]

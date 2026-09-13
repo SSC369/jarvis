@@ -1,0 +1,35 @@
+"""Input DTOs for the records interactors. One per use case, per code-rules.md."""
+
+from dataclasses import dataclass
+from uuid import UUID
+
+from app.domains.records.interfaces.dtos import TaskStatus
+
+
+@dataclass(frozen=True)
+class ListTasksInputDTO:
+    user_id: UUID
+    kind_filter: str | None
+    search: str | None
+    sort_by: str
+    sort_desc: bool
+
+
+@dataclass(frozen=True)
+class GetRecordDetailInputDTO:
+    user_id: UUID
+    task_id: UUID
+
+
+@dataclass(frozen=True)
+class UpdateTaskInputDTO:
+    user_id: UUID
+    task_id: UUID
+    title: str | None
+    status: TaskStatus | None
+
+
+@dataclass(frozen=True)
+class DeleteTasksInputDTO:
+    user_id: UUID
+    task_ids: list[UUID]

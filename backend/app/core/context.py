@@ -8,7 +8,7 @@ cannot attribute work to another user, because no caller supplies the id.
 from dataclasses import dataclass
 from uuid import UUID
 
-from sqlalchemy.ext.asyncio import AsyncSession
+from sqlalchemy.ext.asyncio import AsyncSession, async_sessionmaker
 from strawberry.fastapi import BaseContext
 
 
@@ -30,6 +30,12 @@ class Context(BaseContext):
     user_id: UUID | None
     session: AsyncSession
     request_id: str
+    # Added in epic 001 slice 1: a domain whose composition needs its own,
+    # independent transaction (the gateway's usage write, AD-8) cannot use
+    # ``session`` above, which is shared for the whole request. Most domains
+    # use ``session`` directly, per repo-rules.md section 7.4; this exists
+    # only for building collaborators that specifically must not share it.
+    session_factory: async_sessionmaker[AsyncSession]
 
     @property
     def is_authenticated(self) -> bool:
