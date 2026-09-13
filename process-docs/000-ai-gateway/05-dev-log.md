@@ -275,9 +275,13 @@ true.
 
 Slice 3's own definition of done (04.3 section 10) is not fully met:
 
-1. **A provider-side spend cap and billing alert in the Google console are
-   unverified.** D-12 (below), which blocked this, is now closed — a budget
-   alert still needs to be set at a real threshold.
+1. **Provider-side spend cap: settled 2026-09-13, by decision rather than a
+   console-configured billing budget.** User direction: the cap is the
+   existing per-user limit, 20 commands per day (`DEFAULT_REQUESTS_PER_DAY` in
+   `app/domains/gateway/constants.py`, already built and tested in slice 3),
+   together with Tier 1's automatic 250 USD billing cap (build plan §11.3),
+   rather than a separate dollar-denominated budget alert in the console. No
+   further action on this item.
 2. Langfuse (04.3 §6.3, Q3: wire without content capture) is not implemented.
 
 D-1 and D-2 from slice 1 are resolved or deferred as of 2026-09-13, see slice
@@ -358,3 +362,9 @@ done, item 2.
 
 The feature-level definition of done cannot be fully met until epic 001 exists.
 This is expected, not a defect to chase now.
+
+## Change log addendum
+
+| Date | Change | Why | Approved by |
+|---|---|---|---|
+| 2026-09-13 | Spend cap item settled: the existing 20-per-user-per-day limit plus Tier 1's automatic 250 USD cap serve as the provider-side spend control, by decision, rather than a separate Google Cloud billing budget alert | User decision | user |
