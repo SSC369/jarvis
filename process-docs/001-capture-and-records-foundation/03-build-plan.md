@@ -174,11 +174,11 @@ second hierarchy, since the mapping is a one-line constructor call per member.
 
 | # | Question | Options | Recommendation | Answer |
 |---|---|---|---|---|
-| Q1 | Does a stale pending capture ever expire? | Never / after N days, auto-discarded | **Never, in V1.** FR-37 says answerable "whenever you like"; adding a silent expiry contradicts that unless the PRD is changed first | |
-| Q2 | 500-character input cap: is that generous enough, or should it be higher for a task with a long description? | 500 / 1,000 / no cap | **500.** Every drawn example is well under it, and a cap protects TPM headroom cheaply | |
-| Q3 | Confirm: no GraphQL subscription this epic, live update is same-tab-only via the mutation response | Confirm / want cross-tab sync now | **Confirm.** Cross-tab sync needs T-Q3 answered first, which is a platform question, not this epic's | |
-| Q4 | `UnrecognisedCommand` (FR-12) is a `should`, not a `must`. Build it in this pass, or defer? | Build now / defer | **Build now.** It is one union member and a Levenshtein-distance match against four names, cheap next to the other nine members already being built | |
-| Q5 | The service worker caches records for offline reading. How much: the last N records, or everything the user has? | Last 50 / everything | **Everything.** A personal task list stays small for a long time; capping it adds complexity FR-40 does not ask for | |
+| Q1 | Does a stale pending capture ever expire? | Never / after N days, auto-discarded | **Never, in V1.** FR-37 says answerable "whenever you like"; adding a silent expiry contradicts that unless the PRD is changed first | **Answered 2026-09-13.** Never |
+| Q2 | 500-character input cap: is that generous enough, or should it be higher for a task with a long description? | 500 / 1,000 / no cap | **500.** Every drawn example is well under it, and a cap protects TPM headroom cheaply | **Answered 2026-09-13.** 500 |
+| Q3 | Confirm: no GraphQL subscription this epic, live update is same-tab-only via the mutation response | Confirm / want cross-tab sync now | **Confirm.** Cross-tab sync needs T-Q3 answered first, which is a platform question, not this epic's | **Answered 2026-09-13.** Confirmed |
+| Q4 | `UnrecognisedCommand` (FR-12) is a `should`, not a `must`. Build it in this pass, or defer? | Build now / defer | **Build now.** It is one union member and a Levenshtein-distance match against four names, cheap next to the other nine members already being built | **Answered 2026-09-13.** Build now |
+| Q5 | The service worker caches records for offline reading. How much: the last N records, or everything the user has? | Last 50 / everything | **Everything.** A personal task list stays small for a long time; capping it adds complexity FR-40 does not ask for | **Answered 2026-09-13.** Everything |
 
 ## 11. Risks
 
@@ -193,4 +193,5 @@ second hierarchy, since the mapping is a one-line constructor call per member.
 
 | Date | Change | Why | Approved by |
 |---|---|---|---|
+| 2026-09-13 | All five questions in section 10 answered, every recommendation accepted | User answered | user |
 | 2026-09-13 | Created | Design approved, stage 3 opened | pending |
