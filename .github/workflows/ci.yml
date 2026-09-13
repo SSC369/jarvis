@@ -35,7 +35,16 @@ jobs:
         run: mypy app
 
       - name: Tests
-        run: pytest
+        # Unit tests only: they run against fakes, per repo-rules.md §15. The
+        # integration suite needs a real Supabase-shaped Postgres database,
+        # which CI does not yet provision. Tracked as D-11 in the AI Gateway
+        # dev log rather than solved here with a placeholder database.
+        run: pytest tests/unit tests/test_settings.py tests/test_logging_redaction.py
+        env:
+          GEMINI_API_KEY: "ci-placeholder-not-a-real-key"
+          DATABASE_URL: "postgresql://ci:ci@localhost:5432/ci"
+          SUPABASE_URL: "https://ci-placeholder.supabase.co"
+          SUPABASE_JWKS_URL: "https://ci-placeholder.supabase.co/auth/v1/.well-known/jwks.json"
 
   secrets:
     name: Secret scan
