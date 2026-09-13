@@ -1,0 +1,16 @@
+#import "../../../fragments/TaskFields.graphql"
+
+mutation CompleteTask($id: ID!) {
+  completeTask(id: $id) {
+    __typename
+    ... on Task {
+      ...TaskFields
+    }
+    ... on NoFieldsToUpdate {
+      message
+    }
+    ... on RecordNotFound {
+      message
+    }
+  }
+}

@@ -70,6 +70,7 @@ frontend/
 ├── vite.config.ts
 ├── codegen.ts
 ├── schema.graphql               ← exported from the backend. Never hand-edited
+├── types.generated.ts           ← codegen output, shared base types. Never edited
 ├── .env.example
 └── src/
     ├── main.tsx
@@ -85,9 +86,8 @@ frontend/
     │   │   └── authLink.ts
     │   ├── queries/<Name>/      ← four files each. See §5
     │   ├── mutations/<Name>/
-    │   ├── subscriptions/<Name>/
-    │   ├── fragments/
-    │   └── apiStatus.ts         ← the APIStatus enum. See §6
+    │   └── subscriptions/<Name>/
+    ├── fragments/
     ├── stores/                  ← MobX. The source of truth. See §8
     │   ├── RootStore.ts
     │   └── RecordsStore.ts
@@ -105,6 +105,7 @@ frontend/
     ├── hooks/
     ├── utils/
     ├── constants/
+    │   └── apiConstants.ts      ← the APIStatus enum. See §6
     └── types/
 ```
 
@@ -158,7 +159,7 @@ Rules:
   is committed, and never edited.
 - **Nothing outside this folder imports the generated file.** The hook is the
   public surface.
-- **Fragments live in `src/api/fragments/`** and are shared. A field selection
+- **Fragments live in `src/fragments/`** and are shared. A field selection
   repeated in two operations becomes a fragment.
 
 Why a folder and not a file: the error contract, the unwrapping and the hook
@@ -179,7 +180,7 @@ interface UseCreateRecordReturnType {
 
 Every operation hook returns this. Callers learn one shape.
 
-`APIStatus` is a numeric enum in `src/api/apiStatus.ts`:
+`APIStatus` is a numeric enum in `src/constants/apiConstants.ts`:
 
 ```ts
 export const API_INITIAL = 0 as const;

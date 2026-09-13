@@ -1,0 +1,11 @@
+fragment TaskFields on Task {
+  id
+  title
+  dueAt
+  status
+  isOverdue
+  origin
+  originalInput
+  createdAt
+  updatedAt
+}

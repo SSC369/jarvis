@@ -1,0 +1,130 @@
+union CaptureResult = TaskCreated | TasksListed | PendingQuestionCreated | NonCommandGuidance | UnrecognisedCommand | UserLimitReached | ProviderUnavailable | ProviderTimeout | SharedQuotaExhausted | MalformedResult
+
+"""Date with time (isoformat)"""
+scalar DateTime
+
+type InvalidTimezone {
+  message: String!
+}
+
+type MalformedResult {
+  message: String!
+  reason: String!
+}
+
+type Mutation {
+  submitCapture(rawInput: String!): CaptureResult!
+  answerPendingCapture(pendingCaptureId: ID!, answer: String!): CaptureResult!
+  discardPendingCapture(pendingCaptureId: ID!): Boolean!
+  updateTask(id: ID!, input: UpdateTaskInput!): UpdateTaskResult!
+  completeTask(id: ID!): UpdateTaskResult!
+  deleteTask(ids: [ID!]!): Int!
+  updateTimezone(input: UpdateTimezoneInput!): UpdateTimezoneResult!
+}
+
+type NoFieldsToUpdate {
+  message: String!
+}
+
+type NonCommandGuidance {
+  originalInput: String!
+}
+
+type PendingQuestionCreated {
+  pendingCaptureId: ID!
+  question: String!
+}
+
+type ProviderTimeout {
+  message: String!
+  budgetSeconds: Float!
+}
+
+type ProviderUnavailable {
+  message: String!
+}
+
+type Query {
+  records(filter: RecordsFilterInput = null): [Task!]!
+  record(id: ID!): RecordResult!
+  tasks: [Task!]!
+  settings(detectedTimezone: String = null): Settings!
+  apiVersion: String!
+  me: String!
+}
+
+type RecordNotFound {
+  message: String!
+}
+
+union RecordResult = Task | RecordNotFound
+
+input RecordsFilterInput {
+  kind: String = null
+  search: String = null
+  sortBy: SortField! = CREATED_AT
+  sortDesc: Boolean! = false
+}
+
+type Settings {
+  timezone: String!
+  updatedAt: DateTime!
+}
+
+type SharedQuotaExhausted {
+  message: String!
+}
+
+enum SortField {
+  CREATED_AT
+  DUE_AT
+}
+
+type Task {
+  id: ID!
+  title: String!
+  dueAt: DateTime
+  status: String!
+  isOverdue: Boolean!
+  origin: String!
+  originalInput: String
+  createdAt: DateTime!
+  updatedAt: DateTime!
+}
+
+type TaskCreated {
+  task: Task!
+}
+
+enum TaskStatus {
+  PENDING
+  DONE
+}
+
+type TasksListed {
+  tasks: [Task!]!
+}
+
+type UnrecognisedCommand {
+  attemptedName: String!
+  closestMatches: [String!]!
+}
+
+input UpdateTaskInput {
+  title: String = null
+  status: TaskStatus = null
+}
+
+union UpdateTaskResult = Task | NoFieldsToUpdate | RecordNotFound
+
+input UpdateTimezoneInput {
+  timezone: String!
+}
+
+union UpdateTimezoneResult = Settings | InvalidTimezone
+
+type UserLimitReached {
+  message: String!
+  limit: Int!
+  resetsAt: DateTime!
+}

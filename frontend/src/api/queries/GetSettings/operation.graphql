@@ -1,0 +1,6 @@
+query GetSettings($detectedTimezone: String) {
+  settings(detectedTimezone: $detectedTimezone) {
+    timezone
+    updatedAt
+  }
+}

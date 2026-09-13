@@ -1,0 +1,7 @@
+#import "../../../fragments/TaskFields.graphql"
+
+query GetRecords($filter: RecordsFilterInput) {
+  records(filter: $filter) {
+    ...TaskFields
+  }
+}

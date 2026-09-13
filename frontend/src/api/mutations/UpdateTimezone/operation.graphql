@@ -1,0 +1,12 @@
+mutation UpdateTimezone($input: UpdateTimezoneInput!) {
+  updateTimezone(input: $input) {
+    __typename
+    ... on Settings {
+      timezone
+      updatedAt
+    }
+    ... on InvalidTimezone {
+      message
+    }
+  }
+}

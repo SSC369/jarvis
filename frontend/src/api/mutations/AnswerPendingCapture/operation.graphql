@@ -1,0 +1,47 @@
+#import "../../../fragments/TaskFields.graphql"
+
+mutation AnswerPendingCapture($pendingCaptureId: ID!, $answer: String!) {
+  answerPendingCapture(pendingCaptureId: $pendingCaptureId, answer: $answer) {
+    __typename
+    ... on TaskCreated {
+      task {
+        ...TaskFields
+      }
+    }
+    ... on TasksListed {
+      tasks {
+        ...TaskFields
+      }
+    }
+    ... on PendingQuestionCreated {
+      pendingCaptureId
+      question
+    }
+    ... on NonCommandGuidance {
+      originalInput
+    }
+    ... on UnrecognisedCommand {
+      attemptedName
+      closestMatches
+    }
+    ... on UserLimitReached {
+      message
+      limit
+      resetsAt
+    }
+    ... on ProviderUnavailable {
+      message
+    }
+    ... on ProviderTimeout {
+      message
+      budgetSeconds
+    }
+    ... on SharedQuotaExhausted {
+      message
+    }
+    ... on MalformedResult {
+      message
+      reason
+    }
+  }
+}

@@ -1,0 +1,3 @@
+mutation DiscardPendingCapture($pendingCaptureId: ID!) {
+  discardPendingCapture(pendingCaptureId: $pendingCaptureId)
+}

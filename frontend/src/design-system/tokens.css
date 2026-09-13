@@ -1,0 +1,91 @@
+@import "tailwindcss";
+
+/*
+ * Values sourced from process-docs/001-capture-and-records-foundation's
+ * canvas, DarkTokens.dc.html. Dark is a separate warm-near-black palette,
+ * not the light one inverted. The theme follows the OS only (design Q13,
+ * product.md): there is no user-facing toggle, so only a
+ * prefers-color-scheme media query switches these, never a [data-theme]
+ * attribute.
+ */
+
+@theme {
+  /* Tier 1: primitives. Raw brand values, named for what they are.
+     Redefined for dark below; every one has both a light and dark value. */
+  --color-paper: #faf8f4;
+  --color-surface: #ffffff;
+  --color-rail: #f5f1ea;
+  --color-ink: #2f2823;
+  --color-ink-2: #6b625a;
+  --color-ink-3: #9c9389;
+  --color-line: #e7e0d5;
+  --color-line-2: #d6ccbc;
+  --color-blue: #2f5ea8;
+  --color-blue-wash: #eef3fb;
+  --color-amber: #8a5a2b;
+  --color-amber-wash: #f8f1e6;
+  --color-red: #a83f36;
+  --color-red-wash: #fbf0ee;
+  --color-green: #2f7a52;
+  --color-green-wash: #edf6f1;
+
+  /* Tier 2: semantics. Named for what they do. Reference tier 1 only. */
+  --color-background: var(--color-paper);
+  --color-sidebar: var(--color-rail);
+  --color-card: var(--color-surface);
+  --color-foreground: var(--color-ink);
+  --color-foreground-secondary: var(--color-ink-2);
+  --color-foreground-tertiary: var(--color-ink-3);
+  --color-border: var(--color-line);
+  --color-border-strong: var(--color-line-2);
+  --color-accent: var(--color-blue);
+  --color-accent-wash: var(--color-blue-wash);
+  --color-command: var(--color-amber);
+  --color-command-wash: var(--color-amber-wash);
+  --color-destructive: var(--color-red);
+  --color-destructive-wash: var(--color-red-wash);
+  --color-success: var(--color-green);
+  --color-success-wash: var(--color-green-wash);
+
+  --font-sans: "IBM Plex Sans", system-ui, -apple-system, sans-serif;
+  --font-mono: "IBM Plex Mono", ui-monospace, SFMono-Regular, Menlo, monospace;
+  --font-serif: "Instrument Serif", Georgia, serif;
+
+  --radius-sm: 6px;
+  --radius-md: 8px;
+  --radius-lg: 11px;
+  --radius-xl: 13px;
+}
+
+@media (prefers-color-scheme: dark) {
+  :root {
+    --color-paper: #1c1917;
+    --color-surface: #24211e;
+    --color-rail: #191614;
+    --color-ink: #ece6dc;
+    --color-ink-2: #a89f93;
+    --color-ink-3: #7c7368;
+    --color-line: #35302b;
+    --color-line-2: #443d36;
+    --color-blue: #7ea6e8;
+    --color-blue-wash: #22303f;
+    --color-amber: #d9a441;
+    --color-amber-wash: #332a1b;
+    --color-red: #e08c82;
+    --color-red-wash: #3a2320;
+    --color-green: #6fbf95;
+    --color-green-wash: #1e3128;
+  }
+}
+
+html,
+body,
+#root {
+  height: 100%;
+}
+
+body {
+  background-color: var(--color-background);
+  color: var(--color-foreground);
+  font-family: var(--font-sans);
+}
