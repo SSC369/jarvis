@@ -46,7 +46,8 @@ choice changes, it changes here, and the change log at the bottom records it.
 | Backend hosting | Managed container host. Render or Railway, undecided |
 | Frontend hosting | Static host. Vercel or Cloudflare Pages, undecided |
 | Email | Resend |
-| Model provider | Google Gemini Flash, paid tier. `gemini-2.5-flash` in V1 |
+| Model framework | LangChain, `langchain-core` plus `langchain-google-genai` |
+| Model provider | Google Gemini Flash, paid tier. `gemini-3.6-flash` in V1 |
 | LLM observability | Langfuse |
 
 ---
@@ -234,8 +235,39 @@ here:
 
 | Folder | Ruleset |
 |---|---|
-| `backend/` | [`backend/rules/repo-rules.md`](../backend/rules/repo-rules.md) |
+| `backend/` | [`backend/.claude/rules/repo-rules.md`](../backend/.claude/rules/repo-rules.md) |
 | `frontend/` | [`frontend/rules/repo-rules.md`](../frontend/rules/repo-rules.md) |
+
+### Model framework: LangChain
+
+Chosen by the user on 2026-09-12.
+
+**LangChain sits below the gateway's `ModelProvider` Protocol, never above it.**
+Nothing outside `app/domains/gateway/adapters/` imports it. Rule T4 requires the
+boundary to be ours; if LangChain types reached a service we would have swapped
+our abstraction for theirs and T4 would hold in name only.
+
+| Alternative | Why it lost |
+|---|---|
+| `google-genai` directly | Fewer layers and simpler error classification. Replaced by user direction |
+| `langchain`, the full package | Carries agents, chains and memory. Only `langchain-core` and `langchain-google-genai` are installed for the image |
+
+**What it buys.** `with_structured_output(schema)` enforces the response shape,
+which is most of what FR-16 asks for and removes most malformed-result cases.
+
+**What it costs.** LangChain wraps provider exceptions in its own, so telling a
+quota error from an outage from a timeout means unwrapping to the underlying
+`google-genai` exceptions. The gateway adapter carries more error-mapping code
+than a direct SDK call would, not less.
+
+**The wider toolkit is installed but not deployed.** `langchain-community`,
+`langchain-chroma`, `sentence-transformers`, `langchain-tavily`,
+`langchain-huggingface` and `pypdf` live in `backend/requirements-ai.txt`, which
+the image never installs. Together they cost 1.4 GB, most of it PyTorch. A
+package graduates into `requirements.txt` when code imports it. Two of them carry
+unsettled decisions: Chroma is a second vector store where this document chose
+pgvector in one database, and `sentence-transformers` means local embeddings
+where this document chose Gemini.
 
 ### Model provider: Gemini Flash, paid tier
 
@@ -366,6 +398,8 @@ Seven files sit there: decisions 0001 to 0006 and their README. Decisions 0004,
 |---|---|---|---|
 | 2026-09-09 | Created, absorbing decision records 0004, 0005 and 0006 | User removed the decisions folder and asked for one technical document | user |
 | 2026-09-09 | Server state moved from TanStack Query to Apollo Client. The pillar P2 objection to a normalised cache is preserved by making MobX stores the source of truth and Apollo a transport | User direction while drafting the repository rulesets | user |
+| 2026-09-12 | V1 model changed from `gemini-2.5-flash` to `gemini-3.6-flash`. The former returns 404 to new accounts, and Google's error names the latter as its replacement | Discovered by calling the API during epic 000 slice 3 | user |
+| 2026-09-12 | Added LangChain as the model framework, below the gateway's provider Protocol. Recorded that the wider AI toolkit is installed locally and not deployed | User direction while planning epic 000 slice 3 | user |
 | 2026-09-12 | Corrected the T-Q2 answer. The claim alone leaks every row because `postgres` carries `rolbypassrls`; `SET LOCAL ROLE authenticated` is mandatory alongside it. Stale downstream: none, no code had been written against the earlier answer | Measured against the live database while planning epic 000 slice 2 | user |
 | 2026-09-12 | Added ORM, database driver, migrations and a Python version. Named `gemini-2.5-flash` as the V1 model. Recorded the `SET LOCAL` answer to T-Q2 and that there is no mirrored users table | Decisions AD-2 to AD-7 and AD-9 locked by epic 000's approved build plan, graduated here per rule 6 of the process | user |
 | 2026-09-09 | Repository layout moved from `apps/api`, `apps/web`, `packages/` to `backend/` and `frontend/`. Each folder now owns a `rules/repo-rules.md` | User direction | user |

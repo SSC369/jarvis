@@ -14,7 +14,8 @@ begins:
 |---|---|
 | [process-docs/README.md](./process-docs/README.md) | How the process works |
 | [process-docs/index.md](./process-docs/index.md) | Every feature and its stage |
-| [process-docs/product/product-brief.md](./process-docs/product/product-brief.md) | What Slashit is |
+| [process-docs/product/product.md](./process-docs/product/product.md) | What Slashit is |
+| [process-docs/tech-stack.md](./process-docs/tech-stack.md) | The stack, and why each choice won |
 | [process-docs/CLAUDE.md](./process-docs/CLAUDE.md) | Rules for writing the docs |
 
 There is no application code yet. The product brief has nine open questions that

@@ -9,7 +9,7 @@ Product context: [product](./product/product.md) ·
 [V1 intake](./product/intake/2026-09-08-personal-jarvis-v1.md)
 
 Code rulesets, binding once a feature reaches stage 5:
-[backend](../backend/rules/repo-rules.md) ·
+[backend](../backend/.claude/rules/repo-rules.md) ·
 [frontend](../frontend/rules/repo-rules.md)
 
 Settled: named Slashit, web, one account per user, commands-only capture, in-app

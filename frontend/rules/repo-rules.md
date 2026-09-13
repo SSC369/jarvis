@@ -147,7 +147,7 @@ src/api/mutations/CreateRecord/
 └── useCreateRecord.ts         the public hook. §6
 ```
 
-This is the same `createRecord` call traced in `backend/rules/repo-rules.md` §7.
+This is the same `createRecord` call traced in `backend/.claude/rules/repo-rules.md` §7.
 The two documents describe the two ends of one operation, and the union there
 matches the switch here member for member.
 
@@ -249,7 +249,7 @@ apiStatus: getAPIStatusFromNetworkStatus(networkStatus, data),
 
 ### 6.3 The response handler
 
-The other half of the backend's union contract. `backend/rules/repo-rules.md` §8
+The other half of the backend's union contract. `backend/.claude/rules/repo-rules.md` §8
 is the first half.
 
 ```ts

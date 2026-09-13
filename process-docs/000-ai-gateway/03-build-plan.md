@@ -44,7 +44,7 @@ a restart cannot lose it. Prompt and response content never reach that table.
 
 Other domains reach the gateway the way every domain reaches another: through
 `gateway/public.py`, a port the consumer owns, and an adapter. See
-[the backend ruleset](../../backend/rules/repo-rules.md) section 6.
+[the backend ruleset](../../backend/.claude/rules/repo-rules.md) section 6.
 
 ## 2. Component map
 
@@ -111,7 +111,7 @@ domains. This is the whole point of FR-16 and it is why this epic has no screen.
 | `UsageRepository.usage_for_period()` | Operator, out of band | Service role | date range, optional `user_id` | usage rows | FR-14 |
 
 `ExtractionResult` is a union, matching
-[the backend ruleset](../../backend/rules/repo-rules.md) section 8: `Extraction`,
+[the backend ruleset](../../backend/.claude/rules/repo-rules.md) section 8: `Extraction`,
 `UserLimitReached`, `SharedQuotaExhausted`, `ProviderUnavailable`,
 `ProviderTimeout`, `MalformedResult`. Six members, one per FR-18 outcome.
 
@@ -200,7 +200,7 @@ real p95 latency once epic 001 runs, and revising then.
 | Identity source | Supabase `auth.users` only | A mirrored `users` table, as the epic supplied | A second copy needs synchronising, which is the failure the tech stack rejected Clerk over | costly |
 | Limit storage | `ai_user_limit` table | Environment variable | FR-10 requires change without a deploy | cheap |
 | Limit check | Count rows in `ai_usage` for the window | A counter in Redis | The tech stack removed Redis deliberately. At dozens of calls a day an indexed count is free | cheap |
-| Model | `gemini-2.5-flash` | `gemini-3.8-flash` | Google positions 3.8 Flash for long-horizon software engineering. This workload parses one sentence, and 2.5 Flash is the stated price-performance choice for low-latency, high-volume work | cheap |
+| Model | `gemini-3.6-flash` | `gemini-3.8-flash`, `gemini-3.1-flash-lite` | Google positions 3.8 Flash for long-horizon software engineering. This workload parses one sentence, and 2.5 Flash is the stated price-performance choice for low-latency, high-volume work | cheap |
 | ORM | SQLAlchemy 2.x async | SQLModel | Thinner, and by FastAPI's author, but it lags SQLAlchemy on async and complex queries, and this codebase has a repository layer that wants full query power | costly |
 | ORM | SQLAlchemy 2.x async | Raw asyncpg | Fast, but every repository hand-rolls mapping, and Alembic has nothing to read | costly |
 | Migrations | Alembic | Supabase CLI SQL migrations | Attractive because RLS policies are SQL, but two migration histories over one database is the problem it appears to solve. Alembic executes raw SQL for policies | costly |
@@ -231,13 +231,13 @@ write shares the caller's transaction rather than opening its own.
 | # | Decision | Status | Graduates to tech-stack.md |
 |---|---|---|---|
 | AD-1 | The gateway is an in-process domain with no GraphQL field | locked | no |
-| AD-2 | `gemini-2.5-flash` is the V1 model | locked | yes, the stack names only "Gemini Flash" |
+| AD-2 | `gemini-3.6-flash` is the V1 model | **amended 2026-09-12** | yes |
 | AD-3 | ORM is SQLAlchemy 2.x async | locked | **yes, no row exists** |
 | AD-4 | Migrations are Alembic, RLS policy in the creating migration | locked | **yes, no row exists** |
 | AD-5 | Driver is asyncpg | locked | **yes, no row exists** |
 | AD-6 | Python 3.12 | locked | **yes, no row exists** |
 | AD-7 | Identity reaches the connection by `SET LOCAL` claims **and** `SET LOCAL ROLE authenticated`, both inside the work transaction | **amended 2026-09-12** | yes, closes T-Q2 |
-| AD-8 | Usage is written in the caller's transaction, not a job | locked | no |
+| AD-8 | Usage is written in **its own short transaction**, committed as soon as the provider returns. Not the caller's, not a job | **amended 2026-09-12** | no |
 | AD-9 | No mirrored `users` table. `auth.users` is the only identity store | locked | yes |
 
 AD-3 to AD-6 are the four rows that block `backend/requirements.txt`. They are
@@ -350,6 +350,8 @@ not lost.
 | 2026-09-10 | Real rate limits recorded: RPM 5, TPM 250K, RPD 20. These are free-tier numbers. Q1 suspended behind Q7, and a severe risk added | User read the AI Studio dashboard | pending |
 | 2026-09-10 | All ten questions answered, user said go with the recommendations | User direction | user |
 | 2026-09-10 | Section 11 added: three plan tiers and a pricing model | User asked for free, plus and pro tiers | pending |
+| 2026-09-12 | **AD-2 amended after approval.** `gemini-2.5-flash` returns 404 with "no longer available to new users". Google's own error names `gemini-3.6-flash` as the replacement, and that is what slice 3 runs. Found by calling the API, not by reading. Stale downstream: the model name in `tech-stack.md`, updated in the same change | The locked model could not be called | user |
+| 2026-09-12 | **AD-8 amended after approval.** The usage row moves out of the caller's transaction into its own. A provider call that happened must be recorded even when the caller's later work rolls back, which AD-8 as written discarded, contradicting FR-13 and FR-15. Reasoning in [04.3](./04.3-the-gateway.md) section 6.1. Stale downstream: none | Raised while planning slice 3 | user |
 | 2026-09-12 | **AD-7 amended after approval.** `SET LOCAL` claims alone leak every row, because `postgres` carries `rolbypassrls`. The role switch to `authenticated` is now mandatory. Stale downstream: none, no code had been written against AD-7. `tech-stack.md` section 3 updated in the same change | Measured against the live database while planning slice 2 | user |
 | 2026-09-12 | **Build plan approved.** AD-1 to AD-9 locked. AD-2 to AD-7 and AD-9 graduated to `tech-stack.md` in the same commit, per rule 6 of the process. Q11 carried to epic 001, which owns capture | User said proceed | user |
 | 2026-09-10 | Model cost figures removed throughout: the per-call cost, the rate-card comparison, the spend projections and the promotional-pricing risk. Rate limits and Google tier qualification thresholds kept | User direction | user |

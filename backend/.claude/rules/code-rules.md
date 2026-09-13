@@ -1,169 +1,119 @@
----
-doc: code-rules
-scope: backend
-title: Backend Coding Style
-status: current
-owner: user
-created: 2026-09-12
-updated: 2026-09-12
----
+# Backend — Code Rules
 
-# Backend — Coding Style
+How code is written line by line. [`repo-rules.md`](./repo-rules.md) owns where
+code goes; this file owns what it looks like.
 
-How a method is written under `backend/`. Where code goes is owned by
-[`repo-rules.md`](./repo-rules.md). This file owns types, call style, the
-shape of an interactor method, storage purity, and names.
+## 1. Types on every argument and return
 
-Read both before writing Python here.
-
-## 1. Type every argument and return
-
-Every parameter and every return value is annotated. That includes private
-methods and `__init__`. Domain code does not use untyped `*args` or `**kwargs`.
-
-This is repo-rules §16 tightened from public functions to every method.
-
-Do:
+Every parameter and every return value carries a type hint, including `self`-less
+helpers and test fixtures. `mypy --strict` enforces it.
 
 ```python
-async def extract(
-    self, *, user_id: UUID, request: ExtractionRequest
-) -> ExtractionResult:
-    ...
+# Bad
+def count_since(self, user_id, since): ...
 
-def __init__(
-    self,
-    *,
-    provider: ModelProvider,
-    usage_repository: UsageRepository,
-) -> None:
-    ...
+# Good
+async def count_since(self, *, user_id: UUID, since: datetime) -> int: ...
 ```
 
-Not:
+## 2. Keyword arguments, always
+
+Any function or method taking more than one argument besides `self` declares them
+keyword-only with `*`, and every call site names them. A positional call breaks
+silently when two arguments of the same type swap order.
 
 ```python
-async def extract(self, user_id, request):
-    ...
-```
+# Bad
+await self._record(user_id, model, 0, 0, error, None)
 
-## 2. Call with keyword arguments
-
-Project functions are keyword-only after `self`. The signature uses `*`. Call
-sites pass names.
-
-```python
-def extract(
-    self, *, user_id: UUID, request: ExtractionRequest
-) -> ExtractionResult: ...
-
-result = await interactor.extract(user_id=user_id, request=request)
-await self._record_request(
-    user_id=user_id,
-    model=model,
-    input_tokens=input_tokens,
-    output_tokens=output_tokens,
-    error=error,
-    latency_ms=latency_ms,
+# Good
+await self._record_usage(
+    user_id=user_id, model=model, input_tokens=0, output_tokens=0,
+    error=error, latency_ms=None,
 )
 ```
 
-Not:
+Exempt: single-argument calls, and third-party APIs that do not accept keywords.
+
+## 3. Interactors validate first, then orchestrate
+
+The public method reads as a list of steps. It holds no conditions of its own.
+
+1. **Every validation is a private method** named `_validate_<what>`. It raises
+   a `DomainError` or returns nothing.
+2. **All validations run before any side effect.** No write, no provider call,
+   no job enqueued until every check has passed.
+3. **The public method only calls steps.** Validate, act, record, return.
 
 ```python
-await self._record(user_id, model, 0, 0, error, elapsed_ms)
-```
+async def create_record(self, *, request: CreateRecordRequest) -> RecordDTO:
+    self._validate_title(title=request.title)
+    self._validate_body(body=request.body)
+    await self._validate_record_limit(user_id=request.user_id)
 
-Exceptions: Python builtins (`len`, `str`, `cast`) and operators stay
-positional. Collaborators passed into `__init__` are still keyword-only.
-
-## 3. Interactor: validate first, then orchestrate
-
-The public method is an orchestrator. It does not contain validation branches
-inline.
-
-Order inside the public method:
-
-1. Run every validation. Each check is its own private method.
-2. Perform the work: ports, services, repositories.
-3. Persist or record outcomes if the use case requires it.
-4. Return the result.
-
-Each check is `_ensure_<thing>` or `_validate_<thing>`. It raises the matching
-domain error, or returns the union member when that is the domain's existing
-error style. One concern per method.
-
-Do:
-
-```python
-async def create_record(self, *, dto: CreateRecordInputDTO) -> RecordDTO:
-    self._validate_title(title=dto.title)
-    self._validate_body(body=dto.body)
-    await self._ensure_under_record_limit(user_id=dto.user_id)
-    return await self.record_repository.create(dto=storage_dto)
+    record = await self.record_repository.create_record(record=...)
+    await self._publish_record_created(record=record)
+    return record
 
 def _validate_title(self, *, title: str) -> None:
     if not title.strip():
-        raise InvalidRecordTextError(reason="empty_title")
+        raise InvalidRecordTextError(reason="title is empty")
 ```
 
-Not:
+## 4. Storage does database operations only
+
+A repository method reads or writes rows and converts them to DTOs. It never
+decides.
+
+| Storage may | Storage may not |
+|---|---|
+| Filter by what the caller passed | Choose a default a business rule implies |
+| Convert a model to a DTO | Compare a count against a limit |
+| Raise when the database fails | Raise a `DomainError` |
 
 ```python
-async def create_record(self, dto: CreateRecordInputDTO) -> RecordDTO:
-    if not dto.title.strip():
-        raise InvalidRecordTextError(reason="empty_title")
-    if not dto.body.strip():
-        raise InvalidRecordTextError(reason="empty_body")
-    count = await self.record_repository.count_for_user(dto.user_id)
-    if count >= MAX_RECORDS_PER_USER:
-        raise RecordLimitReachedError(limit=MAX_RECORDS_PER_USER)
-    return await self.record_repository.create(...)
+# Bad: the limit check is a business rule
+async def can_create(self, *, user_id: UUID) -> bool:
+    return await self._count(user_id=user_id) < MAX_RECORDS_PER_USER
+
+# Good: storage counts, the interactor decides
+async def count_records_for_user(self, *, user_id: UUID) -> int: ...
 ```
 
-## 4. Storage is SQL only
+## 5. Names say what the thing does
 
-Repositories are this codebase's storage. They execute queries and map model to
-DTO and back. They do not decide limits, outcomes, retries, or whether a call
-counts. That stays in the interactor or a domain service.
+A method name is a verb phrase that describes its effect without reading the
+body. A private helper is named as specifically as a public one.
 
-The layer contract is repo-rules §4, Repository row, and §7.4. Restated here
-so a storage method is not a place to hide a business rule.
+| Bad | Good |
+|---|---|
+| `_record` | `_record_usage` |
+| `_usage` | `_read_token_count` |
+| `limit_for` | `get_request_limit_for_user` |
+| `handle` | `refuse_over_limit_request` |
+| `process` | `extract_structured_task` |
 
-Do:
+A boolean reads as a question: `has_capacity`, `is_authenticated`.
 
-```python
-async def create(self, *, dto: CreateRecordStorageDTO) -> RecordDTO:
-    record = Record(**asdict(dto))
-    self.session.add(record)
-    await self.session.flush()
-    return record_model_to_dto(record)
-```
+## 6. Variable names from the domain
 
-Not:
+No single letters and no placeholders. Name a value for what it holds here.
 
-```python
-async def create(self, *, dto: CreateRecordStorageDTO) -> RecordDTO:
-    count = await self.count_for_user(user_id=dto.user_id)
-    if count >= MAX_RECORDS_PER_USER:
-        raise RecordLimitReachedError(limit=MAX_RECORDS_PER_USER)
-    ...
-```
+| Bad | Good |
+|---|---|
+| `a`, `e`, `x`, `s`, `k`, `v` | `allowance`, `error`, `secret`, `field_name`, `field_value` |
+| `this`, `that`, `obj`, `tmp` | `usage_record`, `previous_limit` |
+| `data`, `value`, `res`, `ret` | `extracted_task`, `requests_per_day`, `usage_rows` |
 
-## 5. Names describe the action
+Exempt: names a framework mandates, such as Strawberry's `info` and a public
+field a caller already depends on. `_` for a deliberately unused value.
 
-A method name is a short verb phrase a new reader understands without opening
-the body.
+## Enforcement
 
-| Prefer | Over |
-| ------ | ---- |
-| `_record_usage` / `_record_request` | `_record` |
-| `_ensure_user_has_capacity` | `_check` |
-| `_validate_title` | `_ok` |
-
-## 6. Variables are contextual, never placeholders
-
-Ban `a`, `e`, `x`, `this`, `that`, `data`, `obj`, `tmp`, `val`, and `info`
-except Strawberry's `info: Info`. Use names from the domain: `user_id`,
-`allowance`, `usage_record`, `domain_error`. A loop variable names the item:
-`for usage_row in usage_rows`.
+| Rule | Checked by |
+|---|---|
+| 1 | `mypy --strict`, plus ruff `ANN` |
+| 2 | `*` in signatures makes positional calls a `TypeError` and a mypy error |
+| 3, 4 | `backend-code-review` agent, and review |
+| 5 | Review |
+| 6 | `tests/unit/test_code_rules.py`, which rejects banned names by AST |

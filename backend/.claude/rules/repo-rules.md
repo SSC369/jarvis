@@ -32,7 +32,7 @@ idea.
 
 ## 2. Stack, and what this folder supersedes
 
-The stack is owned by [`process-docs/tech-stack.md`](../../process-docs/tech-stack.md).
+The stack is owned by [`process-docs/tech-stack.md`](../../../process-docs/tech-stack.md).
 The rows that shape this folder:
 
 | Layer                  | Choice                                |
@@ -188,6 +188,19 @@ exactly three pieces, and no other route is permitted.
 | Port              | The **consuming** domain, in `interfaces/ports.py`                         | A Protocol describing what this domain needs, in its own vocabulary               |
 | Adapter           | The **consuming** domain, in `adapters/`                                   | Implements the port by calling the published service, and translates types across |
 
+**A published entry point may be an interactor.** Section 5 puts use cases in
+`interactors/` and this section puts the published surface in `services/`. When a
+domain's whole public surface is one use case, those two rules point at the same
+object, and `public.py` names the interactor directly. A service that exists only
+to forward to an interactor is ceremony. Added 2026-09-12, after the gateway hit
+the ambiguity and it was resolved by guessing rather than by reading.
+
+**`adapters/` is only ever for reaching another domain.** A file there that
+imports no other domain's `public.py` is a service in the wrong folder. This is
+the conflation section 6.4 warns about, and `tests/unit/test_layering.py`
+enforces it, because prose did not stop the gateway's Gemini client being written
+there first.
+
 **The port belongs to the consumer.** This is the half that is easy to get wrong
 and the half that does the work. If the consuming domain imports the providing
 domain's interface, nothing has been decoupled; the dependency has been renamed.
@@ -292,9 +305,11 @@ yourself needing one, the fix is one of three things, never an exception:
 3. Invert the direction with an event, so the provider announces and the
    consumer subscribes, rather than the provider calling back.
 
-Enforce it with a test. An import-linter contract, or a test that walks
-`app/domains/*/adapters/` and asserts the graph is acyclic, costs one afternoon
-and holds forever.
+Enforced by `tests/unit/test_layering.py`, which asserts the graph is acyclic,
+that nothing crosses a boundary except through `public.py`, that every domain
+publishes a contract, that only `services/` and `adapters/` import a vendor SDK,
+and that every file in `adapters/` reaches another domain. Each case exists
+because the prose alone did not prevent the mistake.
 
 ## 7. The API lifecycle
 

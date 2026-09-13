@@ -103,7 +103,7 @@ class DomainError(Exception):
 ```
 
 Slice 2 defines it and the `@map_errors` decorator. Slice 3 subclasses it.
-Matches [the backend ruleset](../../backend/rules/repo-rules.md) section 8.
+Matches [the backend ruleset](../../backend/.claude/rules/repo-rules.md) section 8.
 
 ### The gateway's published surface, slice 3 outward
 
@@ -113,7 +113,7 @@ __all__ = ["ExtractionService", "ExtractionResult", "ExtractionRequest"]
 ```
 
 The only names another domain may import. Epic 001 will define its own port and
-adapter against this, per [the backend ruleset](../../backend/rules/repo-rules.md)
+adapter against this, per [the backend ruleset](../../backend/.claude/rules/repo-rules.md)
 section 6. **Changing this list is a change record here**, because it is the
 contract every later epic depends on.
 
