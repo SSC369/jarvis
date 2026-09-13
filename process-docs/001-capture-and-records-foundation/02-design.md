@@ -3,15 +3,17 @@ doc: design
 feature: 001-capture-and-records-foundation
 title: Capture and Records Foundation
 stage: 2
-status: in-review
+status: approved
 owner: user
 created: 2026-09-09
 updated: 2026-09-13
-approved_on: null
+approved_on: 2026-09-13
 supersedes: null
 ---
 
 # Design — Capture and Records Foundation
+
+> **Approved** by @user on 2026-09-13. Locked — changes require a change record (§7 of the rules).
 
 Context: [PRD](./01-prd.md)
 Canvas: https://claude.ai/code/artifact/f4b02674-cc87-486b-9250-dbeb8210e02b
@@ -409,6 +411,7 @@ above (Q6's Records surface). Stage 2 is ready for the user's approval.
 
 | Date | Change | Why | Approved by |
 |---|---|---|---|
+| 2026-09-13 | **Design approved.** All sixteen open questions in §9 answered and their follow-up work done, per the two entries below | User approved, in response to being told approval unlocks the build plan | user |
 | 2026-09-13 | `Main` rebuilt as a working prototype of the Command Center flow, per Q7 scoped to that flow only: live command discovery and filtering, clean capture, capture with a gap (asking and later answering), input without a command, and a simulated refusal with retry. Closes Q7 and most of Q6 (not answering from Records). Verified interactively before publishing; one layout bug found and fixed (the dock collapsed to the top between typing and the first submitted turn). Republished as version 9. Every question in §9 now has an answer; stage 2 is ready for approval | User scoped Q7 to the Command Center flow | pending |
 | 2026-09-13 | Q2 and Q13 done: `CommandPalette`/`CommandFilter` now prove discovery against 16 commands (12 synthetic); the theme-override control removed from the four Settings artboards. §5c rewritten, two annotations updated. Canvas republished as version 8. Q6 and Q7 remain, scope to be agreed | User asked to act on the open-question follow-ups | pending |
 | 2026-09-13 | All sixteen open questions answered. §2's stale "Name and logo candidates" table removed (superseded by §5d, and referenced a non-existent artboard). Four answers open new work: canvas additions for Q2, Q6, Q7; a canvas removal for Q13; change records against the epic and PRD for Q4 and Q9. Not yet approved: those four items are still outstanding | User reviewed the canvas and went through §9 | pending |
