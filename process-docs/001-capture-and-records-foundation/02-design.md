@@ -6,7 +6,7 @@ stage: 2
 status: in-review
 owner: user
 created: 2026-09-09
-updated: 2026-09-09
+updated: 2026-09-13
 approved_on: null
 supersedes: null
 ---
@@ -97,12 +97,11 @@ page of the canvas.
 
 ### Name and logo candidates
 
-| Candidate | Mark | Artboard |
-|---|---|---|
-| Slashit | Serif J monogram | `NameSlashit` |
-| Almanac | Stacked rules with a marker dot | `NameAlmanac` |
-| Magpie | Bird with an amber tail | `NameMagpie` |
-| Slashit | The command character itself | `NameSlashit` |
+Superseded by §5d, which carries the final round's candidates with an honest
+case and cost for each. This table was never updated across three naming
+rounds and pointed at an artboard, `NameSlashit`, that does not exist on the
+canvas — the real artboard is `NameSlash`. Removed rather than fixed in place,
+since §5d already says this once.
 
 ## 3. Flows
 
@@ -374,27 +373,44 @@ the set above.
 
 | # | Question | Owner | Answer |
 |---|---|---|---|
-| Q1 | Is the direction right? Two alternatives sit on the Directions page. | user | |
-| Q2 | Four commands exist in this epic, so `/add` filters to one result. Does the discovery design need proving against a longer list now, or when the list grows? | user | |
-| Q3 | The records type filter shows All and Tasks only. Should the other types appear disabled so the shape is visible, or stay absent until they exist? Absent is drawn. | user | |
-| Q4 | Overdue styling is drawn on the task list. The PRD does not mention lateness. In or out? | user | |
-| Q5 | The transcript keeps history. How far back, and does it survive a reload? The PRD does not say, and it changes the empty state. | user | |
-| Q6 | Should a pending question be answerable from anywhere, or only from the Command Center where it was asked? Only there is drawn. | user | |
-| Q7 | Static mockups are drawn, not a clickable prototype. Is a clickable pass wanted before the build plan? | user | |
+| ~~Q1~~ | Is the direction right? Two alternatives sit on the Directions page. | user | **Answered 2026-09-13.** Yes, the built direction is right. Directions B and C stay on the canvas as the record, not taken. |
+| ~~Q2~~ | Four commands exist in this epic, so `/add` filters to one result. Does the discovery design need proving against a longer list now, or when the list grows? | user | **Answered 2026-09-13.** Prove it now. **Follow-up:** add a longer synthetic command list to `CommandPalette`/`CommandFilter` before stage 2 closes, so the filtering design is validated against more than four commands. |
+| ~~Q3~~ | The records type filter shows All and Tasks only. Should the other types appear disabled so the shape is visible, or stay absent until they exist? Absent is drawn. | user | **Answered 2026-09-13.** Stay absent, as drawn. No change. |
+| ~~Q4~~ | Overdue styling is drawn on the task list. The PRD does not mention lateness. In or out? | user | **Answered 2026-09-13.** In scope. **Follow-up:** lateness was not argued in `00-epic.md` and is not an `01-prd.md` requirement. Per root ruleset rule 3 and `process-docs/CLAUDE.md` §6, this needs a change record adding it to the epic and PRD before the design can rely on it, not a silent addition here. |
+| ~~Q5~~ | The transcript keeps history. How far back, and does it survive a reload? The PRD does not say, and it changes the empty state. | user | **Answered 2026-09-13.** Survives reload, kept indefinitely, same durability as records. |
+| ~~Q6~~ | Should a pending question be answerable from anywhere, or only from the Command Center where it was asked? Only there is drawn. | user | **Answered 2026-09-13.** Answerable from anywhere. **Follow-up:** not currently drawn; needs new design work (e.g. a way to answer from Records) before stage 2 closes. |
+| ~~Q7~~ | Static mockups are drawn, not a clickable prototype. Is a clickable pass wanted before the build plan? | user | **Answered 2026-09-13.** Yes, wanted before the build plan starts. **Follow-up:** a clickable pass on the canvas is outstanding work, blocking stage 3. |
 | ~~Q8~~ | Mobile is described, not drawn. Does phone use matter at launch? | user | **Drawn 2026-09-09** at 390 x 844, at the user's request. |
-| Q9 | Do you approve proposed FR-39 to FR-41, so the installed app can be built? Without them the PWA artboards are design with no requirement behind them. | user | |
-| Q10 | Offline reads but never captures. Is that the right line, or should an offline capture be held and sent when the connection returns? Holding it means a record that appears minutes later with a date resolved against the wrong moment. | user | |
-| Q11 | Tablet is neither drawn nor decided. Leave it to fall between the two drawn ends? | user | |
-| Q12 | Which name? Magpie is recommended. Keeping Slashit is a decision to make knowingly, given the trademark question. | user | |
-| Q13 | Does the theme override belong in epic 001, as proposed FR-42, or does following the system setting suffice for V1? Following only is cheaper and removes a setting. | user | |
+| ~~Q9~~ | Do you approve proposed FR-39 to FR-41, so the installed app can be built? Without them the PWA artboards are design with no requirement behind them. | user | **Answered 2026-09-13.** Approved. **Follow-up:** needs a change record adding FR-39 to FR-41 to `01-prd.md`, per §5b. |
+| ~~Q10~~ | Offline reads but never captures. Is that the right line, or should an offline capture be held and sent when the connection returns? Holding it means a record that appears minutes later with a date resolved against the wrong moment. | user | **Answered 2026-09-13.** Offline reads only, as drawn. Consistent with FR-40 as proposed. |
+| ~~Q11~~ | Tablet is neither drawn nor decided. Leave it to fall between the two drawn ends? | user | **Answered 2026-09-13.** Yes, interpolate. No dedicated tablet artboard. |
+| ~~Q12~~ | Which name? Magpie is recommended. Keeping Slashit is a decision to make knowingly, given the trademark question. | user | **Settled 2026-09-09**, recorded in §5d: the product is Slashit, chosen knowingly against the recommendation and the trademark risk. This row was left open in error; closed here to match §5d. |
+| ~~Q13~~ | Does the theme override belong in epic 001, as proposed FR-42, or does following the system setting suffice for V1? Following only is cheaper and removes a setting. | user | **Answered 2026-09-13.** Following the system setting only. FR-42 is not added. **Follow-up:** `Settings`, `DarkSettings`, `MobileSettings` and `DarkMobileSettings` currently draw a three-way override control (§5c). That control needs removing from those artboards, since there is no override to control. |
 | ~~Q14~~ | If the name changes, when? | user | **Done 2026-09-09**, before any code existed. The GitHub repository is still named `jarvis` and is the one loose end. |
-| Q15 | Renaming the GitHub repository breaks every existing clone and remote. Do it now while there is one clone, or leave it? | user | |
-| Q16 | The command-centre tab is renamed Capture, because a tab called Slashit inside Slashit says nothing. Agreed? | user | |
+| ~~Q15~~ | Renaming the GitHub repository breaks every existing clone and remote. Do it now while there is one clone, or leave it? | user | **Answered 2026-09-13.** Rename now, to `slashit`. |
+| ~~Q16~~ | The command-centre tab is renamed Capture, because a tab called Slashit inside Slashit says nothing. Agreed? | user | **Answered 2026-09-13.** Agreed, as already drawn. |
+
+### What today's answers still leave open
+
+Every question above has an answer, but four answers create new work rather than
+closing outright. Stage 2 is not ready to approve until these are resolved:
+
+1. **Q2, Q6, Q7** need canvas work: a longer command list proven against
+   discovery, a way to answer a pending question from outside the Command
+   Center, and a clickable pass over the key flows.
+2. **Q13** needs canvas work in the other direction: the override control drawn
+   in four Settings artboards must come out, since FR-42 was declined.
+3. **Q4 and Q9** need a change record against `00-epic.md` and `01-prd.md`
+   before this design can rely on overdue styling or the PWA requirements,
+   per root ruleset rule 3.
+4. **Q15** is an infrastructure action (the GitHub repository), tracked outside
+   this document.
 
 ## Change log
 
 | Date | Change | Why | Approved by |
 |---|---|---|---|
+| 2026-09-13 | All sixteen open questions answered. §2's stale "Name and logo candidates" table removed (superseded by §5d, and referenced a non-existent artboard). Four answers open new work: canvas additions for Q2, Q6, Q7; a canvas removal for Q13; change records against the epic and PRD for Q4 and Q9. Not yet approved: those four items are still outstanding | User reviewed the canvas and went through §9 | pending |
 | 2026-09-09 | Created. 18 artboards across four pages. | PRD approved, design stage started | pending |
 | 2026-09-09 | Name settled as Slashit. Logo system drawn, six sheets. Product renamed across every artboard and document. Wordmark set as `slash.it`, and the lowercase misread documented as a permanent constraint on the wordmark. Section 5e added. Q12 closed, Q17 opened. | User chose Slashit and asked for a proper logo | pending |
 | 2026-09-09 | Round three added: Docket, Kist, Sundry, Colophon, Mnemo, Keepsake, plus a shortlist sheet comparing all fourteen candidates with a risk read. | User asked for more options | pending |
