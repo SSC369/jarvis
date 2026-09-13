@@ -328,3 +328,17 @@ to cap while unlinked.
 |---|---|---|---|
 | 2026-09-13 | Slice 3 recorded. All ten tasks done, keyword-call/naming compliance fixed in `b7efa04`, spend cap and slice 1's CI/Docker gaps still unverified | Slice 3 development completed | — |
 | 2026-09-13 | D-12 opened: billing has come unlinked from the Gemini project, account back on free-tier limits (RPD 20 vs. the paid RPD 1,000 the build plan assumed). Blocks the spend cap confirmation | Found while confirming the spend cap and billing alert | user |
+
+### The index's five cross-slice cases (section 8)
+
+Checked 2026-09-13 against `04-implementation-plan.md`'s own definition of
+done, item 2.
+
+| id | Status |
+|---|---|
+| T-X.1 | **Cannot be built yet.** It requires "a gateway-backed field", and the gateway domain has no `graphql/` folder and exposes no field by design — nothing calls it until epic 001 builds a domain that does (04-implementation-plan.md §9). Not a gap in this feature; a dependency on the next one |
+| T-X.2 | Already covered by T-3.14 in `tests/integration/test_gateway_live.py` |
+| T-X.3, T-X.4, T-X.5 | Buildable now without a GraphQL field, but a dedicated integration test would mostly restate what T-3.5 (per-outcome usage row), T-3.12 (key never logged) and the slice 2 RLS boundary tests already prove. Not written, for that reason, rather than left as an oversight |
+
+The feature-level definition of done cannot be fully met until epic 001 exists.
+This is expected, not a defect to chase now.
