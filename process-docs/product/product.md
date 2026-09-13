@@ -4,7 +4,7 @@ title: Slashit Product
 status: in-review
 owner: user
 created: 2026-09-08
-updated: 2026-09-09
+updated: 2026-09-13
 ---
 
 # Slashit — Product
@@ -187,7 +187,7 @@ Settled product decisions. Technical choices are not here; they are in
 | Surfaces | Web. V1 ships as a web application. Mobile and desktop are not V1. | 2026-09-08 |
 | Notification delivery | In-app notifications and email. No push, no SMS. | 2026-09-08 |
 | Capture method | Commands only in V1. Plain-language capture is deferred. | 2026-09-08 |
-| Theme | Light and dark, following the device by default, with a user override | 2026-09-09 |
+| Theme | Light and dark, following the device only. No user override | 2026-09-13 |
 | Design system | Produced in Claude Design at stage 2 of each feature | 2026-09-08 |
 | Build window | No deadline | 2026-09-08 |
 
@@ -312,6 +312,7 @@ the first time a doc needs it. Keep definitions to one or two sentences.
 
 | Date | Change | Why | Approved by |
 |---|---|---|---|
+| 2026-09-13 | Theme baseline corrected: no user override, device setting only. This document said "with a user override," settled 2026-09-09, but that override was proposed as FR-42 during epic 001's design and declined on 2026-09-13 (`001-capture-and-records-foundation/02-design.md` Q13). This document had not been updated to match | Found while reading this document before epic 001's build plan | user |
 | 2026-09-08 | Created as skeleton, then filled from the V1 product definition | Process bootstrap, then the user supplied the product | user |
 | 2026-09-08 | Surface, notifications, model provider, one account per user settled. Plain-language capture, the Life Inbox, and task priority and recurrence deferred out of V1. Pillar P1 marked partly deferred. Numeric targets deferred. Not charging in V1. No deadline. | User answered the blocking product questions and cut scope | user |
 | 2026-09-09 | Name settled as Slashit, with the mark and wordmark | User chose the name after three rounds | user |
