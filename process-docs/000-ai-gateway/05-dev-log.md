@@ -67,28 +67,77 @@ endpoints over real HTTP.
 
 | # | Deviation | Why | Consequence |
 |---|---|---|---|
-| D-1 | T-1.6's acceptance check, `docker run` then curl, was **not performed** | Docker is not installed on this machine, or its daemon is not running | The `Dockerfile` is unverified. It is plausible and conventional, and it has never been built. Must be run before slice 1 is called done |
-| D-2 | T-1.7's acceptance checks were **not performed**: CI has never run, and the secret scan has never been proven to fail on a planted key | The workflow cannot run until the branch is pushed, and nothing has been pushed | The second check is the one that matters. A secret scan that has never failed has never been tested |
+| D-1 | T-1.6's acceptance check, `docker run` then curl, was **not performed** | Docker is not installed on this machine, or its daemon is not running | The `Dockerfile` is unverified. It is plausible and conventional, and it has never been built. Must be run before slice 1 is called done. **Still open**, see 2026-09-13 below |
+| D-2 | T-1.7's acceptance checks were **not performed**: CI has never run, and the secret scan has never been proven to fail on a planted key | The workflow cannot run until the branch is pushed, and nothing has been pushed | The second check is the one that matters. A secret scan that has never failed has never been tested. **Resolved 2026-09-13**, see below |
 | D-3 | 20 files created, against 17 planned | Package markers `tests/integration/__init__.py` and `app/__init__.py` were not itemised in the plan, and the settings and redaction tests were split into two files at `tests/` root rather than sitting under `tests/integration/` | None. They are unit tests and do not belong under `integration/` |
 | D-4 | `.github/workflows/ci.yml` sits at the repository root, not under `backend/` | CI covers the whole repository, and the frontend will add a job to the same file | None. The plan's path was written as if the backend owned it |
 
+### 2026-09-13 — CI proven, D-2 closed and a new gap found
+
+The branch was pushed for the first time today, to a now-public repo. Findings:
+
+**The `secrets` job works, once the planted secret is a real match.** A first
+attempt planted a Google-style key using a sequential-alphabet placeholder
+(`AIzaSy...ABCDEFGHIJKLMNOPQRSTUVWXYZ123456`); gitleaks scanned the exact diff
+and reported no leaks, which was inconclusive rather than a working negative —
+that value likely fails gitleaks' own heuristics, not a broken scanner. A
+second attempt planting a PEM `-----BEGIN PRIVATE KEY-----` marker, which
+gitleaks matches on the header alone, was caught: the job failed with "Leaks
+detected". **D-2 is closed:** the scan has now been proven to fail on a real
+match. Test performed on a throwaway branch (`throwaway/secret-scan-test`,
+commits `b46d434` then `b6b07d6`), deleted afterward, local and remote.
+
+**D-11 (new, closed same day): the `Tests` step failed in CI on every push,
+including the real docs branch.** `Settings()` requires `gemini_api_key`,
+`database_url`, `supabase_url` and `supabase_jwks_url`; the workflow set none of
+them, so every test run died in `conftest.py` before a single test collected.
+Lint, format and types all passed; only `Tests` failed. This was never caught
+before today because nothing had been pushed since T-1.7 was written.
+
+Fixed in `.github/workflows/ci.yml`: the `Tests` step now passes placeholder
+values for the four settings as step-level `env`, and runs only
+`tests/unit tests/test_settings.py tests/test_logging_redaction.py`, not the
+whole `tests/` tree. Verified locally with `.env` moved aside so no real value
+could mask the check: 43 tests pass on the placeholder env alone.
+
+**`tests/integration/` is deliberately excluded from CI, not fixed.** It needs
+a real Supabase-shaped Postgres database, including an `auth.users` table and
+the RLS policies, which CI does not provision. Standing up that database is a
+real decision (a service container mimicking Supabase's schema, or a scoped
+test project) and is left open rather than answered by a placeholder database
+that would silently pass without a database at all. Until it is answered, the
+`Tests` step covers unit tests only, and RLS, permissions, and the union
+mapping are proven locally, not in CI.
+
+**D-1 deferred, not resolved.** Docker still is not installed on this machine.
+User direction 2026-09-13: Docker and production concerns are deferred until
+after the product is built; development proceeds without that verification for
+now. D-1 is not a slice 1 definition-of-done item (04.1 section 9 requires CI
+green and the secret-scan proof, not the image build), so this does not block
+slice 1. It must be revisited before shipping.
+
 ### Not done, and why
 
-Slice 1 is **not complete**. D-1 and D-2 are open acceptance checks, not
-cosmetic gaps. The definition of done in 04.1 section 9 requires both, and it is
-not met.
+Slice 1's own definition of done (04.1 section 9) is now met: CI is green on
+commit `627ec3b` (both jobs, [run 34741143619](https://github.com/SSC369/jarvis/actions/runs/34741143619)),
+and the secret scan is proven to fail on a real planted key. D-1 (the Docker
+image) is deferred by user direction, not a DoD item for this slice, so slice 1
+is otherwise complete.
 
-What remains:
+What remains, tracked against the feature-level DoD in `04-implementation-plan.md`
+section 11, not this slice:
 
-1. Build the image and confirm it answers `/health`.
-2. Push the branch, confirm CI runs green.
-3. Commit a fake key on a throwaway branch and confirm the secret scan fails.
+1. Build the image and confirm it answers `/health` — deferred until after the
+   product is built, per user direction 2026-09-13.
+2. Stand up a real database for `tests/integration/` in CI, so RLS, permissions
+   and the union mapping are proven there too, not only locally.
 
 ## Change log
 
 | Date | Change | Why | Approved by |
 |---|---|---|---|
 | 2026-09-12 | Created. Slice 1 tasks T-1.1 to T-1.5 done, T-1.6 and T-1.7 partial | Slice 1 development began | — |
+| 2026-09-13 | D-2 closed: secret scan proven against a real planted key. D-11 opened and closed same day: CI's `Tests` step, which failed on every push for lack of required settings, now runs unit tests only with placeholder env; CI is fully green for the first time (`627ec3b`). D-1 deferred by user direction, until after the product is built | First push to CI since the branch opened | user (D-1 deferral) |
 
 ## Slice 2 — Identity and Isolation
 
