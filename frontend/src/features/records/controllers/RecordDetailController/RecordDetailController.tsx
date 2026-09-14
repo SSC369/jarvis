@@ -13,7 +13,11 @@ import { useStore } from "../../../../stores/StoreProvider";
 import DeleteConfirmModal from "../../components/DeleteConfirmModal";
 import RecordEditForm, { type EditableStatus } from "../../components/RecordEditForm";
 import * as RecordsStyles from "../../components/styles";
-import { formatLongDate, formatLongDateTime } from "../../../../utils/formatDate";
+import {
+  formatLongDate,
+  formatLongDateTime,
+  fromDateTimeLocalInputValue,
+} from "../../../../utils/formatDate";
 import * as Styles from "./styles";
 
 const RecordDetailController = (): ReactElement => {
@@ -26,6 +30,7 @@ const RecordDetailController = (): ReactElement => {
   const [notFound, setNotFound] = useState(false);
   const [draftTitle, setDraftTitle] = useState("");
   const [draftStatus, setDraftStatus] = useState<EditableStatus>("PENDING");
+  const [draftDueAt, setDraftDueAt] = useState<string | null>(null);
 
   const { triggerAPI: triggerGetRecordDetail, data } = useGetRecordDetail();
   const { handleResponse } = useResponseHandler();
@@ -46,6 +51,7 @@ const RecordDetailController = (): ReactElement => {
         store.records.upsert(task);
         setDraftTitle(task.title);
         setDraftStatus(task.status === "done" ? "DONE" : "PENDING");
+        setDraftDueAt(task.dueAt);
         setNotFound(false);
       },
       onRecordNotFound: () => setNotFound(true),
@@ -59,12 +65,17 @@ const RecordDetailController = (): ReactElement => {
     setDraftTitle(event.target.value);
   };
 
+  const handleDueAtChange = (event: ChangeEvent<HTMLInputElement>): void => {
+    setDraftDueAt(fromDateTimeLocalInputValue(event.target.value));
+  };
+
   const handleSave = (): void => {
     if (!id) return;
     triggerUpdateTask({
       id,
       title: draftTitle,
       status: draftStatus,
+      dueAt: draftDueAt,
       onTaskUpdated: (updated) => {
         store.records.upsert(updated);
         setIsEditing(false);
@@ -77,6 +88,7 @@ const RecordDetailController = (): ReactElement => {
     if (task) {
       setDraftTitle(task.title);
       setDraftStatus(task.status === "done" ? "DONE" : "PENDING");
+      setDraftDueAt(task.dueAt);
     }
     setIsEditing(false);
   };
@@ -156,10 +168,11 @@ const RecordDetailController = (): ReactElement => {
           {isEditing ? (
             <RecordEditForm
               title={draftTitle}
-              dueAt={task.dueAt}
+              dueAt={draftDueAt}
               status={draftStatus}
               isSaving={updateTaskApiStatus === API_FETCHING}
               onTitleChange={handleTitleChange}
+              onDueAtChange={handleDueAtChange}
               onStatusChange={setDraftStatus}
               onSave={handleSave}
               onCancel={handleCancelEdit}

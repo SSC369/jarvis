@@ -51,3 +51,30 @@ export const formatRelativeTime = (value: string): string => {
   if (elapsedMs < 7 * DAY_MS) return `${Math.floor(elapsedMs / DAY_MS)}d ago`;
   return formatLongDate(value);
 };
+
+/** For an `<input type="datetime-local">` value, which is always local time
+ * with no offset ("YYYY-MM-DDTHH:mm"). `null` becomes "" (no due date). */
+export const toDateTimeLocalInputValue = (value: string | null): string => {
+  if (value === null) return "";
+  const date = new Date(value);
+  const pad = (n: number): string => String(n).padStart(2, "0");
+  return (
+    `${date.getFullYear()}-${pad(date.getMonth() + 1)}-${pad(date.getDate())}` +
+    `T${pad(date.getHours())}:${pad(date.getMinutes())}`
+  );
+};
+
+/** The inverse: an empty input value is "no due date"; otherwise the
+ * datetime-local string is interpreted in the browser's own timezone and
+ * converted to an absolute ISO instant, matching what the API stores.
+ * A datetime-local input reports "" while a segment is still incomplete, but
+ * an in-progress edit can transiently report a value `Date` can't parse
+ * (caught live: typing into the day/month segments out of order threw here
+ * mid-edit) — treated the same as "no due date" rather than left to throw,
+ * since the input itself still shows the in-progress text either way. */
+export const fromDateTimeLocalInputValue = (value: string): string | null => {
+  if (!value) return null;
+  const date = new Date(value);
+  if (Number.isNaN(date.getTime())) return null;
+  return date.toISOString();
+};

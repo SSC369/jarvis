@@ -8,6 +8,7 @@ const baseProps = {
   dueAt: null,
   status: "PENDING" as const,
   onTitleChange: vi.fn(),
+  onDueAtChange: vi.fn(),
   onStatusChange: vi.fn(),
   onSave: vi.fn(),
   onCancel: vi.fn(),
@@ -34,5 +35,19 @@ describe("RecordEditForm", () => {
     expect(screen.getByDisplayValue("Buy milk")).not.toBeDisabled();
     expect(screen.getByText("Save changes")).toBeInTheDocument();
     expect(screen.queryByRole("status", { name: "Saving" })).not.toBeInTheDocument();
+  });
+
+  it("renders the due date as an editable datetime-local input", () => {
+    render(<RecordEditForm {...baseProps} dueAt="2026-09-20T09:00:00+00:00" />);
+
+    const dueAtInput = document.querySelector('input[type="datetime-local"]');
+    expect(dueAtInput).not.toBeNull();
+    expect(dueAtInput).not.toBeDisabled();
+  });
+
+  it("disables the due date input while isSaving", () => {
+    render(<RecordEditForm {...baseProps} isSaving />);
+
+    expect(document.querySelector('input[type="datetime-local"]')).toBeDisabled();
   });
 });

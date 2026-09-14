@@ -218,6 +218,7 @@ export type UnrecognisedCommand = {
 };
 
 export type UpdateTaskInput = {
+  dueAt?: InputMaybe<Scalars['DateTime']['input']>;
   status?: InputMaybe<TaskStatus>;
   title?: InputMaybe<Scalars['String']['input']>;
 };

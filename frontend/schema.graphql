@@ -137,6 +137,7 @@ type UnrecognisedCommand {
 input UpdateTaskInput {
   title: String = null
   status: TaskStatus = null
+  dueAt: DateTime
 }
 
 union UpdateTaskResult = Task | NoFieldsToUpdate | RecordNotFound

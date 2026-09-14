@@ -4,7 +4,7 @@ import type { ChangeEvent, ReactElement } from "react";
 import InlineSpinner from "../../../components/InlineSpinner";
 import Button from "../../../design-system/components/Button";
 import { cn } from "../../../utils/cn";
-import { formatLongDate } from "../../../utils/formatDate";
+import { toDateTimeLocalInputValue } from "../../../utils/formatDate";
 import * as Styles from "./styles";
 
 export type EditableStatus = "PENDING" | "DONE";
@@ -15,6 +15,7 @@ interface RecordEditFormProps {
   status: EditableStatus;
   isSaving?: boolean;
   onTitleChange: (event: ChangeEvent<HTMLInputElement>) => void;
+  onDueAtChange: (event: ChangeEvent<HTMLInputElement>) => void;
   onStatusChange: (status: EditableStatus) => void;
   onSave: () => void;
   onCancel: () => void;
@@ -27,6 +28,7 @@ const RecordEditForm = (props: RecordEditFormProps): ReactElement => {
     status,
     isSaving = false,
     onTitleChange,
+    onDueAtChange,
     onStatusChange,
     onSave,
     onCancel,
@@ -49,8 +51,14 @@ const RecordEditForm = (props: RecordEditFormProps): ReactElement => {
       </div>
       <div className={Styles.formRowStyles}>
         <span className={Styles.formLabelStyles}>Due</span>
-        <div className={cn(Styles.controlStyles, Styles.controlReadOnlyStyles)}>
-          {formatLongDate(dueAt)}
+        <div className={Styles.controlStyles}>
+          <input
+            className={Styles.controlInputStyles}
+            type="datetime-local"
+            value={toDateTimeLocalInputValue(dueAt)}
+            onChange={onDueAtChange}
+            disabled={isSaving}
+          />
         </div>
       </div>
       <div className={Styles.formRowStyles}>

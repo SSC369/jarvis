@@ -11,6 +11,7 @@ export type TaskStatus =
   | 'PENDING';
 
 export type UpdateTaskInput = {
+  dueAt?: string | null | undefined;
   status?: TaskStatus | null | undefined;
   title?: string | null | undefined;
 };

@@ -12,6 +12,7 @@ interface TriggerAPIArgs extends UpdateTaskCallbacks {
   id: string;
   title?: string | null;
   status?: "PENDING" | "DONE" | null;
+  dueAt?: string | null;
   onRequestFailed?: (error: Error) => void;
 }
 
@@ -30,9 +31,9 @@ const useUpdateTask = (): UseUpdateTaskReturnType => {
   const { handleResponse } = useResponseHandler();
 
   const triggerAPI = (args: TriggerAPIArgs): void => {
-    const { id, title, status, onRequestFailed, ...callbacks } = args;
+    const { id, title, status, dueAt, onRequestFailed, ...callbacks } = args;
     updateTask({
-      variables: { id, input: { title, status } },
+      variables: { id, input: { title, status, dueAt } },
       onCompleted: (responseData) => {
         if (!responseData?.updateTask) {
           onRequestFailed?.(new Error("The request did not complete. Nothing was saved."));
