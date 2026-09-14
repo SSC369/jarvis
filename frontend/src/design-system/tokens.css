@@ -3,10 +3,23 @@
 /*
  * Values sourced from process-docs/001-capture-and-records-foundation's
  * canvas, DarkTokens.dc.html. Dark is a separate warm-near-black palette,
- * not the light one inverted. The theme follows the OS only (design Q13,
- * product.md): there is no user-facing toggle, so only a
- * prefers-color-scheme media query switches these, never a [data-theme]
- * attribute.
+ * not the light one inverted.
+ *
+ * Theme resolution (product.md and 02-design.md, both updated 2026-09-15):
+ * SYSTEM (default) follows prefers-color-scheme, same as before. LIGHT and
+ * DARK are an explicit user override applied as [data-theme] on <html> by
+ * src/utils/themePreference.ts, and must win over the OS setting. Three
+ * blocks below implement it:
+ *   1. This @theme block: light values, the default.
+ *   2. The prefers-color-scheme media query: dark values, scoped with
+ *      :not([data-theme="light"]) so an explicit light override still wins
+ *      even when the OS is dark.
+ *   3. :root[data-theme="dark"]: dark values again, for an explicit dark
+ *      override regardless of OS.
+ * Tailwind v4's @theme can't import a block into an @media rule or a plain
+ * selector, so blocks 2 and 3 duplicate the same dark values rather than
+ * share them. Keep them byte-identical — that duplication is the deliberate
+ * tradeoff, not drift.
  */
 
 @theme {
@@ -57,8 +70,10 @@
   --radius-xl: 13px;
 }
 
+/* Dark values, block 2 of 3 — see the header comment. Byte-identical to the
+   [data-theme="dark"] block below; keep both in sync on every edit. */
 @media (prefers-color-scheme: dark) {
-  :root {
+  :root:not([data-theme="light"]) {
     --color-paper: #1c1917;
     --color-surface: #24211e;
     --color-rail: #191614;
@@ -76,6 +91,27 @@
     --color-green: #6fbf95;
     --color-green-wash: #1e3128;
   }
+}
+
+/* Dark values, block 3 of 3 — an explicit override, regardless of OS.
+   Byte-identical to the media-query block above; keep both in sync. */
+:root[data-theme="dark"] {
+  --color-paper: #1c1917;
+  --color-surface: #24211e;
+  --color-rail: #191614;
+  --color-ink: #ece6dc;
+  --color-ink-2: #a89f93;
+  --color-ink-3: #7c7368;
+  --color-line: #35302b;
+  --color-line-2: #443d36;
+  --color-blue: #7ea6e8;
+  --color-blue-wash: #22303f;
+  --color-amber: #d9a441;
+  --color-amber-wash: #332a1b;
+  --color-red: #e08c82;
+  --color-red-wash: #3a2320;
+  --color-green: #6fbf95;
+  --color-green-wash: #1e3128;
 }
 
 html,

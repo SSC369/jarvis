@@ -5,6 +5,21 @@
     <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Slashit</title>
+    <script>
+      // Apply a stored theme override before first paint, so there is no
+      // flash of the wrong theme. Mirrors src/utils/themePreference.ts's
+      // storage key and values; keep both in step.
+      (function () {
+        try {
+          var preference = localStorage.getItem("slashit:theme-preference");
+          if (preference === "LIGHT") {
+            document.documentElement.setAttribute("data-theme", "light");
+          } else if (preference === "DARK") {
+            document.documentElement.setAttribute("data-theme", "dark");
+          }
+        } catch (e) {}
+      })();
+    </script>
   </head>
   <body>
     <div id="root"></div>

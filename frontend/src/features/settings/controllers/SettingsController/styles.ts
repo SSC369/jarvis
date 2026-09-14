@@ -13,3 +13,7 @@ export const selectControlStyles =
 export const noteInfoStyles = "mt-4 flex gap-2.5 rounded-[10px] border border-accent-wash bg-accent-wash px-4 py-3.5";
 export const noteInfoTextStyles = "text-[13.5px] text-foreground";
 export const noteErrorStyles = "mt-4 flex gap-2.5 rounded-[10px] border border-destructive-wash bg-destructive-wash px-4 py-3.5";
+export const sectionStyles = "mt-9";
+export const themeOptionGroupStyles = "flex gap-2";
+export const themeOptionButtonStyles = "flex-1 justify-center";
+export const themeOptionOnStyles = "border-accent bg-accent-wash text-accent";

@@ -5,9 +5,27 @@ import { useEffect, useMemo, useState, type ChangeEvent, type ReactElement } fro
 import useUpdateTimezone from "../../../../api/mutations/UpdateTimezone/useUpdateTimezone";
 import useGetSettings from "../../../../api/queries/GetSettings/useGetSettings";
 import { useResponseHandler } from "../../../../api/queries/GetSettings/responseHandler";
+import Button from "../../../../design-system/components/Button";
 import { useStore } from "../../../../stores/StoreProvider";
+import { cn } from "../../../../utils/cn";
 import { detectTimezone } from "../../../../utils/detectTimezone";
+import {
+  getThemePreference,
+  setThemePreference,
+  type ThemePreferenceType,
+} from "../../../../utils/themePreference";
 import * as Styles from "./styles";
+
+interface ThemeOptionProps {
+  value: ThemePreferenceType;
+  label: string;
+}
+
+const THEME_OPTIONS: ThemeOptionProps[] = [
+  { value: "SYSTEM", label: "System" },
+  { value: "LIGHT", label: "Light" },
+  { value: "DARK", label: "Dark" },
+];
 
 const listSupportedTimezones = (): string[] => {
   try {
@@ -20,6 +38,9 @@ const listSupportedTimezones = (): string[] => {
 const SettingsController = (): ReactElement => {
   const store = useStore();
   const [errorMessage, setErrorMessage] = useState<string | null>(null);
+  const [themePreference, setThemePreferenceValue] = useState<ThemePreferenceType>(
+    getThemePreference,
+  );
   const timezones = useMemo(listSupportedTimezones, []);
 
   const { triggerAPI: triggerGetSettings, data } = useGetSettings();
@@ -50,6 +71,11 @@ const SettingsController = (): ReactElement => {
       },
       onInvalidTimezone: (message) => setErrorMessage(message),
     });
+  };
+
+  const handleThemePreferenceChange = (preference: ThemePreferenceType): void => {
+    setThemePreference(preference);
+    setThemePreferenceValue(preference);
   };
 
   return (
@@ -95,6 +121,38 @@ const SettingsController = (): ReactElement => {
                 </div>
               </div>
             )}
+          </div>
+
+          <div className={Styles.sectionStyles}>
+            <div className={Styles.sectionTitleStyles}>Appearance</div>
+            <div className={Styles.sectionBodyStyles}>
+              Follows your system by default, or pick a theme.
+            </div>
+            <div className={Styles.controlWrapStyles}>
+              <div className={Styles.formRowStyles}>
+                <span className={Styles.formLabelStyles}>Theme</span>
+                <div className={Styles.themeOptionGroupStyles} role="group" aria-label="Theme">
+                  {THEME_OPTIONS.map((option) => {
+                    const isSelected = themePreference === option.value;
+                    return (
+                      <Button
+                        key={option.value}
+                        type="button"
+                        variant="default"
+                        aria-pressed={isSelected}
+                        className={cn(
+                          Styles.themeOptionButtonStyles,
+                          isSelected && Styles.themeOptionOnStyles,
+                        )}
+                        onClick={() => handleThemePreferenceChange(option.value)}
+                      >
+                        {option.label}
+                      </Button>
+                    );
+                  })}
+                </div>
+              </div>
+            </div>
           </div>
         </div>
       </div>
