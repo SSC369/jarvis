@@ -35,6 +35,13 @@ type MalformedResult {
   reason: String!
 }
 
+type Me {
+  id: ID!
+  email: String!
+  username: String
+  avatarUrl: String
+}
+
 type Mutation {
   submitCapture(rawInput: String!): CaptureResult!
   answerPendingCapture(pendingCaptureId: ID!, answer: String!): CaptureResult!
@@ -73,8 +80,8 @@ type Query {
   record(id: ID!): RecordResult!
   tasks: [Task!]!
   settings(detectedTimezone: String = null): Settings!
+  me: Me!
   apiVersion: String!
-  me: String!
 }
 
 type RecordNotFound {

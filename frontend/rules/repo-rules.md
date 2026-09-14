@@ -527,6 +527,17 @@ const shouldSubmitTitle = isTitleWithinLength && hasTitleChanged;
 
 Not `isValidTitle()`, not `shouldSubmit()`.
 
+**7. A local string union type takes a `Type` suffix, and its members are
+uppercase.**
+
+```ts
+type ScreenStateType = "FORM" | "LOADING" | "ERROR" | "SUCCESS";
+```
+
+Not `type ScreenState = "form" | "loading"`. The suffix marks it as a locally
+defined type at the call site; uppercase members keep a string union visually
+distinct from a plain string value being compared or rendered as copy.
+
 ## 14. Testing
 
 | Kind | Tool | Covers |

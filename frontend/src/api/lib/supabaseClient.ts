@@ -10,10 +10,3 @@ if (!supabaseUrl || !supabasePublishableKey) {
 }
 
 export const supabaseClient = createClient(supabaseUrl, supabasePublishableKey);
-
-if (import.meta.env.DEV) {
-  // No sign-in screen exists yet (out of scope for this slice). Exposed only
-  // in dev builds so a session can be established from the console while
-  // testing the capture flow manually.
-  (window as unknown as { __supabaseClient: typeof supabaseClient }).__supabaseClient = supabaseClient;
-}

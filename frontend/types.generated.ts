@@ -48,6 +48,14 @@ export type MalformedResult = {
   reason: Scalars['String']['output'];
 };
 
+export type Me = {
+  __typename?: 'Me';
+  avatarUrl?: Maybe<Scalars['String']['output']>;
+  email: Scalars['String']['output'];
+  id: Scalars['ID']['output'];
+  username?: Maybe<Scalars['String']['output']>;
+};
+
 export type Mutation = {
   __typename?: 'Mutation';
   answerPendingCapture: CaptureResult;
@@ -127,7 +135,7 @@ export type Query = {
   __typename?: 'Query';
   apiVersion: Scalars['String']['output'];
   captureHistory: CaptureHistoryPage;
-  me: Scalars['String']['output'];
+  me: Me;
   record: RecordResult;
   records: Array<Task>;
   settings: Settings;

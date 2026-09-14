@@ -1,10 +1,14 @@
-import { Command, List, Settings } from "lucide-react";
+import { Command, List, LogOut, Settings } from "lucide-react";
+import { observer } from "mobx-react-lite";
 import type { ReactElement } from "react";
-import { NavLink, Outlet } from "react-router";
+import { Link, NavLink, Outlet } from "react-router";
 
+import { supabaseClient } from "../api/lib/supabaseClient";
 import InstallPrompt from "../components/InstallPrompt";
 import OfflineBanner from "../components/OfflineBanner";
 import UpdateBanner from "../components/UpdateBanner";
+import Popover from "../design-system/components/Popover";
+import { useStore } from "../stores/StoreProvider";
 import { cn } from "../utils/cn";
 import * as Styles from "./styles";
 
@@ -21,6 +25,25 @@ const NAV_ITEMS: NavItemProps[] = [
 ];
 
 const AppShell = (): ReactElement => {
+  const store = useStore();
+  const { id, username, email, avatarUrl } = store.auth;
+  // A Google-only account has no username until slice 3 gives it a way to
+  // set one (04-implementation-plan.md section 4's contract on `profiles`);
+  // fall back to the email's local part rather than show nothing.
+  const displayName = username ?? email?.split("@")[0] ?? "Your account";
+  const avatarLetter = displayName.charAt(0).toUpperCase() || "?";
+  // RequireAuth renders AppShell as soon as the session is authenticated,
+  // before GetMe resolves — `id` is null for that gap.
+  const isProfileLoading = id === null;
+
+  const handleSignOut = async (close: () => void): Promise<void> => {
+    close();
+    // RequireAuth's onAuthStateChange listener clears store.auth and
+    // redirects to /sign-in the moment the session goes null; nothing else
+    // to do here.
+    await supabaseClient.auth.signOut();
+  };
+
   return (
     <div className={Styles.shellStyles}>
       <div className={Styles.railStyles}>
@@ -49,13 +72,57 @@ const AppShell = (): ReactElement => {
             </NavLink>
           ))}
         </nav>
-        <div className={Styles.railFootStyles}>
-          <div className={Styles.avatarStyles}>Y</div>
-          <div className="min-w-0">
-            <div className={Styles.accountNameStyles}>Your account</div>
-            <div className={Styles.accountEmailStyles}>you@example.com</div>
-          </div>
-        </div>
+        <Popover
+          placement="top-start"
+          containerClassName="mt-auto"
+          trigger={({ isOpen, toggle }) => (
+            <button
+              type="button"
+              onClick={toggle}
+              aria-haspopup="menu"
+              aria-expanded={isOpen}
+              className={Styles.railFootStyles}
+            >
+              {isProfileLoading ? (
+                <div className={Styles.avatarSkeletonStyles} />
+              ) : avatarUrl !== null ? (
+                <img src={avatarUrl} alt="" className={Styles.avatarImageStyles} />
+              ) : (
+                <div className={Styles.avatarStyles}>{avatarLetter}</div>
+              )}
+              <div className="min-w-0">
+                {isProfileLoading ? (
+                  <>
+                    <div className={Styles.accountNameSkeletonStyles} />
+                    <div className={Styles.accountEmailSkeletonStyles} />
+                  </>
+                ) : (
+                  <>
+                    <div className={Styles.accountNameStyles}>{displayName}</div>
+                    <div className={Styles.accountEmailStyles}>{email ?? ""}</div>
+                  </>
+                )}
+              </div>
+            </button>
+          )}
+        >
+          {({ close }) => (
+            <>
+              <Link to="/settings" onClick={close} className={Styles.accountMenuItemStyles}>
+                <Settings size={16} />
+                <span>Settings</span>
+              </Link>
+              <button
+                type="button"
+                onClick={() => void handleSignOut(close)}
+                className={Styles.accountMenuItemStyles}
+              >
+                <LogOut size={16} />
+                <span>Sign out</span>
+              </button>
+            </>
+          )}
+        </Popover>
       </div>
       <div className={Styles.mainStyles}>
         <OfflineBanner />
@@ -67,4 +134,4 @@ const AppShell = (): ReactElement => {
   );
 };
 
-export default AppShell;
+export default observer(AppShell);

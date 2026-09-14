@@ -10,9 +10,17 @@ export const navStyles = "flex flex-col gap-0.5";
 export const navItemStyles =
   "flex h-10 items-center gap-2.5 rounded-md px-2.5 font-medium text-foreground-secondary";
 export const navItemOnStyles = "bg-card text-foreground ring-1 ring-border";
-export const railFootStyles = "mt-auto flex items-center gap-2.5 border-t border-border px-2.5 pt-2.5";
+export const railFootStyles =
+  "flex w-full items-center gap-2.5 border-t border-border px-2.5 pt-2.5 text-left";
+export const accountMenuItemStyles =
+  "flex w-full items-center gap-2.5 px-3.5 py-2 text-[13px] font-medium text-foreground hover:bg-background";
 export const avatarStyles =
   "flex h-7 w-7 shrink-0 items-center justify-center rounded-full bg-command-wash text-xs font-semibold text-command";
+export const avatarImageStyles = "h-7 w-7 shrink-0 rounded-full object-cover";
 export const accountNameStyles = "text-[13px] font-medium text-foreground";
 export const accountEmailStyles = "overflow-hidden text-ellipsis text-[11.5px] text-foreground-tertiary";
+export const avatarSkeletonStyles = "h-7 w-7 shrink-0 animate-pulse rounded-full bg-border-strong";
+export const accountNameSkeletonStyles = "h-[13px] w-20 animate-pulse rounded-full bg-border-strong";
+export const accountEmailSkeletonStyles =
+  "mt-1.5 h-[11.5px] w-28 animate-pulse rounded-full bg-border-strong";
 export const mainStyles = "flex min-w-0 flex-1 flex-col";
