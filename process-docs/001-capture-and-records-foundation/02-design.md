@@ -6,7 +6,7 @@ stage: 2
 status: approved
 owner: user
 created: 2026-09-09
-updated: 2026-09-13
+updated: 2026-09-14
 approved_on: 2026-09-13
 supersedes: null
 ---
@@ -53,6 +53,7 @@ page of the canvas.
 | Record edit | Change any user-supplied field | FR-19 | `RecordEdit` |
 | Delete confirmation | Naming the record being deleted | FR-20, FR-21 | `DeleteConfirm` |
 | Settings | Timezone, detected and changeable | FR-27, FR-28 | `Settings` |
+| Capture history | Past capture turns, most recent first, opened from Capture | FR-44, FR-45 | none — added 2026-09-14, described in prose below rather than drawn on the canvas. See the note under §4 |
 | Shared states | Loading, error, session ended, empty result | all surfaces | `EdgeStates` |
 | Direction B, C | Alternatives not taken, low-fi | — | `DirectionB`, `DirectionC` |
 
@@ -114,11 +115,37 @@ since §5d already says this once.
 | Input without a command | Command Center | Plain text submitted, guidance shown, text preserved, command applied to it | Record created, or nothing | FR-9 |
 | Inspect and correct | Records | Filter or search, open a record, edit or delete | Record changed or removed | FR-13 to FR-21 |
 | Refusal | Command Center | Capture fails on quota or outage, input preserved, retry | Retry succeeds, or user waits | FR-35 |
+| Review history | Command Center | Open the history action, scroll past turns, close it | Back to the Command Center, nothing changed | FR-44, FR-45 |
 
 ## 4. States
 
 Five states per surface. Where a state cannot occur, that is stated rather than
 left blank.
+
+> Added 2026-09-14, per FR-46: two interactions had no state between a click
+> and a response. Answering a pending question (Command Center) and saving
+> the task edit form (Record detail — the one control FR-19 and FR-24 both
+> save through) each get a **Saving** sub-state, layered under a normal
+> Success screen — a small inline spinner on the control, that control
+> disabled against a second click, everything else on screen stays
+> interactive. Not a fifth state in the tables below: it is a transient
+> overlay on Success, not a separate screen, so it is described here once
+> rather than added as a row twice. No new copy: the spinner alone answers
+> "is this working".
+
+### Capture history
+
+Added 2026-09-14, per FR-44 and FR-45. No Claude Design artboard exists for
+this; it is a slide-over panel from the Command Center, described here since
+the surface is small enough that a canvas pass would only restate this table.
+
+| State | What the user sees | Copy |
+|---|---|---|
+| Empty | Icon, one line. Cannot occur after the first capture, since FR-44 logs every turn including refusals | "Nothing captured yet" |
+| Loading | Skeleton rows in the panel's own shape | — |
+| Error | Card, retry, panel stays open | "Couldn't load your history" |
+| Success | Turns most recent first: input text, outcome (task created, question asked, refused, discarded), relative time. A question-asked, answered or discarded turn also shows the question Slashit asked, and an answered one shows what the user answered | — |
+| No permission | Session ended | "Your session ended" |
 
 ### Command Center
 
@@ -340,6 +367,13 @@ establishes one.
 No one-off styles outstanding. Every colour and size in the canvas comes from
 the set above.
 
+**Added 2026-09-14, capture history and loading feedback:**
+
+| Change | Kind | Token or component | Note |
+|---|---|---|---|
+| Inline spinner | added | component | Field- or row-scoped, `blue` token, per §4's Saving note. Not the full-surface loading state already in the deltas above |
+| History panel | added | component | Slide-over, reuses field-card typography for each turn, no new tokens |
+
 ## 7. Accessibility
 
 | Area | Decision |
@@ -371,7 +405,7 @@ the set above.
 | # | Question | Owner | Answer |
 |---|---|---|---|
 | ~~Q1~~ | Is the direction right? Two alternatives sit on the Directions page. | user | **Answered 2026-09-13.** Yes, the built direction is right. Directions B and C stay on the canvas as the record, not taken. |
-| ~~Q2~~ | Four commands exist in this epic, so `/add` filters to one result. Does the discovery design need proving against a longer list now, or when the list grows? | user | **Answered 2026-09-13.** Prove it now. **Done 2026-09-13:** `CommandPalette` now lists 16 commands (4 real, 12 synthetic placeholders from epics 002 to 008, muted and marked "not yet built") in a scrolling list; `CommandFilter` shows `/add` matching 7 of them, not 1. Annotation `n-cmdcount` updated to match. |
+| ~~Q2~~ | Four commands exist in this epic, so `/add` filters to one result. Does the discovery design need proving against a longer list now, or when the list grows? | user | **Answered 2026-09-13.** Prove it now. **Done 2026-09-13:** `CommandPalette` now lists 16 commands (4 real, 12 synthetic placeholders from epics 003 to 009, muted and marked "not yet built") in a scrolling list; `CommandFilter` shows `/add` matching 7 of them, not 1. Annotation `n-cmdcount` updated to match. |
 | ~~Q3~~ | The records type filter shows All and Tasks only. Should the other types appear disabled so the shape is visible, or stay absent until they exist? Absent is drawn. | user | **Answered 2026-09-13.** Stay absent, as drawn. No change. |
 | ~~Q4~~ | Overdue styling is drawn on the task list. The PRD does not mention lateness. In or out? | user | **Answered 2026-09-13.** In scope. **Follow-up:** lateness was not argued in `00-epic.md` and is not an `01-prd.md` requirement. Per root ruleset rule 3 and `process-docs/CLAUDE.md` §6, this needs a change record adding it to the epic and PRD before the design can rely on it, not a silent addition here. |
 | ~~Q5~~ | The transcript keeps history. How far back, and does it survive a reload? The PRD does not say, and it changes the empty state. | user | **Answered 2026-09-13.** Survives reload, kept indefinitely, same durability as records. |
@@ -411,6 +445,9 @@ above (Q6's Records surface). Stage 2 is ready for the user's approval.
 
 | Date | Change | Why | Approved by |
 |---|---|---|---|
+| 2026-09-14 | The Q2 answer's "epics 002 to 008" renumbered to "epics 003 to 009" | Epic 002, Authentication, inserted ahead of them; `product/v1-features.md` renumbered 002 to 010 as 003 to 011 on 2026-09-14 | user |
+| 2026-09-14 | Capture history's Success state copy extended: a question-asked, answered or discarded turn shows the question text, and an answered one shows the answer text | User asked whether an asked question is recorded at all; `pending_captures` deletes it on resolution, so `04.4` now captures both onto the turn itself | user |
+| 2026-09-14 | Capture history screen and states added (§2, §4); loading-feedback Saving sub-state added to §4; two design-system deltas added to §6 (inline spinner, history panel). No canvas work: described in prose, per the note under §2's new row | User asked for a history action and loading feedback, argued in `00-epic.md`'s 2026-09-14 addendum | user |
 | 2026-09-13 | **Design approved.** All sixteen open questions in §9 answered and their follow-up work done, per the two entries below | User approved, in response to being told approval unlocks the build plan | user |
 | 2026-09-13 | `Main` rebuilt as a working prototype of the Command Center flow, per Q7 scoped to that flow only: live command discovery and filtering, clean capture, capture with a gap (asking and later answering), input without a command, and a simulated refusal with retry. Closes Q7 and most of Q6 (not answering from Records). Verified interactively before publishing; one layout bug found and fixed (the dock collapsed to the top between typing and the first submitted turn). Republished as version 9. Every question in §9 now has an answer; stage 2 is ready for approval | User scoped Q7 to the Command Center flow | pending |
 | 2026-09-13 | Q2 and Q13 done: `CommandPalette`/`CommandFilter` now prove discovery against 16 commands (12 synthetic); the theme-override control removed from the four Settings artboards. §5c rewritten, two annotations updated. Canvas republished as version 8. Q6 and Q7 remain, scope to be agreed | User asked to act on the open-question follow-ups | pending |

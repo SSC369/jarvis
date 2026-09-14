@@ -6,7 +6,7 @@ stage: 4
 status: approved
 owner: user
 created: 2026-09-13
-updated: 2026-09-13
+updated: 2026-09-14
 approved_on: 2026-09-13
 supersedes: null
 split: true
@@ -21,6 +21,15 @@ Context: [PRD](./01-prd.md) · [Design](./02-design.md) · [Build plan](./03-bui
 The index is approved: the slicing, order and cross-slice contracts are locked.
 Each sub-plan is still approved on its own before its own build starts, per §6
 of the process rules.
+
+## Tables touched
+
+| Table | Change | Slice |
+|---|---|---|
+| `tasks` | new | 1 |
+| `pending_captures` | new | 1 |
+| `user_settings` | new | 2 |
+| `capture_turns` | new | 4 |
 
 ## 1. Scope recap
 
@@ -39,7 +48,11 @@ unanswered question — all deferred by the build plan or the PRD's own scope.
 | Distinct boundaries touched | more than two | 4: data model, capture pipeline, records surface, installed-app/theme |
 | Length of the drafted plan | more than 500 lines | Would be, undivided |
 
-**Decision: split into 3 sub-plans.**
+**Decision: split into 3 sub-plans, a 4th added 2026-09-14 for capture history
+and loading feedback (FR-44 to FR-46).** Small enough on its own (one table,
+one query, three UI touch-ups) that it would not have crossed the split
+thresholds by itself; it is sliced anyway to match the other three and because
+it depends on both.
 
 ### Slices
 
@@ -47,12 +60,17 @@ unanswered question — all deferred by the build plan or the PRD's own scope.
 |---|---|---|---|---|
 | 1 | [04.1-capture-core.md](./04.1-capture-core.md) | Type a command in the Command Center and get a task, a question, or an honest refusal. Every capture outcome in the design's four flows | — | draft |
 | 2 | [04.2-records-and-settings.md](./04.2-records-and-settings.md) | Open Records, see every task, filter, search, open one, edit or delete it. Change timezone in Settings | 1 | not started |
-| 3 | [04.3-installed-app-and-theme.md](./04.3-installed-app-and-theme.md) | Install Slashit to a home screen, read records offline, get told when an update is ready. The app follows the device's light or dark setting everywhere | 2 | not started |
+| 3 | [04.3-installed-app-and-theme.md](./04.3-installed-app-and-theme.md) | Install Slashit to a home screen, read records offline, get told when an update is ready. The app follows the device's light or dark setting everywhere | 2 | approved |
+| 4 | [04.4-chat-history-and-loading-feedback.md](./04.4-chat-history-and-loading-feedback.md) | Open a history panel from Capture and see every past turn. Saving the task edit form and answering a pending question both show a loading state instead of nothing | 1, 2 | approved |
 
 Slice 1 is capture without a way to browse what was captured, which is
 demonstrable but incomplete on its own; slice 2 is what makes it a product.
 Slice 3 is additive polish that touches no domain logic, which is why it comes
-last and depends only on the UI slice 2 finishes.
+last and depends only on the UI slice 2 finishes. Slice 4, added 2026-09-14
+per FR-44 to FR-46, is the same kind of polish: it adds one table and one
+query to capture, and a loading affordance to interactions slices 1 and 2
+already built. It depends on both because it puts a spinner on slice 2's
+task edit and completion, and logs slice 1's capture turns.
 
 ## 3. File-by-file plan
 
@@ -129,6 +147,7 @@ add members to it.
 | `0003_tasks` | Creates `tasks`, RLS enabled, policy scoped to `user_id`, grants to `authenticated` | yes | none, new table | 1 |
 | `0004_pending_captures` | Creates `pending_captures`, RLS enabled, policy scoped to `user_id` | yes | none, new table | 1 |
 | `0005_user_settings` | Creates `user_settings`, RLS enabled, policy scoped to `user_id` | yes | none, new table | 2 |
+| `0006_capture_turns` | Creates `capture_turns`, RLS enabled, policy scoped to `user_id` | yes | none, new table | 4 |
 
 Numbering continues from epic 000's `0001_ai_usage` and `0002_ai_user_limit`,
 the only migrations that exist yet.
@@ -190,5 +209,8 @@ The feature is done when every sub-plan is done and:
 
 | Date | Change | Why | Approved by |
 |---|---|---|---|
+| 2026-09-14 | Slice 4 marked approved | User approved `04.4` | user |
+| 2026-09-14 | `Tables touched` section added at the top, per the new doc rule in `process-docs/CLAUDE.md` | User asked that any feature touching tables name them at the top of the doc | user |
+| 2026-09-14 | Slice 4, `04.4-chat-history-and-loading-feedback.md`, added to §2's slice list, depending on 1 and 2. `0006_capture_turns` added to §5 | User asked for a history action on the Capture page and loading feedback on in-flight edits, added as a fourth slice per FR-44 to FR-46 | pending |
 | 2026-09-13 | **Index approved.** §6's theme row corrected: no JS listener needed, a plain CSS media query does it | Slice 3's drafting caught the overstatement; user approved the index | user |
 | 2026-09-13 | Created as the index, split into three slices | Build plan approved | pending |

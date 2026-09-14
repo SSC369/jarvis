@@ -36,7 +36,8 @@ Status values: `draft`, `in-review`, `approved`, `blocked`, `shipped`,
 | # | Feature | Priority | Stage | Status | Waiting on | Updated |
 |---|---|---|---|---|---|---|
 | 000 | [AI Gateway and Usage](./000-ai-gateway/) | P0, platform | 5 Dev | slices 1, 2 and 3 built, CI green, billing re-linked (RPD 10,000 confirmed) | A billing budget alert at a real spend threshold (Tier 1's built-in 250 USD cap is not an alert). Deferred: Docker (D-1), a real database for integration tests in CI, Langfuse (not needed until epic 001 calls the gateway) | 2026-09-13 |
-| 001 | [Capture and Records Foundation](./001-capture-and-records-foundation/) | P0 | 5 Dev | in-review | All three slices built and verified end to end, real DB, real Gemini, real Supabase session, a real production build for the PWA. No sign-in screen exists yet anywhere in the product; a dev-only console workaround stands in | 2026-09-14 |
+| 001 | [Capture and Records Foundation](./001-capture-and-records-foundation/) | P0 | 5 Dev | in-review | All four slices shipped, verified end to end, including a real backend/frontend/Supabase manual pass for slice 4. `RecordEditForm` has no due-date control, logged but not fixed. No sign-in screen exists yet anywhere in the product; a dev-only console workaround stands in | 2026-09-14 |
+| 002 | [Authentication](./002-authentication/) | P0, blocking | 2 Design | draft | Design in progress, now including Google sign-in and rate-limit states. Account-linking (Google vs. manual, same email) and exact lockout thresholds are open, see the PRD and design open questions | 2026-09-14 |
 
 ## Planned
 
@@ -44,15 +45,15 @@ Confirmed in [V1 features](./product/v1-features.md), not yet opened.
 
 | # | Epic | Priority | Depends on |
 |---|---|---|---|
-| 002 | Reminders and Notifications | P0 | 001 |
-| 003 | Persistent Memory | P0 | 001 |
-| 004 | Personal Search and Context | P0 | 001, 003 |
-| 005 | Expenses | P1 | 001 |
-| 006 | Events | P1 | 001 |
-| 007 | Goals and Projects | P1 | 001, 004 |
-| 008 | Notes | P1 | 001 |
-| 009 | Daily Control | P1 | 001, 002, 005, 006, 007 |
-| 010 | Proactive Slashit | P2 | 004, 009 |
+| 003 | Reminders and Notifications | P0 | 001, 002 |
+| 004 | Persistent Memory | P0 | 001, 002 |
+| 005 | Personal Search and Context | P0 | 001, 002, 004 |
+| 006 | Expenses | P1 | 001, 002 |
+| 007 | Events | P1 | 001, 002 |
+| 008 | Goals and Projects | P1 | 001, 002, 005 |
+| 009 | Notes | P1 | 001, 002 |
+| 010 | Daily Control | P1 | 001, 002, 003, 006, 007, 008 |
+| 011 | Proactive Slashit | P2 | 005, 010 |
 
 ## Shipped
 

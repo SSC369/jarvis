@@ -6,7 +6,7 @@ stage: 1
 status: approved
 owner: user
 created: 2026-09-08
-updated: 2026-09-13
+updated: 2026-09-14
 approved_on: 2026-09-09
 supersedes: null
 ---
@@ -67,12 +67,12 @@ build targets, not success bets.
 
 ## 4. Non-goals
 
-- Any record type beyond tasks. **Reminders moved to epic 002.** Expenses,
-  memories, events, goals, projects and notes are epics 003 to 008.
-- Persistent memory and contextual retrieval. Epic 002 and 003.
-- Search across record types. Epic 003. This epic searches records by text only.
-- Today and Upcoming views, and the home dashboard. Epic 008.
-- Proactive suggestions. Epic 009.
+- Any record type beyond tasks. **Reminders moved to epic 003.** Expenses,
+  memories, events, goals, projects and notes are epics 004 to 009.
+- Persistent memory and contextual retrieval. Epic 003 and 004.
+- Search across record types. Epic 004. This epic searches records by text only.
+- Today and Upcoming views, and the home dashboard. Epic 009.
+- Proactive suggestions. Epic 010.
 - Linking a task to a project or a goal. Those entities do not exist yet.
 - Multi-user, sharing or collaboration of any kind.
 - Voice input, offline capture, and importing from other apps.
@@ -92,7 +92,8 @@ build targets, not success bets.
 - **US-7.** As a user, I correct or delete anything Slashit recorded, so that a mistake is not permanent.
 - **US-9.** As a user, I type something without a command and Slashit tells me how to record it, so that I am not left guessing why nothing happened.
 - **US-10.** As a user, I leave a question from Slashit unanswered and carry on working, so that one incomplete capture never traps me.
-- **US-8.** *Moved to epic 002 with reminders.*
+- **US-11.** As a user, I open my past captures, so that I can see what I asked and what happened, even after the task is done or the input was refused.
+- **US-8.** *Moved to epic 003 with reminders.*
 
 ## 6. Functional requirements
 
@@ -176,6 +177,18 @@ before a PRD entry exists.
 |---|---|---|---|
 | FR-43 | A task past its due date and not done is shown as overdue in the records view and on `/tasks`, distinctly from pending and done. | should | US-6 |
 
+### Capture history and loading feedback
+
+Added 2026-09-14. Argued in [00-epic.md](./00-epic.md)'s addendum of the same
+date. Same gate exception as FR-43: added to the PRD directly, epic updated in
+the same change.
+
+| id | Requirement | Priority | Story |
+|---|---|---|---|
+| FR-44 | Every capture turn is retained after its outcome — created, answered, discarded or refused — and stays available independent of whether it produced a task. | must | US-11 |
+| FR-45 | The user opens and closes a history view from the Capture page without leaving it. Past turns show most recent first, survive a reload, and are the same from any device the user signs into. | must | US-11 |
+| FR-46 | While a capture-related mutation is in flight — submitting a command, answering a pending question, or saving changes to a task from its edit form — the affected control shows a loading indicator and cannot be submitted again until the response arrives. | must | US-1, US-7, US-10 |
+
 ## 7. Non-functional requirements
 
 | id | Requirement | Number | How it is measured |
@@ -185,7 +198,7 @@ before a PRD entry exists.
 | NFR-3 | A created record appears in the records view without a perceptible gap. | Under 1 s at p95 | Time from record creation to visible in a records query |
 | NFR-4 | Field extraction is correct on unambiguous everyday input. | Over 90% of fields correct | Labelled evaluation set, built before build plan approval |
 | NFR-5 | *Withdrawn. Plain-language classification is out of V1.* | — | — |
-| NFR-6 | *Moved to epic 002 with reminders.* | — | — |
+| NFR-6 | *Moved to epic 003 with reminders.* | — | — |
 | NFR-7 | A user's records are never readable by another user, in storage or in a model prompt. | Zero incidents | Authorisation tests on every record path |
 | NFR-8 | The records view stays responsive as records accumulate. | Under 1 s at p95 for a user with 10,000 records | Load test |
 | NFR-9 | No capture is lost once acknowledged. | Zero acknowledged captures without a record | Reconciliation of acknowledgements against records |
@@ -220,7 +233,7 @@ made unavoidable, not a disappointing result.
 | [Epic 000, the AI Gateway](../000-ai-gateway/) | internal | user | Added 2026-09-09. This epic makes no model call of its own. FR-4, FR-5 and FR-35 are served through the gateway |
 | Gemini paid-tier rate limits, read from the provider's current documentation | vendor | Claude | Not started, needed before the build plan sets NFR-11 |
 | Gemini paid-tier data handling terms | vendor | user | Not read. Blocks launch, not the build. See Q10 |
-| Email delivery and a background job runner | vendor | user | Settled 2026-09-09. Used by epic 002, not by this epic |
+| Email delivery and a background job runner | vendor | user | Settled 2026-09-09. Used by epic 003, not by this epic |
 | One account per user | platform | user | Settled 2026-09-08 |
 | Platform stack | platform | user | Settled 2026-09-09, see [the tech stack](../tech-stack.md) |
 | An identity provider, so records have an owner | platform | user | Settled 2026-09-09, see [the tech stack](../tech-stack.md) |
@@ -236,7 +249,7 @@ made unavoidable, not a disappointing result.
 | One shared free-tier key means one shared quota, so one heavy user degrades the product for everyone | high | high | NFR-11 caps per-user requests, NFR-10 tracks headroom, FR-35 makes exhaustion honest rather than silent, a non-model fast path for unambiguous commands is a build plan question |
 | Free-tier terms allow user data to improve the provider's products, in a product holding passports and finances | medium | high | Q10 must be answered before launch, not after. If the terms are unacceptable the tier changes or the user is told before their first capture |
 | Free-tier models or limits change without notice | medium | medium | NFR-12 keeps the provider behind one boundary, so a switch is configuration |
-| Splitting reminders out leaves 001 without the notification machinery, and epic 002 inherits all of the scheduling risk at once | medium | medium | 001 still ships a usable product on its own. Epic 002 carries scheduling, delivery and retry as its whole scope, which is the reason for the split |
+| Splitting reminders out leaves 001 without the notification machinery, and epic 003 inherits all of the scheduling risk at once | medium | medium | 001 still ships a usable product on its own. Epic 003 carries scheduling, delivery and retry as its whole scope, which is the reason for the split |
 | The epic grows to cover every record type before shipping anything | high | medium | Non-goals list every excluded type explicitly, epic map holds the rest |
 | Records view becomes a second, competing way to work, splitting the product | low | medium | Principle 2 in the brief, both paths write the same records |
 
@@ -245,7 +258,7 @@ made unavoidable, not a disappointing result.
 | # | Question | Blocks | Owner | Answer |
 |---|---|---|---|---|
 | ~~Q1~~ | Which surface ships first? | design, HLD | user | **Web.** Mobile and desktop are out of V1. |
-| ~~Q2~~ | How does a reminder reach the user? | epic 002 | user | **In-app and email.** No push. Both ship, user can disable either. Carried to epic 002. |
+| ~~Q2~~ | How does a reminder reach the user? | epic 003 | user | **In-app and email.** No push. Both ship, user can disable either. Carried to epic 003. |
 | ~~Q3~~ | One personal account per user, or workspaces with members? | HLD, data model | user | **One account per user.** No workspaces, no members, no sharing in V1. |
 | ~~Q4~~ | Which model provider, at what cost, at what latency? | NFR-2, NFR-4, NFR-10 | user | **Gemini Flash, paid tier, single key in the server environment.** Recorded as decision 0006, which supersedes 0001. Cost is about 0.0001 USD per capture, `estimate`. |
 | Q10 | Do the Gemini **paid-tier** data handling terms meet the bar for a product holding passports, finances and family details? | launch | user | |
@@ -253,16 +266,16 @@ made unavoidable, not a disappointing result.
 | ~~Q12~~ | Are we charging users in V1? | pricing | user | **No.** Not charging for now. |
 | ~~Q5~~ | Should plain-language capture create records directly, or propose them first? | FR-9, design | user | **Neither. Commands only in V1.** Plain-language capture is deferred. |
 | ~~Q6~~ | Are task priority and recurrence needed in V1? | FR-23, FR-26 | user | **No.** Both are out. A task is a title, a due date and a status. |
-| ~~Q13~~ | Are recurring reminders also out? | epic 002 | user | **In.** Reminders keep recurrence. Carried to epic 002 along with the scheduling machinery it needs. |
-| Q14 | With conversation out of V1, does `/search` still answer questions in sentences, or only return matching records? Epic 004 owns search, but the answer changes what the command surface is. | epic 004 | user | |
+| ~~Q13~~ | Are recurring reminders also out? | epic 003 | user | **In.** Reminders keep recurrence. Carried to epic 003 along with the scheduling machinery it needs. |
+| Q14 | With conversation out of V1, does `/search` still answer questions in sentences, or only return matching records? Epic 005 owns search, but the answer changes what the command surface is. | epic 005 | user | |
 | ~~Q7~~ | What numeric targets make G1 to G4 pass or fail? | section 3 | user | **Deferred.** No targets in V1. Instrument everything, set targets once there is real usage. |
-| ~~Q8~~ | Is there a settings surface in this epic? | FR-27, scope | user | **Yes.** Timezone lives here, in FR-27 and FR-28. The default reminder time goes to epic 002 with reminders. |
+| ~~Q8~~ | Is there a settings surface in this epic? | FR-27, scope | user | **Yes.** Timezone lives here, in FR-27 and FR-28. The default reminder time goes to epic 003 with reminders. |
 | ~~Q9~~ | Is a pending question blocking? | FR-8, design | user | **No.** The question sits in the conversation. The user may leave the screen, return, answer it, ignore it, or run other commands. FR-36 to FR-38 added. |
 
 ## 12. Out of scope
 
 Everything in the product non-goals, plus the record types and views assigned to
-epics 002 to 009 in the epic map, plus plain-language capture, conversation
+epics 003 to 010 in the epic map, plus plain-language capture, conversation
 outside a command, task priority and task recurrence. Also out: bulk import, data export, offline
 capture, undo beyond edit and delete, attachments on records, and any sharing.
 
@@ -270,6 +283,8 @@ capture, undo beyond edit and delete, attachments on records, and any sharing.
 
 | Date | Change | Why | Approved by |
 |---|---|---|---|
+| 2026-09-14 | FR-44 to FR-46 added (capture history, loading feedback) and US-11 added, argued in `00-epic.md`'s 2026-09-14 addendum in the same change. Added as slice 4 (`04.4`) of this feature's implementation plan rather than a new epic | User asked for a history action on the Capture page and loading feedback on in-flight edits | user |
+| 2026-09-14 | Every epic-number reference shifted up by one to match the new registry: 002→003 (Reminders), 003→004 (Persistent Memory), 004→005 (Personal Search and Context), 008→009 (Notes/Daily Control mentions), 009→010, plus the "epics 002 to 009" and "003 to 008" ranges renumbered to match | Epic 002, Authentication, inserted ahead of them; `product/v1-features.md` renumbered 002 to 010 as 003 to 011 on 2026-09-14 | user |
 | 2026-09-13 | **FR-24 narrowed.** Complete, edit and delete are records-view actions only, never commands. Only creation happens by command. Found while drafting the implementation plan: `/complete-task` and `/delete-task` had no way to name their target task, and the answer is that they should not exist as commands at all. Stale downstream: `02-design.md` (drops the two command chips and palette entries), `03-build-plan.md` §4 and §7 (command list, file-by-file plan), `04-implementation-plan.md` and `04.1-capture-core.md` (file-by-file plan, task breakdown), all corrected in the same change | User decided while reviewing slice 1's open question | user |
 | 2026-09-13 | FR-39 to FR-41 added (installed app), applying the 2026-09-09 proposal in `02-design.md` §5b now that the user approved it against Q9. FR-43 added (task lateness), argued in `00-epic.md`'s 2026-09-13 addendum in the same change, per Q4. FR-42 (theme override) considered and declined, per Q13: not added | User answered the design's open questions | user |
 | 2026-09-08 | Created from the V1 product definition | First epic of V1 | pending |
@@ -278,7 +293,7 @@ capture, undo beyond edit and delete, attachments on records, and any sharing.
 | 2026-09-09 | Dependencies repointed at decisions 0004 to 0006, and framework names dropped from them. The model tier moved from free to paid, so Q4 and Q10 are restated and the refusal metric no longer says "free tier". No requirement changed. NFR-10, rewritten from cost to quota on 2026-09-08, now describes the weaker half of the constraint: on a paid tier, spend matters alongside quota. Left as approved pending the user's call. | The stack was revised and the model tier moved from free to paid | user |
 | 2026-09-09 | Epic 000 added as a dependency after approval. No requirement changed: FR-4 and FR-5 already needed a model call, and FR-35 already described the refusal. The gateway is now where those happen. Nothing downstream is stale. | User supplied the AI API key architecture | user |
 | 2026-09-09 | **PRD approved.** Pending questions confirmed non-blocking: FR-8 rewritten, FR-36 to FR-38 added, US-10 added. Q9 closed. | User approved the PRD and settled the pending-question behaviour | user |
-| 2026-09-08 | Reminders split out into epic 002. FR-27 to FR-34 and NFR-6 removed from this epic, US-8 moved. Settings added as FR-27 and FR-28 for timezone. FR-35 rewritten to refuse honestly on quota exhaustion. Q8, Q11, Q12, Q13 closed. | User split the epic and settled the stack | user |
+| 2026-09-08 | Reminders split out into epic 002 (renumbered to epic 003 on 2026-09-14, see `product/v1-features.md`). FR-27 to FR-34 and NFR-6 removed from this epic, US-8 moved. Settings added as FR-27 and FR-28 for timezone. FR-35 rewritten to refuse honestly on quota exhaustion. Q8, Q11, Q12, Q13 closed. | User split the epic and settled the stack | user |
 | 2026-09-08 | Numeric targets removed from goals and success metrics. Metrics are instrumented without targets. Engineering numbers in section 7 unchanged. Q7 closed as deferred. | User deferred targets until real usage exists | user |
 | 2026-09-08 | Commands-only capture. FR-1 rewritten, FR-9 repurposed to handle non-command input, FR-10, FR-11, FR-26 and NFR-5 withdrawn, FR-23 reduced to title, due date and status. US-4 dropped, US-9 added. Q3, Q5, Q6 closed. Q13, Q14 opened. | User cut plain language, task priority and task recurrence from V1 | user |
 | 2026-09-08 | Surface, notification channels and model provider settled. FR-29 split into FR-33 and FR-34, FR-35 added for quota failure, NFR-10 rewritten from cost to quota, NFR-11 and NFR-12 added, two risks added, Q10 to Q12 opened. | User answered Q1, Q2 and Q4 | user |

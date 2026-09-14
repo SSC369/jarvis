@@ -270,6 +270,10 @@ Rules:
 - HLD is locked on approval. A locked decision that affects more than this
   feature is copied into `tech-stack.md` or `product/product.md`, whichever owns
   that kind of fact, in the same commit.
+- **A new or changed table is named at the top of the document, not only in
+  Data model.** Right after the intro, before section 1: one line per table,
+  its name and whether it is new or changed. A reviewer scanning several docs
+  sees what touches storage without reading to section 3.
 
 ### 04-implementation-plan.md — LLD
 Required: Scope recap, File-by-file plan, Interfaces and contracts, Data
@@ -284,6 +288,10 @@ Rules:
 - The test plan names the cases, not the intent. `covers FR-4: retry on 429` is
   a case. `good coverage` is not.
 - No code is written before this document is approved.
+- **A new or changed table is named at the top of the document**, same
+  placement and reason as the build plan's rule above, not only in Data and
+  migrations. A split sub-plan with its own migration does the same, right
+  after its own intro.
 
 **Splitting a large implementation plan.**
 

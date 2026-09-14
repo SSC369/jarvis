@@ -6,7 +6,7 @@ stage: 3
 status: approved
 owner: user
 created: 2026-09-13
-updated: 2026-09-13
+updated: 2026-09-14
 approved_on: 2026-09-13
 supersedes: null
 ---
@@ -18,6 +18,15 @@ supersedes: null
 Context: [PRD](./01-prd.md) · [Design](./02-design.md) · [Tech stack](../tech-stack.md)
 
 This document locks the high-level architecture. Section 10 is answered.
+
+## Tables touched
+
+| Table | Change |
+|---|---|
+| `tasks` | new |
+| `pending_captures` | new |
+| `user_settings` | new |
+| `capture_turns` | new, added 2026-09-14 with slice 4 |
 
 > 310 lines against a 250 budget. Two new backend domains, a persisted pending
 > question, and the PWA and dark-theme surfaces the user asked to include now
@@ -65,6 +74,13 @@ Settings (React)        --query/mutation-> identity domain --SQL--> user_setting
 | `tasks` | `id`, `user_id`, `title`, `due_at` (nullable), `status` (pending, done), `origin` (command, edit), `original_input`, `created_at`, `updated_at` | `records` | Created on capture or manual add, edited or deleted by the user. Never hard-deleted by the system | RLS on `user_id` |
 | `pending_captures` | `id`, `user_id`, `command_name`, `known_fields` (jsonb), `missing_field`, `question_text`, `original_input`, `asked_at` | `capture` | Created when a required field is missing, FR-8. Removed when answered (becomes a task) or discarded, FR-37. No expiry: the PRD does not set one, see §10 Q6 | RLS on `user_id` |
 | `user_settings` | `user_id` (PK), `timezone` | `identity` | One row per user, created on first use with a browser-detected value, updated by the user | RLS on `user_id` |
+| `capture_turns` | `id`, `user_id`, `input_text`, `outcome` (created, answered, discarded, refused), `resulting_task_id` (nullable), `created_at` | `capture` | One row written per `submitCapture` or `answerPendingCapture` call, regardless of its result, per FR-44. Never updated or deleted; a capture turn is a log entry, not a record the user edits | RLS on `user_id` |
+
+Added 2026-09-14, per FR-44/FR-45, argued in `00-epic.md`'s addendum of the
+same date. `capture_turns` is written by the same interactors that already
+handle `submitCapture` and `answerPendingCapture`, as one extra repository
+call after the existing outcome is known: no new interactor, one new
+repository method each.
 
 `overdue` is not a column. FR-43 is `due_at < now() AND status = 'pending'`,
 computed in the repository's query, per the storage-purity rule that a
@@ -92,6 +108,7 @@ table.
 | `tasks` | query | `IsAuthenticated` | none | `[Task]`, soonest due first | FR-25 |
 | `settings` | query | `IsAuthenticated` | none | `Settings` | FR-27 |
 | `updateTimezone` | mutation | `IsAuthenticated` | IANA timezone string | `Settings` | FR-28 |
+| `captureHistory` | query | `IsAuthenticated` | cursor, limit | `[CaptureTurn]`, paginated, most recent first | FR-44, FR-45 |
 
 **The command list is a frontend constant, not a query.** Two commands,
 `/add-task` and `/tasks`, fixed for this epic. Completing, editing and deleting
@@ -207,6 +224,8 @@ gateway's to own.
 
 | Date | Change | Why | Approved by |
 |---|---|---|---|
+| 2026-09-14 | `Tables touched` section added at the top, per the new doc rule in `process-docs/CLAUDE.md` | User asked that any feature touching tables name them at the top of the doc | user |
+| 2026-09-14 | `capture_turns` table added to §3, `captureHistory` query added to §4, per FR-44/FR-45 | User asked for a history action on the Capture page, argued in `00-epic.md`'s 2026-09-14 addendum | user |
 | 2026-09-13 | §7 corrected: the union has nine members, not ten, and capture reuses the gateway's five outcome types directly (they cross via `public.py`, not `graphql/`) instead of mirroring them. No architecture change: same members, same behaviour, only which file defines five of the types | Found while drafting `04.1-capture-core.md` against the real epic 000 code | user |
 | 2026-09-13 | All five questions in section 10 answered, every recommendation accepted | User answered | user |
 | 2026-09-13 | Created | Design approved, stage 3 opened | pending |

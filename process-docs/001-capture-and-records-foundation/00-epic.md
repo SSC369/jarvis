@@ -6,7 +6,7 @@ stage: 0
 status: approved
 owner: user
 created: 2026-09-08
-updated: 2026-09-13
+updated: 2026-09-14
 approved_on: 2026-09-08
 supersedes: null
 ---
@@ -28,7 +28,7 @@ Nothing is restated here that lives there.
 ## Requirement as stated
 
 The sections of the source that define this epic. Reminders, §21, were part of
-this epic until 2026-09-08 and now form epic 002.
+this epic until 2026-09-08 and now form epic 003.
 
 | § | Topic |
 |---|---|
@@ -85,7 +85,7 @@ Carried into the PRD as open questions.
 | # | Unknown |
 |---|---|
 | U1 | Which surface ships first, and therefore what "typing `/`" means physically |
-| U2 | *Resolved and moved. Reminders are epic 002.* |
+| U2 | *Resolved and moved. Reminders are epic 003.* |
 | U3 | Whether ₹ is the only currency, which matters once expenses arrive |
 | U4 | What accuracy of classification and extraction counts as good enough |
 | U5 | Whether project and goal links on a task are in scope here, given those epics land later |
@@ -114,8 +114,59 @@ a label) that needs its own accessibility treatment, per `02-design.md` §7.
 the cost is purely presentational: no new stored field, no new command, no new
 extraction behaviour.
 
+## Addendum, 2026-09-14: capture history and loading feedback
+
+Argued directly, same treatment as the 2026-09-13 lateness addendum above: this
+doc predates the pros/cons contract, so the argument is made here rather than
+retrofitted into a section that does not exist.
+
+**Capture history.** Nothing today distinguishes an answered, discarded or
+refused capture turn from one that never happened: `pending_captures` (FR-8,
+FR-37) holds a question only until it is answered, and the frontend's in-memory
+turn list is lost on reload. Nothing persists what was typed or what happened
+to it once resolved.
+
+Pro: a persisted turn log costs one small table and gives the user a record of
+what they asked and what came of it, useful when a capture was refused (FR-35)
+or a task was found weeks later against wording nobody remembers typing.
+
+Con: widens the capture domain for a capability not asked for at launch, and a
+turn is not itself a record type FR-13 to FR-22 already cover, so it needs its
+own light entity rather than reusing `tasks` or `pending_captures`.
+
+Decision: in scope, as FR-44 and FR-45 in `01-prd.md`. A session-only history
+(kept only in browser memory, gone on reload) was considered and rejected: it
+defeats the purpose of a history view, which is to survive exactly the reload
+that clears it.
+
+**Loading feedback.** The design (`02-design.md` §4) already gives the Command
+Center a loading state for the first capture, and Records and Record detail a
+loading state for their initial fetch. Nothing covers the moment between a
+click and a response for two interactions approved earlier: saving a task's
+edit form, which is the one control FR-19 and FR-24 both save through today,
+and answering a pending question (FR-37). Today the user sees nothing happen
+until the result appears.
+
+Checked against the actual `RecordEditForm` while drafting this: due date
+renders read-only there, not as an editable field, and a `completeTask`
+mutation exists with no UI calling it — completion happens by setting status
+to Done in the same form. FR-19's "any field the user supplied" is therefore
+not fully built yet for due date. That gap is real but is not this
+addendum's to fix; FR-46 below covers the one Save action that exists, not
+the fields it does not yet let the user change.
+
+Pro: this only extends a pattern the PRD already approved for capture to the
+two interactions that currently give no feedback at all. It changes no data,
+no contract, no requirement already locked.
+
+Con: none material.
+
+Decision: in scope, as FR-46.
+
 ## Change log
 
 | Date | Change | Why | Approved by |
 |---|---|---|---|
+| 2026-09-14 | Both "epic 002" references (Reminders) renumbered to "epic 003" | Epic 002, Authentication, inserted ahead of it; `product/v1-features.md` renumbered 002 to 010 as 003 to 011 on 2026-09-14 | user |
+| 2026-09-14 | Addendum added, arguing capture history and loading feedback. `01-prd.md` FR-44 to FR-46 and US-11 added in the same change | User asked for a history action on the Capture page and loading feedback on in-flight edits, and to add both as a fourth slice of this feature | user |
 | 2026-09-13 | Addendum added, arguing task lateness after the design drew it. `01-prd.md` FR-43 added in the same change | User approved overdue styling while reviewing the design canvas | user |

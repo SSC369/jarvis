@@ -194,6 +194,56 @@ slice were killed mid-work (see incidents); the work was finished directly.
 | I-6 | Two background attempts at this slice both terminated with `HTTP 429` ("You've hit your session limit"), the second mid-way through wiring the Capture input | Account-level rate limiting, unrelated to the task. Not a code defect | The slice was finished directly instead of through a third background attempt. Partial work from the second attempt (hooks, components, `sw.ts`, `vite.config.ts`, one test file with a stale mock path) was inspected file-by-file and completed rather than restarted, after independently re-verifying every piece against the sub-plan |
 | I-7 | The first `InstallPrompt`/`UpdateBanner` test attempts using a raw DOM `.click()` and `window.dispatchEvent()` outside `act()` did not update component state before the assertion ran | Standard React Testing Library gap: a native event dispatched on `window` for a listener registered via `useEffect`'s own `addEventListener` is not wrapped in React's `act()` the way `render()` or `fireEvent` calls are | Rewrote the three affected dispatches to use `act()` (for `beforeinstallprompt`/`appinstalled`) and RTL's `fireEvent.click` (for button clicks) |
 
+## Slice 4 — Chat History and Loading Feedback
+
+Backend and frontend, built and verified 2026-09-14. FR-44 to FR-46.
+
+### Tasks
+
+| # | Task | Status | Note |
+|---|---|---|---|
+| T-4.1 | `0006_capture_turns` migration, RLS policy | **done** | Applied, downgraded and re-applied cleanly against the real database |
+| T-4.2 | `CaptureTurnDTO`, `CaptureHistoryPageDTO`, `CaptureTurnRepository` Protocol, `SqlCaptureTurnRepository` | **done** | Also carries `resulting_pending_capture_id`, `question_text`, `answer_text` beyond the sub-plan's first draft — see deviations |
+| T-4.3 | `submit_capture`, `answer_pending_capture`, `discard_pending_capture` each take and call `capture_turn_repository` | **done** | |
+| T-4.4 | `ListCaptureHistoryInteractor`, `captureHistory` query, `deps.py` wiring, `CaptureQueries` added to the schema | **done** | |
+| T-4.5 | `InlineSpinner` component | **done** | `src/components/`, alongside `InstallPrompt`/`OfflineBanner`/`UpdateBanner` |
+| T-4.6 | `RecordEditForm`'s `isSaving` prop, `RecordDetailController` wiring | **done** | |
+| T-4.7 | `TurnCard`'s `isAnswering` prop, `CommandCenterController`'s `submittingTurnId` wiring | **done** | |
+| T-4.8 | `GetCaptureHistory` operation folder, `CaptureTurnFields` fragment, codegen run | **done** | |
+| T-4.9 | `HistoryPanel`, history icon in the Capture topbar | **done** | |
+
+### Verification
+
+| Check | Result |
+|---|---|
+| `mypy --strict app` / `ruff check app tests` | Clean |
+| `pytest tests/unit` | **75 passed** (was 70; +5 for this slice) |
+| `pytest tests/integration -m "not live"` | **49 passed** (was 46; +3 for this slice) |
+| `alembic upgrade head` / `downgrade -1` / `upgrade head` | Clean round-trip against the real database |
+| `npx tsc -b --noEmit` / `npx oxlint` | Clean |
+| `npm run test` (Vitest) | **35 passed** (was 25; +10: `RecordEditForm`, `TurnCard`, `HistoryPanel`) |
+| `npm run build` | Clean |
+| Manual browser pass, real backend (restarted to pick up the new schema — see incidents), real Supabase session | Ran `/add-task` with no arguments, answered the resulting question, opened History: both turns show, most recent first, correctly correlated (the answered turn shows the question it resolved and the answer given). Edited the created task's status to Done from Records; the edit form's Save round-tripped and the detail view showed the new status and last-edited time |
+
+### Deviations
+
+| # | Deviation | Why | Consequence |
+|---|---|---|---|
+| D-37 | `capture_turns` gained `resulting_pending_capture_id`, `question_text` and `answer_text`, beyond the sub-plan's first-drafted `resulting_task_id`-only shape | Found while drafting, before any code was written, in answer to the user asking whether an asked question is recorded at all: `pending_captures` deletes its row on resolution (FR-37), so without capturing the question and answer text onto the turn itself, history would lose the wording for every resolved question, the exact case FR-44 exists to cover | Sub-plan `04.4` updated in place before approval; no rework. The `task_created` row written by `answer_pending_capture` carries both `resulting_task_id` and `resulting_pending_capture_id`, which is what lets a history view later correlate it back to the `question_asked` row for the same thread |
+| D-38 | `discard_pending_capture` now raises `PendingCaptureNotFoundError` when the pending capture does not exist, where it previously did nothing silently | FR-44 needs the pending capture's `original_input` and `question_text` before it is deleted, which means fetching it first; once fetched, a missing row is indistinguishable from the case `answer_pending_capture` already treats as an error | No existing test asserted the old silent behaviour. Matches `answer_pending_capture`'s existing treatment of the same not-found case: a plain GraphQL error, not a union member, since the frontend never holds an id it did not receive from its own account |
+| D-39 | The Capture page's pending-question answer control has no dedicated submit button; `InlineSpinner` renders inside the answer field itself during `isAnswering`, not on a button | Slice 1 shipped this control as Enter-to-submit only, with no button. Adding one to show a spinner on would have been new UI beyond this slice's scope (loading feedback on an existing control, not a new control) | `Discard` is disabled during `isAnswering`; the input is disabled and the spinner appears beside it |
+| D-40 | Answering two different pending questions in close succession can clear the first one's spinner early, since `CommandCenterController`'s `submittingTurnId` tracks only the most recently submitted answer | `useAnswerPendingCapture` is one mutation tuple per component instance; Apollo's `loading` reflects the most recent call, not a per-call flag. Fixing this properly needs per-call tracking, which is more than loading feedback needs | Accepted as a known edge case in the sub-plan before it shipped, not discovered afterward. Named here per rule 5 regardless |
+
+### Not done, and why
+
+RecordEditForm's due date field renders read-only; there is no control to change it, and `completeTask` exists as a mutation with no UI calling it — completion happens by setting status to Done in the same form. Found while drafting this slice, not fixed: FR-19's "any field the user supplied" is not fully built for due date, but building that control is new functionality, not loading feedback on an existing one. Named in `04.4` section 4 before any code was written, same treatment as slice 3's reload-loses-input gap.
+
+### Incidents and defects
+
+| # | What broke | Cause | Fix |
+|---|---|---|---|
+| I-8 | The manual browser pass initially failed with `Cannot query field 'captureHistory' on type 'Query'` even though the code was correct and unit/integration tests passed | The running backend process (`uvicorn`, started earlier in the session for manual testing) had no `--reload` flag, so it never picked up any of this slice's code changes, including ones made hours earlier | Restarted the process. Not a code defect; worth remembering that this repo's dev server is not auto-reloading unless started with `--reload` |
+
 ## Change log
 
 | Date | Change | Why | Approved by |
@@ -203,3 +253,4 @@ slice were killed mid-work (see incidents); the work was finished directly.
 | 2026-09-13 | Slice 2 backend built and verified: `records` extended (5 new repository methods, 4 interactors, a full `graphql/` folder), `identity` domain built from scratch, 1 migration, 116 tests passing (70 unit, 46 integration) | User asked to build slice 2 | user |
 | 2026-09-13 | Slice 2 frontend built and verified: 8 operation folders, `RecordsStore`/`SettingsStore`, `RecordsController`/`RecordDetailController`/`SettingsController` and their components, a new sidebar app shell (D-32), Vitest and React Testing Library installed for the first time. Verified against the real backend and a real Supabase session in a browser: list, detail, edit, complete-via-edit, delete, search, and timezone change all confirmed working | User asked to build slice 2 | user |
 | 2026-09-14 | Slice 3 built and verified: `vite-plugin-pwa` with a hand-written service worker for GraphQL-aware offline caching (D-33), install/offline/update UI, a clean dark-mode audit across every screen from slices 1-2. Verified against a real production build: Chrome's own installability check, and a real offline read proven by stopping the backend outright, not just toggling a client-side flag. Feature 001 (all three slices) is now feature-complete pending the open sign-in-screen gap noted after slice 1 | User asked to build slice 3 | user |
+| 2026-09-14 | Slice 4 built and verified: `capture_turns` table and `captureHistory` query (with `question_text`/`answer_text` added mid-draft, D-37), a history panel on the Capture page, and loading feedback on the task edit form's Save action and on answering a pending question. 124 backend tests passing (75 unit, 49 integration), 35 frontend tests passing. Found and logged, not fixed: `RecordEditForm` has no due-date control | User approved `04.4` and asked to build it | user |
