@@ -36,7 +36,7 @@ Status values: `draft`, `in-review`, `approved`, `blocked`, `shipped`,
 | # | Feature | Priority | Stage | Status | Waiting on | Updated |
 |---|---|---|---|---|---|---|
 | 000 | [AI Gateway and Usage](./000-ai-gateway/) | P0, platform | 5 Dev | slices 1, 2 and 3 built, CI green, billing re-linked (RPD 10,000 confirmed) | A billing budget alert at a real spend threshold (Tier 1's built-in 250 USD cap is not an alert). Deferred: Docker (D-1), a real database for integration tests in CI, Langfuse (not needed until epic 001 calls the gateway) | 2026-09-13 |
-| 001 | [Capture and Records Foundation](./001-capture-and-records-foundation/) | P0 | 5 Dev | in-review | Slices 1 and 2 (backend and frontend) built and verified end to end in a browser, real DB, real Gemini, real Supabase session. No sign-in screen exists yet anywhere in the product; a dev-only console workaround stands in. Slice 3 not started | 2026-09-13 |
+| 001 | [Capture and Records Foundation](./001-capture-and-records-foundation/) | P0 | 5 Dev | in-review | All three slices built and verified end to end, real DB, real Gemini, real Supabase session, a real production build for the PWA. No sign-in screen exists yet anywhere in the product; a dev-only console workaround stands in | 2026-09-14 |
 
 ## Planned
 
