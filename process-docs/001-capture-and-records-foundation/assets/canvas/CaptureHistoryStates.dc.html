@@ -1,0 +1,87 @@
+<!doctype html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500&family=IBM+Plex+Sans:wght@400;500;600&family=Instrument+Serif&display=swap">
+  <style>
+:root{
+  --paper:#faf8f4; --surface:#ffffff; --ink:#2f2823; --ink2:#6b625a; --ink3:#9c9389;
+  --line:#e7e0d5; --line2:#d6ccbc; --rail:#f5f1ea; --blue:#2f5ea8; --blueWash:#eef3fb;
+  --amber:#8a5a2b; --amberWash:#f8f1e6; --red:#a83f36; --redWash:#fbf0ee;
+}
+*{box-sizing:border-box}
+body{margin:0;width:1440px;height:620px;overflow:hidden;background:var(--paper);color:var(--ink);
+  font-family:'IBM Plex Sans',system-ui,-apple-system,sans-serif;font-size:14px;line-height:1.5;
+  -webkit-font-smoothing:antialiased}
+.mono{font-family:'IBM Plex Mono',ui-monospace,SFMono-Regular,Menlo,monospace}
+.pane{padding:32px 40px}
+.label{font-size:11px;font-weight:600;letter-spacing:.07em;text-transform:uppercase;color:var(--ink3);margin-bottom:12px}
+.panel{background:var(--surface);border:1px solid var(--line);border-radius:11px;overflow:hidden;height:520px;display:flex;flex-direction:column}
+.phead{height:56px;flex-shrink:0;border-bottom:1px solid var(--line);display:flex;align-items:center;
+  justify-content:space-between;padding:0 18px;font-size:14.5px;font-weight:600}
+.pclose{width:28px;height:28px;border-radius:7px;display:flex;align-items:center;justify-content:center;color:var(--ink2)}
+.pbody{flex:1;padding:18px}
+.row{border-bottom:1px solid var(--line);padding-bottom:14px;margin-bottom:14px}
+.skel{background:linear-gradient(90deg,#efe9de 25%,#f6f1e9 37%,#efe9de 63%);background-size:400% 100%;
+  animation:sh 1.4s ease infinite;border-radius:5px;height:11px}
+@keyframes sh{0%{background-position:100% 50%}100%{background-position:0 50%}}
+.empty{height:100%;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;padding:0 28px}
+.btn{display:inline-flex;align-items:center;height:32px;padding:0 13px;border-radius:8px;
+  border:1px solid var(--line2);background:var(--surface);color:var(--ink);font-size:12.5px;font-weight:500;font-family:inherit}
+</style>
+</helmet>
+<div class="pane">
+  <div style="font-size:15px;font-weight:600;margin-bottom:6px">History panel &mdash; empty, loading, error</div>
+  <div style="color:var(--ink2);font-size:13.5px;margin-bottom:24px;max-width:700px">Same 420&times;auto slide-over as the success state, shown here at its own width for the three states that carry no rows.</div>
+  <div style="display:flex;gap:24px">
+
+    <div style="width:380px">
+      <div class="label">Empty</div>
+      <div class="panel">
+        <div class="phead">History<div class="pclose"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><line x1="6" y1="6" x2="18" y2="18"/><line x1="18" y1="6" x2="6" y2="18"/></svg></div></div>
+        <div class="pbody">
+          <div class="empty">
+            <svg width="30" height="30" viewBox="0 0 24 24" fill="none" stroke="var(--ink3)" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" style="margin-bottom:14px"><circle cx="12" cy="12" r="8.5"/><polyline points="12 7.5 12 12 15.5 14"/></svg>
+            <div style="color:var(--ink3);font-size:13.5px">Nothing captured yet</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div style="width:380px">
+      <div class="label">Loading</div>
+      <div class="panel">
+        <div class="phead">History<div class="pclose"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><line x1="6" y1="6" x2="18" y2="18"/><line x1="18" y1="6" x2="6" y2="18"/></svg></div></div>
+        <div class="pbody">
+          <div class="row"><div class="skel" style="width:38%;margin-bottom:8px"></div><div class="skel" style="width:72%"></div></div>
+          <div class="row"><div class="skel" style="width:44%;margin-bottom:8px"></div><div class="skel" style="width:58%"></div></div>
+          <div class="row"><div class="skel" style="width:34%;margin-bottom:8px"></div><div class="skel" style="width:66%"></div></div>
+          <div class="row" style="border-bottom:0;margin-bottom:0"><div class="skel" style="width:40%;margin-bottom:8px"></div><div class="skel" style="width:50%"></div></div>
+        </div>
+      </div>
+    </div>
+
+    <div style="width:380px">
+      <div class="label">Error</div>
+      <div class="panel">
+        <div class="phead">History<div class="pclose"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><line x1="6" y1="6" x2="18" y2="18"/><line x1="18" y1="6" x2="6" y2="18"/></svg></div></div>
+        <div class="pbody">
+          <div class="empty">
+            <div style="color:var(--red);margin-bottom:12px"><svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><line x1="12" y1="7.5" x2="12" y2="13"/><circle cx="12" cy="16.5" r=".6" fill="currentColor"/></svg></div>
+            <div style="font-size:14px;color:var(--ink2);margin-bottom:14px">Couldn&rsquo;t load your history</div>
+            <span class="btn">Retry</span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+  </div>
+</div>
+</x-dc>
+</body>
+</html>

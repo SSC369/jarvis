@@ -53,7 +53,8 @@ page of the canvas.
 | Record edit | Change any user-supplied field | FR-19 | `RecordEdit` |
 | Delete confirmation | Naming the record being deleted | FR-20, FR-21 | `DeleteConfirm` |
 | Settings | Timezone, detected and changeable | FR-27, FR-28 | `Settings` |
-| Capture history | Past capture turns, most recent first, opened from Capture | FR-44, FR-45 | none — added 2026-09-14, described in prose below rather than drawn on the canvas. See the note under §4 |
+| Capture history | Past capture turns, most recent first, opened from Capture | FR-44, FR-45 | `CaptureHistory` |
+| Capture history, empty/loading/error | The three states with no rows, at the panel's own width | FR-44, FR-45 | `CaptureHistoryStates` |
 | Shared states | Loading, error, session ended, empty result | all surfaces | `EdgeStates` |
 | Direction B, C | Alternatives not taken, low-fi | — | `DirectionB`, `DirectionC` |
 
@@ -67,6 +68,7 @@ page of the canvas.
 | Question waiting | The same non-blocking question, with the waiting chip | FR-8, FR-36 to FR-38 | `MobilePending` |
 | Records | Table becomes stacked rows | FR-13 to FR-17 | `MobileRecords` |
 | Record detail | Fields stacked, actions full width | FR-18, FR-19, FR-20 | `MobileRecordDetail` |
+| Capture history | Panel width is the viewport minus 40px, anchored right, same as any slide-over on mobile | FR-44, FR-45 | `MobileCaptureHistory` |
 
 ### Installed app
 
@@ -135,9 +137,11 @@ left blank.
 
 ### Capture history
 
-Added 2026-09-14, per FR-44 and FR-45. No Claude Design artboard exists for
-this; it is a slide-over panel from the Command Center, described here since
-the surface is small enough that a canvas pass would only restate this table.
+Added 2026-09-14, per FR-44 and FR-45. A slide-over panel opened by the
+history icon beside the Capture title, 420px wide (desktop) or the viewport
+minus 40px (mobile), anchored to the right edge. `CaptureHistory` (desktop,
+success state), `CaptureHistoryStates` (empty, loading, error), and
+`MobileCaptureHistory` on the canvas.
 
 | State | What the user sees | Copy |
 |---|---|---|
@@ -146,6 +150,24 @@ the surface is small enough that a canvas pass would only restate this table.
 | Error | Card, retry, panel stays open | "Couldn't load your history" |
 | Success | Turns most recent first: input text, outcome (task created, question asked, refused, discarded), relative time. A question-asked, answered or discarded turn also shows the question Slashit asked, and an answered one shows what the user answered | — |
 | No permission | Session ended | "Your session ended" |
+
+**One row per thread, not per write.** `capture_turns` is an insert-only log
+(build plan §3), so a resolved question is two rows in storage: the original
+`question_asked` write and the later `task_created` or `discarded` write that
+resolved it. Showing both as separate history rows reads as a near-duplicate
+— the same question text appears twice, once alone and once repeated inside
+the resolution. The panel shows ONE row per thread instead: a still-open
+question keeps its own row; once a later row's `resultingPendingCaptureId`
+correlates to an earlier `question_asked` row's id, only the later
+(resolving) row is shown, carrying both the question and its resolution. The
+earlier row is not rendered as a separate list entry. This is a display rule
+only — both rows still exist in `capture_turns` and in whatever the API
+returns; nothing about storage or the query changes.
+
+Found 2026-09-14 during this slice's own manual QA (dev log, slice 4
+verification), after the panel had already shipped showing both rows
+separately. Implemented the same day in `HistoryPanel.tsx` — see the dev
+log's D-41.
 
 ### Command Center
 
@@ -445,6 +467,7 @@ above (Q6's Records surface). Stage 2 is ready for the user's approval.
 
 | Date | Change | Why | Approved by |
 |---|---|---|---|
+| 2026-09-14 | Capture history drawn on the canvas: `CaptureHistory` (desktop success), `CaptureHistoryStates` (empty, loading, error), `MobileCaptureHistory`, replacing the prose-only placeholder. §2 and §4 updated to reference them. Also decided and implemented a one-row-per-thread merge rule for a resolved question, found during this slice's manual QA (dev log D-41) | User asked for good UX/UI on capture history and for it to be in the designs, then to implement the merge fix | user |
 | 2026-09-14 | The Q2 answer's "epics 002 to 008" renumbered to "epics 003 to 009" | Epic 002, Authentication, inserted ahead of them; `product/v1-features.md` renumbered 002 to 010 as 003 to 011 on 2026-09-14 | user |
 | 2026-09-14 | Capture history's Success state copy extended: a question-asked, answered or discarded turn shows the question text, and an answered one shows the answer text | User asked whether an asked question is recorded at all; `pending_captures` deletes it on resolution, so `04.4` now captures both onto the turn itself | user |
 | 2026-09-14 | Capture history screen and states added (§2, §4); loading-feedback Saving sub-state added to §4; two design-system deltas added to §6 (inline spinner, history panel). No canvas work: described in prose, per the note under §2's new row | User asked for a history action and loading feedback, argued in `00-epic.md`'s 2026-09-14 addendum | user |
