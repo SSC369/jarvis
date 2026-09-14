@@ -42,12 +42,15 @@ class RecordMutations:
         context = cast(Context, info.context)
         user_id = cast(UUID, context.user_id)
         interactor = build_update_task_interactor(context)
+        due_at_provided = input_.due_at is not strawberry.UNSET
         task = await interactor.update_task(
             dto=UpdateTaskInputDTO(
                 user_id=user_id,
                 task_id=UUID(str(id_)),
                 title=input_.title,
                 status=input_.status.value if input_.status is not None else None,
+                due_at=input_.due_at if due_at_provided else None,
+                due_at_provided=due_at_provided,
             )
         )
         return cast(UpdateTaskResult, task_dto_to_type(task=task))
@@ -68,6 +71,8 @@ class RecordMutations:
                 task_id=UUID(str(id_)),
                 title=None,
                 status=TaskStatus.DONE.value,
+                due_at=None,
+                due_at_provided=False,
             )
         )
         return cast(UpdateTaskResult, task_dto_to_type(task=task))

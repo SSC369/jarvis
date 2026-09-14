@@ -1,6 +1,7 @@
 """Input DTOs for the records interactors. One per use case, per code-rules.md."""
 
 from dataclasses import dataclass
+from datetime import datetime
 from uuid import UUID
 
 from app.domains.records.interfaces.dtos import TaskStatus
@@ -27,6 +28,8 @@ class UpdateTaskInputDTO:
     task_id: UUID
     title: str | None
     status: TaskStatus | None
+    due_at: datetime | None
+    due_at_provided: bool
 
 
 @dataclass(frozen=True)

@@ -134,6 +134,8 @@ class SqlTaskRepository:
         task_id: uuid.UUID,
         title: str | None,
         status: TaskStatus | None,
+        due_at: datetime | None,
+        due_at_provided: bool,
     ) -> TaskDTO | None:
         now = datetime.now(UTC)
         values: dict[str, object] = {"updated_at": now}
@@ -141,6 +143,8 @@ class SqlTaskRepository:
             values["title"] = title
         if status is not None:
             values["status"] = status
+        if due_at_provided:
+            values["due_at"] = due_at
 
         async with user_transaction(self.session, user_id) as scoped:
             await scoped.execute(
@@ -157,7 +161,12 @@ class SqlTaskRepository:
         self, *, user_id: uuid.UUID, task_id: uuid.UUID, status: TaskStatus
     ) -> TaskDTO | None:
         return await self.update(
-            user_id=user_id, task_id=task_id, title=None, status=status
+            user_id=user_id,
+            task_id=task_id,
+            title=None,
+            status=status,
+            due_at=None,
+            due_at_provided=False,
         )
 
     async def delete_many(

@@ -80,19 +80,22 @@ class FakeTaskRepository:
         task_id: uuid.UUID,
         title: str | None,
         status: TaskStatus | None,
+        due_at: datetime | None,
+        due_at_provided: bool,
     ) -> TaskDTO | None:
         task = self.tasks.get(task_id)
         if task is None or task.user_id != user_id:
             return None
         now = datetime.now(UTC)
+        new_due_at = due_at if due_at_provided else task.due_at
         updated = TaskDTO(
             id=task.id,
             user_id=task.user_id,
             title=title if title is not None else task.title,
-            due_at=task.due_at,
+            due_at=new_due_at,
             status=status if status is not None else task.status,
-            is_overdue=task.due_at is not None
-            and task.due_at < now
+            is_overdue=new_due_at is not None
+            and new_due_at < now
             and (status or task.status) == "pending",
             origin=task.origin,
             original_input=task.original_input,
@@ -106,7 +109,12 @@ class FakeTaskRepository:
         self, *, user_id: uuid.UUID, task_id: uuid.UUID, status: TaskStatus
     ) -> TaskDTO | None:
         return await self.update(
-            user_id=user_id, task_id=task_id, title=None, status=status
+            user_id=user_id,
+            task_id=task_id,
+            title=None,
+            status=status,
+            due_at=None,
+            due_at_provided=False,
         )
 
     async def delete_many(

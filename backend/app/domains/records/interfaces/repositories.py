@@ -45,6 +45,8 @@ class TaskRepository(Protocol):
         task_id: UUID,
         title: str | None,
         status: TaskStatus | None,
+        due_at: datetime | None,
+        due_at_provided: bool,
     ) -> TaskDTO | None: ...
 
     async def set_status(
