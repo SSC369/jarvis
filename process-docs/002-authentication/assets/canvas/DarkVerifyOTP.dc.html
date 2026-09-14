@@ -1,0 +1,170 @@
+<!doctype html>
+<html>
+<head>
+<meta charset="utf-8">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500&family=IBM+Plex+Sans:wght@400;500;600&family=Instrument+Serif&display=swap">
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<style>
+:root{
+  --paper:#faf8f4; --surface:#ffffff; --ink:#2f2823; --ink2:#6b625a; --ink3:#9c9389;
+  --line:#e7e0d5; --line2:#d6ccbc; --rail:#f5f1ea;
+  --blue:#2f5ea8; --blueWash:#eef3fb; --amber:#8a5a2b; --amberWash:#f8f1e6;
+  --red:#a83f36; --redWash:#fbf0ee; --green:#2f7a52; --greenWash:#edf6f1;
+}
+*{box-sizing:border-box}
+body{margin:0;width:1440px;height:900px;overflow:hidden;color:var(--ink);
+  font-family:'IBM Plex Sans',system-ui,-apple-system,sans-serif;font-size:14px;line-height:1.5;
+  -webkit-font-smoothing:antialiased;text-wrap:pretty;position:relative;
+  background-color:var(--paper);
+  background-image:radial-gradient(circle, #ddd2bf 1.2px, transparent 1.2px);
+  background-size:26px 26px;background-position:-4px -4px}
+.vign{position:absolute;inset:0;background:radial-gradient(ellipse at center, transparent 40%, var(--paper) 92%)}
+a{color:var(--blue);text-decoration:none} a:hover{color:#24487f}
+.mono{font-family:'IBM Plex Mono',ui-monospace,SFMono-Regular,Menlo,monospace}
+.btn{display:inline-flex;align-items:center;gap:7px;height:40px;padding:0 15px;border-radius:8px;
+  border:1px solid var(--line2);background:var(--surface);color:var(--ink);font-size:13.5px;font-weight:500;
+  font-family:inherit;cursor:default}
+.btn.pri{background:var(--blue);border-color:var(--blue);color:#fff}
+.note{display:flex;gap:11px;padding:13px 15px;border-radius:10px;border:1px solid;font-size:13px;line-height:1.5}
+.note.err{background:var(--redWash);border-color:#f0d7d3;color:var(--red)}
+.authwrap{position:relative;width:100%;min-height:900px;display:flex;align-items:center;justify-content:center;padding:40px}
+.authcol{width:400px;display:flex;flex-direction:column;gap:22px;position:relative;z-index:1}
+.wordmark{display:flex;align-items:center;justify-content:center;gap:9px}
+.wmark{width:27px;height:27px;border-radius:7px;background:var(--ink);color:var(--paper);display:flex;
+  align-items:center;justify-content:center;flex-shrink:0}
+.wtext{font-family:'IBM Plex Mono',monospace;font-weight:500;font-size:19px;letter-spacing:-.015em}
+.authcard{background:var(--surface);border:1px solid var(--line);border-radius:13px;
+  box-shadow:0 1px 2px rgba(47,40,35,.05);padding:32px}
+.authtitle{font-family:'Instrument Serif',Georgia,serif;font-size:26px;font-weight:400;
+  letter-spacing:-.005em;margin:0 0 6px;text-align:center}
+.authsub{font-size:13.5px;color:var(--ink2);line-height:1.5;margin:0 0 26px;text-align:center}
+.otprow{display:flex;gap:9px;justify-content:center;margin-bottom:18px}
+.otpbox{width:46px;height:56px;border:1px solid var(--line2);border-radius:9px;display:flex;
+  align-items:center;justify-content:center;font-family:'IBM Plex Mono',monospace;font-size:22px;
+  font-weight:500;background:var(--surface)}
+.otpbox.err{border-color:var(--red);background:var(--redWash);color:var(--red)}
+.resendrow{display:flex;justify-content:center;font-size:12.5px;color:var(--ink3);margin-bottom:22px}
+.btn.full{width:100%;justify-content:center;height:44px;font-size:14px}
+.authfoot{text-align:center;font-size:13px;color:var(--ink2)}
+.spinner{width:15px;height:15px;border-radius:50%;border:2px solid rgba(255,255,255,.4);
+  border-top-color:#fff;animation:spin .7s linear infinite}
+@keyframes spin{to{transform:rotate(360deg)}}
+.checkcircle{width:52px;height:52px;border-radius:50%;background:var(--greenWash);display:flex;
+  align-items:center;justify-content:center;color:var(--green);margin:0 auto 14px}
+.amberwarn{width:52px;height:52px;border-radius:50%;background:var(--amberWash);display:flex;
+  align-items:center;justify-content:center;color:var(--amber);margin:0 auto 14px}
+.centermsg{text-align:center}
+
+:root{--paper:#1c1917;--surface:#24211e;--ink:#ece6dc;--ink2:#a89f93;--ink3:#7c7368;
+ --line:#35302b;--line2:#443d36;--rail:#191614;--blue:#7ea6e8;--blueWash:#22303f;
+ --amber:#d9a441;--amberWash:#332a1b;--red:#e08c82;--redWash:#3a2320;--green:#6fbf95;--greenWash:#1e3128;}
+a{color:#7ea6e8}a:hover{color:#a3c1f0}
+.gbtn{background:#2a2622;border-color:#443d36;color:#ece6dc}
+.divider .ln{background:#443d36}
+body{background-color:#1c1917;background-image:radial-gradient(circle, #3c362f 1.2px, transparent 1.2px)}
+</style>
+</helmet>
+<div class="vign"></div>
+<div class="authwrap">
+<div class="authcol">
+  <div class="wordmark">
+    <div class="wmark"><svg viewBox="0 0 48 48" width="21" height="21"><path d="M31.5 6 L40 6 L18.5 42 L10 42 Z" fill="currentColor"/></svg></div>
+    <span class="wtext">slash<span style="color:var(--amber)">.</span>it</span>
+  </div>
+
+  <sc-if value="{{isSuccess}}" hint-placeholder-val="{{false}}">
+  <div class="authcard centermsg">
+    <div class="checkcircle"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg></div>
+    <div class="authtitle">Email verified</div>
+    <div class="authsub" style="margin-bottom:0">Taking you into Slashit now.</div>
+  </div>
+  </sc-if>
+
+  <sc-if value="{{isLimited}}" hint-placeholder-val="{{false}}">
+  <div class="authcard centermsg">
+    <div class="amberwarn"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg></div>
+    <div class="authtitle">Too many attempts</div>
+    <div class="authsub" style="margin-bottom:0">This code is now blocked. Request a new one in 15 minutes.</div>
+  </div>
+  </sc-if>
+
+  <sc-if value="{{showForm}}" hint-placeholder-val="{{true}}">
+  <div class="authcard">
+    <div class="authtitle">Verify your email</div>
+    <div class="authsub">We sent a 6-digit code to <span class="mono">jordan@example.com</span></div>
+
+    <sc-if value="{{isWrong}}" hint-placeholder-val="{{false}}">
+    <div class="note err" style="margin-bottom:18px">
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="flex-shrink:0;margin-top:1px"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
+      <div>That code is not right. Check it and try again.</div>
+    </div>
+    </sc-if>
+    <sc-if value="{{isExpired}}" hint-placeholder-val="{{false}}">
+    <div class="note err" style="margin-bottom:18px">
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="flex-shrink:0;margin-top:1px"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
+      <div>This code expired. Request a new one below.</div>
+    </div>
+    </sc-if>
+
+    <div class="otprow">
+      <div class="otpbox {{boxErrClass}}">4</div>
+      <div class="otpbox {{boxErrClass}}">8</div>
+      <div class="otpbox {{boxErrClass}}">2</div>
+      <div class="otpbox {{boxErrClass}}">0</div>
+      <div class="otpbox {{boxErrClass}}">1</div>
+      <div class="otpbox {{boxErrClass}}">7</div>
+    </div>
+
+    <div class="resendrow">
+      <sc-if value="{{isExpired}}" hint-placeholder-val="{{false}}">
+        <a href="#">Resend code</a>
+      </sc-if>
+      <sc-if value="{{canResend}}" hint-placeholder-val="{{false}}">
+        <span>Resend code in 0:24</span>
+      </sc-if>
+    </div>
+
+    <button class="btn pri full">
+      <sc-if value="{{isLoading}}" hint-placeholder-val="{{false}}">
+        <span class="spinner"></span><span>Verifying&hellip;</span>
+      </sc-if>
+      <sc-if value="{{notLoading}}" hint-placeholder-val="{{true}}">
+        <span>Verify</span>
+      </sc-if>
+    </button>
+  </div>
+  <div class="authfoot">Wrong email? <a href="#">Start over</a></div>
+  </sc-if>
+</div>
+</div>
+</x-dc>
+<script data-dc-script data-props='{
+  "state":{"editor":"enum","default":"form","options":["form","loading","error","limited","success"],"section":"State"},
+  "errorKind":{"editor":"enum","default":"wrong","options":["wrong","expired"],"section":"State"}
+}'>
+class Component extends DCLogic {
+  renderVals() {
+    const state = this.props.state || "form";
+    const errorKind = this.props.errorKind || "wrong";
+    const isError = state === "error";
+    const isLimited = state === "limited";
+    return {
+      isLoading: state === "loading",
+      notLoading: state !== "loading",
+      isSuccess: state === "success",
+      isLimited: isLimited,
+      showForm: state !== "success" && state !== "limited",
+      isWrong: isError && errorKind === "wrong",
+      isExpired: isError && errorKind === "expired",
+      canResend: !(isError && errorKind === "expired"),
+      boxErrClass: isError ? "err" : "",
+    };
+  }
+}
+</script>
+</body>
+</html>

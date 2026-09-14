@@ -1,0 +1,30 @@
+{
+  "artboards": [
+    { "file": "Main.dc.html", "x": 0, "y": 0, "w": 1440, "h": 900, "page": "page-1" },
+    { "file": "VerifyOTP.dc.html", "x": 1520, "y": 0, "w": 1440, "h": 900, "page": "page-1" },
+    { "file": "SignIn.dc.html", "x": 3040, "y": 0, "w": 1440, "h": 900, "page": "page-1" },
+    { "file": "ForgotPassword.dc.html", "x": 4560, "y": 0, "w": 1440, "h": 900, "page": "page-1" },
+    { "file": "ResetPassword.dc.html", "x": 6080, "y": 0, "w": 1440, "h": 900, "page": "page-1" },
+    { "file": "MobileSignUp.dc.html", "x": 0, "y": 1020, "w": 390, "h": 844, "page": "page-1" },
+    { "file": "MobileVerifyOTP.dc.html", "x": 470, "y": 1020, "w": 390, "h": 844, "page": "page-1" },
+    { "file": "MobileSignIn.dc.html", "x": 940, "y": 1020, "w": 390, "h": 844, "page": "page-1" },
+    { "file": "DarkMain.dc.html", "x": 0, "y": 0, "w": 1440, "h": 900, "page": "page-2" },
+    { "file": "DarkVerifyOTP.dc.html", "x": 1520, "y": 0, "w": 1440, "h": 900, "page": "page-2" },
+    { "file": "DarkSignIn.dc.html", "x": 3040, "y": 0, "w": 1440, "h": 900, "page": "page-2" },
+    { "file": "DarkForgotPassword.dc.html", "x": 4560, "y": 0, "w": 1440, "h": 900, "page": "page-2" },
+    { "file": "DarkResetPassword.dc.html", "x": 6080, "y": 0, "w": 1440, "h": 900, "page": "page-2" },
+    { "file": "DarkMobileSignUp.dc.html", "x": 0, "y": 1020, "w": 390, "h": 844, "page": "page-2" },
+    { "file": "DarkMobileVerifyOTP.dc.html", "x": 470, "y": 1020, "w": 390, "h": 844, "page": "page-2" },
+    { "file": "DarkMobileSignIn.dc.html", "x": 940, "y": 1020, "w": 390, "h": 844, "page": "page-2" }
+  ],
+  "annotations": [
+    { "id": "n-flow", "x": 0, "y": -110, "w": 400, "text": "Sign up -> Verify email (OTP) -> signed in.\nUnverified sign-in routes back to Verify.\nForgot password -> code (reuses the OTP UI) -> set new password.\nGoogle button on Sign up and Sign in skips password + code entirely.\nEach screen's states are a tweak chip above it: form / loading / error / limited (rate limit) / success, plus blocked on Sign in.\nBackground: fine dot-grid texture with a center vignette, picked from six directions on 2026-09-14.", "page": "page-1" },
+    { "id": "n-mobile", "x": 0, "y": 900, "w": 300, "text": "Mobile, 390x844 -- default state only, per the desktop artboard's states.", "page": "page-1" },
+    { "id": "n-dark", "x": 0, "y": -110, "w": 420, "text": "Same screens, same tokens as 001's dark theme (DarkCommandPalette.dc.html etc.), not a new palette. Exploratory, same as 001: 001 drew dark screens but declined an FR for a theme toggle (its Q13). No dark FR exists here either yet.", "page": "page-2" }
+  ],
+  "pages": [
+    { "id": "page-1", "name": "Flows" },
+    { "id": "page-2", "name": "Dark theme" }
+  ],
+  "launch": { "view": "focused", "file": "Main.dc.html" }
+}

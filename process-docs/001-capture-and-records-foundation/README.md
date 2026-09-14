@@ -25,4 +25,5 @@
 The Slashit Command Center, the command system, and the structured record store,
 proven end to end with tasks.
 
-Reminders were split out into epic 002 on 2026-09-08.
+Reminders were split out into epic 003 on 2026-09-08 (numbered 002 until epic
+002, Authentication, was inserted ahead of it on 2026-09-14).

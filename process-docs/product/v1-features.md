@@ -4,7 +4,7 @@ title: V1 Features
 status: approved
 owner: user
 created: 2026-09-08
-updated: 2026-09-09
+updated: 2026-09-14
 ---
 
 # V1 Features
@@ -53,15 +53,16 @@ independently.
 |---|---|---|---|---|
 | 000 | AI Gateway and Usage | P0, platform | AI API key architecture, supplied 2026-09-09 | — |
 | 001 | Capture and Records Foundation | P0 | Command Center §7, Command System §8, Command discovery §9, Structured Records §10 to §13, Record detail §19, Tasks §20, Confirmation model §35, Record creation principle §36 | 000 |
-| 002 | Reminders and Notifications | P0 | Reminders §21, recurrence, in-app and email delivery | 001 |
-| 003 | Persistent Memory | P0 | Memory §15 to §18 | 001 |
-| 004 | Personal Search and Context | P0 | Personal search §27, Contextual intelligence §28 | 001, 003 |
-| 005 | Expenses | P1 | Expenses §14, expense summaries | 001 |
-| 006 | Events | P1 | Events §22 | 001 |
-| 007 | Goals and Projects | P1 | Goals §23, Projects §24, goal-project-task relationships | 001, 004 |
-| 008 | Notes | P1 | Notes and Ideas §25 | 001 |
-| 009 | Daily Control | P1 | Today's view §29, Upcoming view §30, Home dashboard §32, Navigation §33 | 001, 002, 005, 006, 007 |
-| 010 | Proactive Slashit | P2 | Proactive Slashit §31, advanced contextual intelligence | 004, 009 |
+| 002 | Authentication | P0, blocking | Real signup, login and email verification, requested 2026-09-14. Not in the source; V1 shipped so far against a dev-only console workaround | — |
+| 003 | Reminders and Notifications | P0 | Reminders §21, recurrence, in-app and email delivery | 001, 002 |
+| 004 | Persistent Memory | P0 | Memory §15 to §18 | 001, 002 |
+| 005 | Personal Search and Context | P0 | Personal search §27, Contextual intelligence §28 | 001, 002, 004 |
+| 006 | Expenses | P1 | Expenses §14, expense summaries | 001, 002 |
+| 007 | Events | P1 | Events §22 | 001, 002 |
+| 008 | Goals and Projects | P1 | Goals §23, Projects §24, goal-project-task relationships | 001, 002, 005 |
+| 009 | Notes | P1 | Notes and Ideas §25 | 001, 002 |
+| 010 | Daily Control | P1 | Today's view §29, Upcoming view §30, Home dashboard §32, Navigation §33 | 001, 002, 003, 006, 007, 008 |
+| 011 | Proactive Slashit | P2 | Proactive Slashit §31, advanced contextual intelligence | 005, 010 |
 
 ---
 
@@ -112,9 +113,9 @@ interesting once there is memory to search.
 
 ## 6. Sequencing
 
-Epics 005, 006 and 008 are near-identical in shape once 001 exists: a new record
+Epics 006, 007 and 009 are near-identical in shape once 001 exists: a new record
 type, its command set, its fields, its list view. They can run in any order, or
-in parallel, once the foundation is approved. 009 needs the record types it
+in parallel, once the foundation is approved. 010 needs the record types it
 displays, so it lands after them.
 
 There is no deadline for V1, confirmed 2026-09-08, so the order is driven by
@@ -167,7 +168,7 @@ Pricing is the other post-V1 question. It is open as Q5 in
 | # | Question | Blocks | Answer |
 |---|---|---|---|
 | ~~Q1~~ | Is this the right split, and is 001 the right first epic? | all | **Confirmed 2026-09-08.** |
-| ~~Q2~~ | Should reminders be pulled out of 001? | 001 | **Yes, done.** Reminders are epic 002. |
+| ~~Q2~~ | Should reminders be pulled out of 001? | 001 | **Yes, done.** Reminders are epic 003. |
 | ~~Q3~~ | What is the V1 build window? | sequencing | **No deadline.** |
 
 ---
@@ -179,4 +180,5 @@ Pricing is the other post-V1 question. It is open as Q5 in
 | 2026-09-08 | Created | V1 product definition supplied | pending |
 | 2026-09-08 | Reminders split into epic 002, later epics renumbered to ten. Epic 007 reduced to Notes. Life Inbox, plain-language capture, task priority and recurrence recorded as deferred. Q1, Q2, Q3 closed. | User confirmed the split and cut scope | user |
 | 2026-09-09 | Epic 000, AI Gateway and Usage, added ahead of 001. Recorded as a deliberate exception to the vertical-slice rule. | User supplied the AI API key architecture | user |
+| 2026-09-14 | Epic 002, Authentication, inserted after 001. Epics 002 to 010 renumbered to 003 to 011, and 002 added to the `Depends on` column of every epic after it, since none can be used by a real user without it. Not in the original source: 001 shipped so far against a dev-only console workaround. | User asked to plan real signup, login and email verification as the immediate next feature | user |
 | 2026-09-09 | Superseded `v1-epic-map.md`. Absorbed the V1 capability priorities from the product brief and added a Later versions section. Epic folders are now direct children of `process-docs/`. | User asked for one V1 features document | user |

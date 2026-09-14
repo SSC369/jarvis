@@ -1,0 +1,87 @@
+<!doctype html>
+<html>
+<head>
+<meta charset="utf-8">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500&family=IBM+Plex+Sans:wght@400;500;600&family=Instrument+Serif&display=swap">
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<style>
+:root{
+  --paper:#faf8f4; --surface:#ffffff; --ink:#2f2823; --ink2:#6b625a; --ink3:#9c9389;
+  --line:#e7e0d5; --line2:#d6ccbc;
+  --blue:#2f5ea8; --amber:#8a5a2b;
+}
+*{box-sizing:border-box}
+body{margin:0;width:390px;height:844px;overflow:hidden;color:var(--ink);
+  font-family:'IBM Plex Sans',system-ui,-apple-system,sans-serif;font-size:14px;line-height:1.5;
+  -webkit-font-smoothing:antialiased;position:relative;
+  background-color:var(--paper);
+  background-image:radial-gradient(circle, #ddd2bf 1.1px, transparent 1.1px);
+  background-size:22px 22px;background-position:-4px -4px}
+.vign{position:absolute;inset:0;background:radial-gradient(ellipse at 50% 30%, transparent 35%, var(--paper) 88%)}
+a{color:var(--blue);text-decoration:none}
+.btn{display:inline-flex;align-items:center;gap:7px;height:44px;padding:0 15px;border-radius:8px;
+  border:1px solid var(--line2);background:var(--surface);color:var(--ink);font-size:14px;font-weight:500;
+  font-family:inherit}
+.btn.pri{background:var(--blue);border-color:var(--blue);color:#fff}
+.btn.full{width:100%;justify-content:center}
+.control{height:46px;display:flex;align-items:center;padding:0 13px;background:var(--surface);
+  border:1px solid var(--line2);border-radius:8px;font-size:15px}
+.wrap{position:relative;z-index:1;padding:56px 22px 24px}
+.wordmark{display:flex;align-items:center;justify-content:center;gap:9px;margin-bottom:28px}
+.wmark{width:27px;height:27px;border-radius:7px;background:var(--ink);color:var(--paper);display:flex;
+  align-items:center;justify-content:center;flex-shrink:0}
+.wtext{font-family:'IBM Plex Mono',monospace;font-weight:500;font-size:19px;letter-spacing:-.015em}
+.authtitle{font-family:'Instrument Serif',Georgia,serif;font-size:26px;font-weight:400;margin:0 0 24px}
+.formrow{display:flex;flex-direction:column;gap:6px;margin-bottom:16px}
+.fieldlabel{display:flex;justify-content:space-between;font-size:12.5px;font-weight:500;color:var(--ink2)}
+.authfoot{text-align:center;font-size:13px;color:var(--ink2);margin-top:20px}
+.gbtn{display:flex;align-items:center;justify-content:center;gap:10px;width:100%;height:44px;
+  border-radius:8px;border:1px solid var(--line2);background:#fff;color:#3c4043;font-size:14px;
+  font-weight:500;font-family:inherit;margin-bottom:18px}
+.divider{display:flex;align-items:center;gap:12px;color:var(--ink3);font-size:12px;margin-bottom:18px}
+.divider .ln{flex:1;height:1px;background:var(--line)}
+
+:root{--paper:#1c1917;--surface:#24211e;--ink:#ece6dc;--ink2:#a89f93;--ink3:#7c7368;
+ --line:#35302b;--line2:#443d36;--rail:#191614;--blue:#7ea6e8;--blueWash:#22303f;
+ --amber:#d9a441;--amberWash:#332a1b;--red:#e08c82;--redWash:#3a2320;--green:#6fbf95;--greenWash:#1e3128;}
+a{color:#7ea6e8}a:hover{color:#a3c1f0}
+.gbtn{background:#2a2622;border-color:#443d36;color:#ece6dc}
+.divider .ln{background:#443d36}
+body{background-color:#1c1917;background-image:radial-gradient(circle, #3c362f 1.1px, transparent 1.1px)}
+</style>
+</helmet>
+<div class="vign"></div>
+<div class="wrap">
+  <div class="wordmark">
+    <div class="wmark"><svg viewBox="0 0 48 48" width="21" height="21"><path d="M31.5 6 L40 6 L18.5 42 L10 42 Z" fill="currentColor"/></svg></div>
+    <span class="wtext">slash<span style="color:var(--amber)">.</span>it</span>
+  </div>
+  <div class="authtitle">Sign in</div>
+  <button class="gbtn">
+    <svg width="18" height="18" viewBox="0 0 18 18">
+      <path fill="#4285F4" d="M17.64 9.2c0-.637-.057-1.251-.164-1.84H9v3.481h4.844c-.209 1.125-.843 2.078-1.796 2.717v2.258h2.908c1.702-1.567 2.684-3.874 2.684-6.615z"/>
+      <path fill="#34A853" d="M9 18c2.43 0 4.467-.806 5.956-2.18l-2.908-2.259c-.806.54-1.837.86-3.048.86-2.344 0-4.328-1.584-5.036-3.711H.957v2.332A8.997 8.997 0 0 0 9 18z"/>
+      <path fill="#FBBC05" d="M3.964 10.71A5.41 5.41 0 0 1 3.682 9c0-.593.102-1.17.282-1.71V4.958H.957A8.996 8.996 0 0 0 0 9c0 1.452.348 2.827.957 4.042l3.007-2.332z"/>
+      <path fill="#EA4335" d="M9 3.58c1.321 0 2.508.454 3.44 1.345l2.582-2.58C13.463.891 11.426 0 9 0A8.997 8.997 0 0 0 .957 4.958L3.964 7.29C4.672 5.163 6.656 3.58 9 3.58z"/>
+    </svg>
+    <span>Continue with Google</span>
+  </button>
+  <div class="divider"><span class="ln"></span><span>or</span><span class="ln"></span></div>
+  <div class="formrow">
+    <div class="fieldlabel">Email</div>
+    <div class="control">jordan@example.com</div>
+  </div>
+  <div class="formrow">
+    <div class="fieldlabel"><span>Password</span><a href="#">Forgot password?</a></div>
+    <div class="control">••••••••••</div>
+  </div>
+  <button class="btn pri full" style="margin-top:8px">Sign in</button>
+  <div class="authfoot">New to Slashit? <a href="#">Create an account</a></div>
+</div>
+</x-dc>
+</body>
+</html>

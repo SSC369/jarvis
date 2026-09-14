@@ -1,0 +1,73 @@
+<!doctype html>
+<html>
+<head>
+<meta charset="utf-8">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500&family=IBM+Plex+Sans:wght@400;500;600&family=Instrument+Serif&display=swap">
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<style>
+:root{
+  --paper:#faf8f4; --surface:#ffffff; --ink:#2f2823; --ink2:#6b625a; --ink3:#9c9389;
+  --line:#e7e0d5; --line2:#d6ccbc;
+  --blue:#2f5ea8; --blueWash:#eef3fb; --amber:#8a5a2b;
+}
+*{box-sizing:border-box}
+body{margin:0;width:390px;height:844px;overflow:hidden;color:var(--ink);
+  font-family:'IBM Plex Sans',system-ui,-apple-system,sans-serif;font-size:14px;line-height:1.5;
+  -webkit-font-smoothing:antialiased;position:relative;
+  background-color:var(--paper);
+  background-image:radial-gradient(circle, #ddd2bf 1.1px, transparent 1.1px);
+  background-size:22px 22px;background-position:-4px -4px}
+.vign{position:absolute;inset:0;background:radial-gradient(ellipse at 50% 30%, transparent 35%, var(--paper) 88%)}
+a{color:var(--blue);text-decoration:none}
+.mono{font-family:'IBM Plex Mono',ui-monospace,SFMono-Regular,Menlo,monospace}
+.btn{display:inline-flex;align-items:center;gap:7px;height:44px;padding:0 15px;border-radius:8px;
+  border:1px solid var(--line2);background:var(--surface);color:var(--ink);font-size:14px;font-weight:500;
+  font-family:inherit}
+.btn.pri{background:var(--blue);border-color:var(--blue);color:#fff}
+.btn.full{width:100%;justify-content:center}
+.wrap{position:relative;z-index:1;padding:56px 22px 24px;text-align:center}
+.wordmark{display:flex;align-items:center;justify-content:center;gap:9px;margin-bottom:28px}
+.wmark{width:27px;height:27px;border-radius:7px;background:var(--ink);color:var(--paper);display:flex;
+  align-items:center;justify-content:center;flex-shrink:0}
+.wtext{font-family:'IBM Plex Mono',monospace;font-weight:500;font-size:19px;letter-spacing:-.015em}
+.authtitle{font-family:'Instrument Serif',Georgia,serif;font-size:26px;font-weight:400;margin:0 0 6px}
+.authsub{font-size:13.5px;color:var(--ink2);margin:0 0 26px}
+.otprow{display:flex;gap:8px;justify-content:center;margin-bottom:18px}
+.otpbox{width:44px;height:54px;border:1px solid var(--line2);border-radius:9px;display:flex;
+  align-items:center;justify-content:center;font-family:'IBM Plex Mono',monospace;font-size:21px;
+  font-weight:500;background:var(--surface)}
+.resendrow{font-size:12.5px;color:var(--ink3);margin-bottom:22px}
+.authfoot{text-align:center;font-size:13px;color:var(--ink2);margin-top:20px}
+
+:root{--paper:#1c1917;--surface:#24211e;--ink:#ece6dc;--ink2:#a89f93;--ink3:#7c7368;
+ --line:#35302b;--line2:#443d36;--rail:#191614;--blue:#7ea6e8;--blueWash:#22303f;
+ --amber:#d9a441;--amberWash:#332a1b;--red:#e08c82;--redWash:#3a2320;--green:#6fbf95;--greenWash:#1e3128;}
+a{color:#7ea6e8}a:hover{color:#a3c1f0}
+.gbtn{background:#2a2622;border-color:#443d36;color:#ece6dc}
+.divider .ln{background:#443d36}
+body{background-color:#1c1917;background-image:radial-gradient(circle, #3c362f 1.1px, transparent 1.1px)}
+</style>
+</helmet>
+<div class="vign"></div>
+<div class="wrap">
+  <div class="wordmark">
+    <div class="wmark"><svg viewBox="0 0 48 48" width="21" height="21"><path d="M31.5 6 L40 6 L18.5 42 L10 42 Z" fill="currentColor"/></svg></div>
+    <span class="wtext">slash<span style="color:var(--amber)">.</span>it</span>
+  </div>
+  <div class="authtitle">Verify your email</div>
+  <div class="authsub">We sent a 6-digit code to<br><span class="mono">jordan@example.com</span></div>
+  <div class="otprow">
+    <div class="otpbox">4</div><div class="otpbox">8</div><div class="otpbox">2</div>
+    <div class="otpbox">0</div><div class="otpbox">1</div><div class="otpbox">7</div>
+  </div>
+  <div class="resendrow">Resend code in 0:24</div>
+  <button class="btn pri full">Verify</button>
+  <div class="authfoot">Wrong email? <a href="#">Start over</a></div>
+</div>
+</x-dc>
+</body>
+</html>

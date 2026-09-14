@@ -4,7 +4,7 @@ title: Slashit Technical Stack
 status: current
 owner: user
 created: 2026-09-09
-updated: 2026-09-13
+updated: 2026-09-14
 ---
 
 # Slashit — Technical Stack
@@ -332,11 +332,11 @@ month costs about one cent. This is why the free tier was not worth its terms.
 |---|---|---|
 | T-Q1 | Render or Railway for the backend? | epic 000 build plan |
 | ~~T-Q2~~ | How the authenticated user's identity reaches the database connection so RLS applies | **Answered 2026-09-12**, section 3. `SET LOCAL` claims plus `SET LOCAL ROLE authenticated`. Claims alone are not sufficient |
-| T-Q3 | What backplane carries GraphQL subscriptions when there is more than one API instance? One instance hides this until it does not | epic 002 |
+| T-Q3 | What backplane carries GraphQL subscriptions when there is more than one API instance? One instance hides this until it does not | epic 003 |
 | T-Q4 | What are the query depth and complexity limits, as numbers? | public launch |
 | ~~T-Q5~~ | Vercel or Cloudflare Pages for the frontend? | **Answered 2026-09-13.** Vercel |
 | T-Q6 | Supabase free-tier projects pause after inactivity. What is the current threshold, and on what date does the project move to Pro? | launch |
-| T-Q7 | Does the GraphQL schema stay one graph as epics land, or split by domain? | epic 004 |
+| T-Q7 | Does the GraphQL schema stay one graph as epics land, or split by domain? | epic 005 |
 | T-Q8 | The model tier moved from free to paid, so a runaway user now costs money rather than exhausting a shared quota. Do epic 000's per-user caps keep request ceilings, or gain a spend ceiling? | epic 000 build plan |
 
 ---
@@ -396,6 +396,7 @@ Seven files sit there: decisions 0001 to 0006 and their README. Decisions 0004,
 
 | Date | Change | Why | Approved by |
 |---|---|---|---|
+| 2026-09-14 | T-Q3 and T-Q7's `Blocks` column renumbered from epic 002/004 to epic 003/005 | Epic 002, Authentication, inserted ahead of the old 002 to 010, which shifted to 003 to 011 (`product/v1-features.md`, 2026-09-14) | user |
 | 2026-09-13 | T-Q5 answered: frontend hosting is Vercel | Epic 001's build plan needed it | user |
 | 2026-09-09 | Created, absorbing decision records 0004, 0005 and 0006 | User removed the decisions folder and asked for one technical document | user |
 | 2026-09-09 | Server state moved from TanStack Query to Apollo Client. The pillar P2 objection to a normalised cache is preserved by making MobX stores the source of truth and Apollo a transport | User direction while drafting the repository rulesets | user |
