@@ -69,7 +69,15 @@ def create_app(settings: Settings | None = None) -> FastAPI:
         # frontend, not a local default.
         app.add_middleware(
             CORSMiddleware,
-            allow_origins=["http://localhost:5173", "http://127.0.0.1:5173"],
+            allow_origins=[
+                "http://localhost:5173",
+                "http://127.0.0.1:5173",
+                # vite preview's default port, used for PWA verification —
+                # a production service worker only registers against a real
+                # build, not the dev server.
+                "http://localhost:4173",
+                "http://127.0.0.1:4173",
+            ],
             allow_credentials=True,
             allow_methods=["*"],
             allow_headers=["*"],
