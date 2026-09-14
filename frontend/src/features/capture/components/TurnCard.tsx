@@ -1,6 +1,7 @@
 import { AlertCircle, Check, Clock } from "lucide-react";
 import type { ReactElement } from "react";
 
+import InlineSpinner from "../../../components/InlineSpinner";
 import Button from "../../../design-system/components/Button";
 import type { CaptureTurn } from "../../../stores/CaptureStore";
 import { formatShortDate as formatDueDate } from "../../../utils/formatDate";
@@ -8,6 +9,7 @@ import * as Styles from "./styles";
 
 interface TurnCardProps {
   turn: CaptureTurn;
+  isAnswering?: boolean;
   onAnswerDraftChange: (id: string, draft: string) => void;
   onAnswerSubmit: (id: string) => void;
   onDiscardPending: (id: string) => void;
@@ -20,7 +22,7 @@ const assertNever = (value: never): never => {
 };
 
 const TurnCard = (props: TurnCardProps): ReactElement => {
-  const { turn, onAnswerDraftChange, onAnswerSubmit, onDiscardPending, onUseWithAddTask, onRetry } = props;
+  const { turn, isAnswering, onAnswerDraftChange, onAnswerSubmit, onDiscardPending, onUseWithAddTask, onRetry } = props;
 
   return (
     <div className={Styles.turnStyles}>
@@ -29,6 +31,7 @@ const TurnCard = (props: TurnCardProps): ReactElement => {
       </div>
       <TurnBody
         turn={turn}
+        isAnswering={isAnswering}
         onAnswerDraftChange={onAnswerDraftChange}
         onAnswerSubmit={onAnswerSubmit}
         onDiscardPending={onDiscardPending}
@@ -40,7 +43,7 @@ const TurnCard = (props: TurnCardProps): ReactElement => {
 };
 
 const TurnBody = (props: TurnCardProps): ReactElement => {
-  const { turn, onAnswerDraftChange, onAnswerSubmit, onDiscardPending, onUseWithAddTask, onRetry } = props;
+  const { turn, isAnswering = false, onAnswerDraftChange, onAnswerSubmit, onDiscardPending, onUseWithAddTask, onRetry } = props;
 
   switch (turn.status) {
     case "loading":
@@ -141,6 +144,7 @@ const TurnBody = (props: TurnCardProps): ReactElement => {
                   type="text"
                   placeholder="Type an answer…"
                   value={turn.answerDraft}
+                  disabled={isAnswering}
                   onChange={(event) => onAnswerDraftChange(turn.id, event.target.value)}
                   onKeyDown={(event) => {
                     if (event.key !== "Enter") return;
@@ -148,8 +152,11 @@ const TurnBody = (props: TurnCardProps): ReactElement => {
                     onAnswerSubmit(turn.id);
                   }}
                 />
+                {isAnswering && <InlineSpinner className="mr-2.5 shrink-0" />}
               </div>
-              <Button onClick={() => onDiscardPending(turn.id)}>Discard</Button>
+              <Button onClick={() => onDiscardPending(turn.id)} disabled={isAnswering}>
+                Discard
+              </Button>
             </div>
           </div>
         </div>

@@ -7,6 +7,7 @@ import useDeleteTask from "../../../../api/mutations/DeleteTask/useDeleteTask";
 import useUpdateTask from "../../../../api/mutations/UpdateTask/useUpdateTask";
 import useGetRecordDetail from "../../../../api/queries/GetRecordDetail/useGetRecordDetail";
 import { useResponseHandler } from "../../../../api/queries/GetRecordDetail/responseHandler";
+import { API_FETCHING } from "../../../../constants/apiConstants";
 import Button from "../../../../design-system/components/Button";
 import { useStore } from "../../../../stores/StoreProvider";
 import DeleteConfirmModal from "../../components/DeleteConfirmModal";
@@ -28,7 +29,7 @@ const RecordDetailController = (): ReactElement => {
 
   const { triggerAPI: triggerGetRecordDetail, data } = useGetRecordDetail();
   const { handleResponse } = useResponseHandler();
-  const { triggerAPI: triggerUpdateTask } = useUpdateTask();
+  const { triggerAPI: triggerUpdateTask, apiStatus: updateTaskApiStatus } = useUpdateTask();
   const { triggerAPI: triggerDeleteTask } = useDeleteTask();
 
   useEffect(() => {
@@ -157,6 +158,7 @@ const RecordDetailController = (): ReactElement => {
               title={draftTitle}
               dueAt={task.dueAt}
               status={draftStatus}
+              isSaving={updateTaskApiStatus === API_FETCHING}
               onTitleChange={handleTitleChange}
               onStatusChange={setDraftStatus}
               onSave={handleSave}

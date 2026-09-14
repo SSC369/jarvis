@@ -22,6 +22,8 @@ export const cardFootStyles =
 export const pillBaseStyles = "inline-flex h-[23px] items-center gap-1.5 rounded-full border px-2.5 text-[11.5px] font-medium";
 export const pillWaitStyles = "border-accent-wash bg-accent-wash text-accent";
 export const pillDoneStyles = "border-success-wash bg-success-wash text-success";
+export const pillMutedStyles = "border-border-strong bg-background text-foreground-tertiary";
+export const pillErrStyles = "border-destructive-wash bg-destructive-wash text-destructive";
 
 export const fieldsGridStyles = "grid grid-cols-3 gap-px bg-border";
 export const fieldCellStyles = "flex flex-col gap-1 bg-card px-4 py-3.5";
@@ -69,3 +71,25 @@ export const slashBadgeStyles =
 export const rawInputStyles = "min-w-0 flex-1 border-0 bg-transparent p-0 font-mono text-[15px] text-foreground outline-none";
 export const kbdStyles = "rounded border border-border-strong bg-card px-1.5 py-0.5 font-mono text-[11px] text-foreground-secondary";
 export const hintRowStyles = "mt-3 flex items-center justify-center gap-4 text-xs text-foreground-tertiary";
+
+// History panel
+export const historyOverlayStyles = "fixed inset-0 z-20 bg-black/30";
+export const historyPanelStyles =
+  "fixed inset-y-0 right-0 z-20 flex w-[420px] max-w-[calc(100vw-2.5rem)] flex-col border-l border-border bg-card shadow-2xl";
+export const historyHeadStyles =
+  "flex h-[60px] shrink-0 items-center justify-between border-b border-border px-5";
+export const historyTitleStyles = "text-[15px] font-semibold text-foreground";
+export const historyCloseStyles =
+  "flex h-8 w-8 items-center justify-center rounded-md text-foreground-secondary hover:bg-background hover:text-foreground";
+export const historyBodyStyles = "flex-1 overflow-y-auto px-5 py-4";
+export const historyRowStyles = "border-b border-border py-3.5 last:border-b-0";
+export const historyRowHeadStyles = "flex items-center justify-between gap-2.5";
+export const historyInputTextStyles = "font-mono text-[13px] text-foreground";
+export const historyTimeStyles = "shrink-0 text-[11.5px] text-foreground-tertiary";
+export const historyDetailStyles = "mt-1.5 text-[12.5px] text-foreground-secondary";
+export const historySkeletonRowStyles = "border-b border-border py-3.5 last:border-b-0";
+export const historyEmptyStyles =
+  "flex flex-1 flex-col items-center justify-center px-6 text-center text-sm text-foreground-tertiary";
+export const historyErrorStyles =
+  "flex flex-1 flex-col items-center justify-center gap-2.5 px-6 text-center text-sm text-foreground-secondary";
+export const historyLoadMoreStyles = "mt-1 flex justify-center pb-1";

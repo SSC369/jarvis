@@ -1,0 +1,10 @@
+fragment CaptureTurnFields on CaptureTurn {
+  id
+  inputText
+  outcome
+  resultingTaskId
+  resultingPendingCaptureId
+  questionText
+  answerText
+  createdAt
+}

@@ -1,0 +1,10 @@
+#import "../../../fragments/CaptureTurnFields.graphql"
+
+query GetCaptureHistory($cursor: String) {
+  captureHistory(cursor: $cursor) {
+    nextCursor
+    items {
+      ...CaptureTurnFields
+    }
+  }
+}

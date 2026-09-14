@@ -1,4 +1,27 @@
+type CaptureHistoryPage {
+  items: [CaptureTurn!]!
+  nextCursor: String
+}
+
 union CaptureResult = TaskCreated | TasksListed | PendingQuestionCreated | NonCommandGuidance | UnrecognisedCommand | UserLimitReached | ProviderUnavailable | ProviderTimeout | SharedQuotaExhausted | MalformedResult
+
+type CaptureTurn {
+  id: ID!
+  inputText: String!
+  outcome: CaptureTurnOutcome!
+  resultingTaskId: ID
+  resultingPendingCaptureId: ID
+  questionText: String
+  answerText: String
+  createdAt: DateTime!
+}
+
+enum CaptureTurnOutcome {
+  TASK_CREATED
+  QUESTION_ASKED
+  DISCARDED
+  REFUSED
+}
 
 """Date with time (isoformat)"""
 scalar DateTime
@@ -45,6 +68,7 @@ type ProviderUnavailable {
 }
 
 type Query {
+  captureHistory(cursor: String = null, limit: Int = null): CaptureHistoryPage!
   records(filter: RecordsFilterInput = null): [Task!]!
   record(id: ID!): RecordResult!
   tasks: [Task!]!

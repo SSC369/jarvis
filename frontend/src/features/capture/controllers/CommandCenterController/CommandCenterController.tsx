@@ -1,3 +1,4 @@
+import { History } from "lucide-react";
 import { observer } from "mobx-react-lite";
 import { useEffect, useRef, useState, type ChangeEvent, type KeyboardEvent, type ReactElement } from "react";
 
@@ -5,6 +6,7 @@ import type { SubmitCaptureCallbacks } from "../../../../api/mutations/SubmitCap
 import useAnswerPendingCapture from "../../../../api/mutations/AnswerPendingCapture/useAnswerPendingCapture";
 import useDiscardPendingCapture from "../../../../api/mutations/DiscardPendingCapture/useDiscardPendingCapture";
 import useSubmitCapture from "../../../../api/mutations/SubmitCapture/useSubmitCapture";
+import { API_FETCHING } from "../../../../constants/apiConstants";
 import { CAPTURE_COMMANDS } from "../../../../constants/captureCommands";
 import type { CaptureStoreModel } from "../../../../stores/CaptureStore";
 import { useStore } from "../../../../stores/StoreProvider";
@@ -12,6 +14,7 @@ import { useOnlineStatus } from "../../../../hooks/useOnlineStatus";
 import CommandInputBar from "../../components/CommandInputBar";
 import CommandPalette from "../../components/CommandPalette";
 import EmptyState from "../../components/EmptyState";
+import HistoryPanel from "../../components/HistoryPanel";
 import TurnCard from "../../components/TurnCard";
 import * as StreamStyles from "../../components/styles";
 import * as Styles from "./styles";
@@ -46,10 +49,15 @@ const CommandCenterController = (): ReactElement => {
   const store = useStore();
   const [input, setInput] = useState("");
   const [selectedIndex, setSelectedIndex] = useState(0);
+  const [isHistoryOpen, setIsHistoryOpen] = useState(false);
+  const [submittingTurnId, setSubmittingTurnId] = useState<string | null>(null);
   const isOnline = useOnlineStatus();
 
   const { triggerAPI: triggerSubmitCapture } = useSubmitCapture();
-  const { triggerAPI: triggerAnswerPendingCapture } = useAnswerPendingCapture();
+  const {
+    triggerAPI: triggerAnswerPendingCapture,
+    apiStatus: answerApiStatus,
+  } = useAnswerPendingCapture();
   const { triggerAPI: triggerDiscardPendingCapture } = useDiscardPendingCapture();
 
   const paletteOpen = isPaletteOpen(input);
@@ -131,6 +139,7 @@ const CommandCenterController = (): ReactElement => {
     const answer = turn.answerDraft.trim();
     if (!answer || !isOnline) return;
 
+    setSubmittingTurnId(turnId);
     triggerAnswerPendingCapture({
       pendingCaptureId: turn.pendingCaptureId,
       answer,
@@ -171,7 +180,12 @@ const CommandCenterController = (): ReactElement => {
     <div className={Styles.pageStyles}>
       <div className={Styles.topbarStyles}>
         <div className={Styles.topbarTitleStyles}>Capture</div>
+        <div className={Styles.historyButtonStyles} onClick={() => setIsHistoryOpen(true)}>
+          <History size={17} />
+        </div>
       </div>
+
+      <HistoryPanel isOpen={isHistoryOpen} onClose={() => setIsHistoryOpen(false)} />
 
       {showEmpty ? (
         <EmptyState onFillCommand={handleFillCommand} />
@@ -182,6 +196,7 @@ const CommandCenterController = (): ReactElement => {
               <TurnCard
                 key={turn.id}
                 turn={turn}
+                isAnswering={submittingTurnId === turn.id && answerApiStatus === API_FETCHING}
                 onAnswerDraftChange={handleAnswerDraftChange}
                 onAnswerSubmit={handleAnswerSubmit}
                 onDiscardPending={handleDiscardPending}

@@ -1,6 +1,7 @@
 import { InfoIcon } from "lucide-react";
 import type { ChangeEvent, ReactElement } from "react";
 
+import InlineSpinner from "../../../components/InlineSpinner";
 import Button from "../../../design-system/components/Button";
 import { cn } from "../../../utils/cn";
 import { formatLongDate } from "../../../utils/formatDate";
@@ -12,6 +13,7 @@ interface RecordEditFormProps {
   title: string;
   dueAt: string | null;
   status: EditableStatus;
+  isSaving?: boolean;
   onTitleChange: (event: ChangeEvent<HTMLInputElement>) => void;
   onStatusChange: (status: EditableStatus) => void;
   onSave: () => void;
@@ -19,7 +21,16 @@ interface RecordEditFormProps {
 }
 
 const RecordEditForm = (props: RecordEditFormProps): ReactElement => {
-  const { title, dueAt, status, onTitleChange, onStatusChange, onSave, onCancel } = props;
+  const {
+    title,
+    dueAt,
+    status,
+    isSaving = false,
+    onTitleChange,
+    onStatusChange,
+    onSave,
+    onCancel,
+  } = props;
 
   return (
     <div>
@@ -31,6 +42,7 @@ const RecordEditForm = (props: RecordEditFormProps): ReactElement => {
             type="text"
             value={title}
             onChange={onTitleChange}
+            disabled={isSaving}
             autoFocus
           />
         </div>
@@ -43,19 +55,19 @@ const RecordEditForm = (props: RecordEditFormProps): ReactElement => {
       </div>
       <div className={Styles.formRowStyles}>
         <span className={Styles.formLabelStyles}>Status</span>
-        <div className={Styles.segStyles}>
+        <div className={cn(Styles.segStyles, isSaving && "pointer-events-none opacity-60")}>
           <div
             className={cn(
               Styles.segOptionStyles,
               status === "PENDING" && Styles.segOptionOnStyles,
             )}
-            onClick={() => onStatusChange("PENDING")}
+            onClick={() => !isSaving && onStatusChange("PENDING")}
           >
             Pending
           </div>
           <div
             className={cn(Styles.segOptionStyles, status === "DONE" && Styles.segOptionOnStyles)}
-            onClick={() => onStatusChange("DONE")}
+            onClick={() => !isSaving && onStatusChange("DONE")}
           >
             Done
           </div>
@@ -69,10 +81,12 @@ const RecordEditForm = (props: RecordEditFormProps): ReactElement => {
         </div>
       </div>
       <div className={Styles.formActionsRowStyles}>
-        <Button variant="primary" onClick={onSave}>
-          Save changes
+        <Button variant="primary" onClick={onSave} disabled={isSaving}>
+          {isSaving ? <InlineSpinner /> : "Save changes"}
         </Button>
-        <Button onClick={onCancel}>Cancel</Button>
+        <Button onClick={onCancel} disabled={isSaving}>
+          Cancel
+        </Button>
       </div>
     </div>
   );

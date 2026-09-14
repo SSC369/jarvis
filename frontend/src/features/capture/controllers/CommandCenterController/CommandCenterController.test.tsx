@@ -25,6 +25,10 @@ vi.mock("@/api/mutations/DiscardPendingCapture/useDiscardPendingCapture", () => 
   default: () => ({ triggerAPI: vi.fn(), apiStatus: 0, apiError: null }),
 }));
 
+vi.mock("@/api/queries/GetCaptureHistory/useGetCaptureHistory", () => ({
+  default: () => ({ triggerAPI: vi.fn(), data: undefined, apiStatus: 0, apiError: null }),
+}));
+
 const renderWithProviders = () =>
   render(
     <StoreProvider>

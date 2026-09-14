@@ -11,7 +11,31 @@ export type Scalars = {
   DateTime: { input: string; output: string; }
 };
 
+export type CaptureHistoryPage = {
+  __typename?: 'CaptureHistoryPage';
+  items: Array<CaptureTurn>;
+  nextCursor?: Maybe<Scalars['String']['output']>;
+};
+
 export type CaptureResult = MalformedResult | NonCommandGuidance | PendingQuestionCreated | ProviderTimeout | ProviderUnavailable | SharedQuotaExhausted | TaskCreated | TasksListed | UnrecognisedCommand | UserLimitReached;
+
+export type CaptureTurn = {
+  __typename?: 'CaptureTurn';
+  answerText?: Maybe<Scalars['String']['output']>;
+  createdAt: Scalars['DateTime']['output'];
+  id: Scalars['ID']['output'];
+  inputText: Scalars['String']['output'];
+  outcome: CaptureTurnOutcome;
+  questionText?: Maybe<Scalars['String']['output']>;
+  resultingPendingCaptureId?: Maybe<Scalars['ID']['output']>;
+  resultingTaskId?: Maybe<Scalars['ID']['output']>;
+};
+
+export type CaptureTurnOutcome =
+  | 'DISCARDED'
+  | 'QUESTION_ASKED'
+  | 'REFUSED'
+  | 'TASK_CREATED';
 
 export type InvalidTimezone = {
   __typename?: 'InvalidTimezone';
@@ -102,11 +126,18 @@ export type ProviderUnavailable = {
 export type Query = {
   __typename?: 'Query';
   apiVersion: Scalars['String']['output'];
+  captureHistory: CaptureHistoryPage;
   me: Scalars['String']['output'];
   record: RecordResult;
   records: Array<Task>;
   settings: Settings;
   tasks: Array<Task>;
+};
+
+
+export type QueryCaptureHistoryArgs = {
+  cursor?: InputMaybe<Scalars['String']['input']>;
+  limit?: InputMaybe<Scalars['Int']['input']>;
 };
 
 

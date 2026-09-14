@@ -10,3 +10,5 @@ export const installPromptStyles =
 export const installPromptTitleStyles = "text-[13.5px] font-semibold text-foreground";
 export const installPromptBodyStyles = "mt-0.5 text-[12.5px] text-foreground-secondary";
 export const installPromptActionsStyles = "mt-3 flex gap-2";
+
+export const inlineSpinnerStyles = "inline-block animate-spin rounded-full border-2 border-current border-t-transparent text-accent";
