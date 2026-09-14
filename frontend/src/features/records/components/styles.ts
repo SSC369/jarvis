@@ -12,6 +12,9 @@ export const searchBoxStyles =
   "flex h-9 w-[280px] items-center gap-2.5 rounded-md border border-border-strong bg-card px-3 text-[13.5px] text-foreground-tertiary";
 export const searchInputStyles = "w-full border-0 bg-transparent text-foreground outline-none placeholder:text-foreground-tertiary";
 
+// Loading skeleton (table and detail page share the same pulse block)
+export const skeletonBlockStyles = "h-[11px] animate-pulse rounded bg-border";
+
 // Table
 export const cardStyles = "overflow-hidden rounded-lg border border-border bg-card";
 export const tableStyles = "w-full border-collapse bg-card";

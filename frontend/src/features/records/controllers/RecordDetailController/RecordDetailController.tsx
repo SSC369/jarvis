@@ -12,7 +12,7 @@ import { useStore } from "../../../../stores/StoreProvider";
 import DeleteConfirmModal from "../../components/DeleteConfirmModal";
 import RecordEditForm, { type EditableStatus } from "../../components/RecordEditForm";
 import * as RecordsStyles from "../../components/styles";
-import { formatLongDate, formatLongDateTime } from "../../utils/formatDate";
+import { formatLongDate, formatLongDateTime } from "../../../../utils/formatDate";
 import * as Styles from "./styles";
 
 const RecordDetailController = (): ReactElement => {
@@ -117,6 +117,19 @@ const RecordDetailController = (): ReactElement => {
       <div className={Styles.pageStyles}>
         <div className={Styles.topbarStyles}>
           <div className={Styles.topbarTitleStyles}>Records</div>
+        </div>
+        <div className={Styles.paneStyles}>
+          <div className={Styles.contentStyles}>
+            <div className={RecordsStyles.skeletonBlockStyles} style={{ width: "40%", height: 20 }} />
+            <div className={RecordsStyles.detailFieldsStyles}>
+              {Array.from({ length: 5 }, (_, index) => (
+                <div key={index} className={RecordsStyles.detailRowStyles}>
+                  <div className={RecordsStyles.detailLabelStyles}>&nbsp;</div>
+                  <div className={RecordsStyles.skeletonBlockStyles} style={{ width: "50%" }} />
+                </div>
+              ))}
+            </div>
+          </div>
         </div>
       </div>
     );

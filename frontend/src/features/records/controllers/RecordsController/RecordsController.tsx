@@ -107,7 +107,11 @@ const RecordsController = (): ReactElement => {
               </div>
             </div>
           </div>
-          <RecordTable records={records} onOpenRecord={handleOpenRecord} />
+          <RecordTable
+            records={records}
+            onOpenRecord={handleOpenRecord}
+            isLoading={!hasLoadedOnce}
+          />
         </div>
       )}
     </div>

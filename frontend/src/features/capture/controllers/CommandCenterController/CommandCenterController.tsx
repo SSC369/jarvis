@@ -8,6 +8,7 @@ import useSubmitCapture from "../../../../api/mutations/SubmitCapture/useSubmitC
 import { CAPTURE_COMMANDS } from "../../../../constants/captureCommands";
 import type { CaptureStoreModel } from "../../../../stores/CaptureStore";
 import { useStore } from "../../../../stores/StoreProvider";
+import { useOnlineStatus } from "../../../../hooks/useOnlineStatus";
 import CommandInputBar from "../../components/CommandInputBar";
 import CommandPalette from "../../components/CommandPalette";
 import EmptyState from "../../components/EmptyState";
@@ -45,6 +46,7 @@ const CommandCenterController = (): ReactElement => {
   const store = useStore();
   const [input, setInput] = useState("");
   const [selectedIndex, setSelectedIndex] = useState(0);
+  const isOnline = useOnlineStatus();
 
   const { triggerAPI: triggerSubmitCapture } = useSubmitCapture();
   const { triggerAPI: triggerAnswerPendingCapture } = useAnswerPendingCapture();
@@ -56,7 +58,7 @@ const CommandCenterController = (): ReactElement => {
 
   const submit = (rawInput: string): void => {
     const text = rawInput.trim();
-    if (!text) return;
+    if (!text || !isOnline) return;
 
     const turnId = store.capture.addLoadingTurn(text);
     triggerSubmitCapture({
@@ -127,7 +129,7 @@ const CommandCenterController = (): ReactElement => {
     const turn = store.capture.turns.get(turnId);
     if (!turn || turn.status !== "pending") return;
     const answer = turn.answerDraft.trim();
-    if (!answer) return;
+    if (!answer || !isOnline) return;
 
     triggerAnswerPendingCapture({
       pendingCaptureId: turn.pendingCaptureId,
@@ -205,7 +207,12 @@ const CommandCenterController = (): ReactElement => {
               onPick={pickCommand}
             />
           )}
-          <CommandInputBar value={input} onChange={handleInputChange} onKeyDown={handleKeyDown} />
+          <CommandInputBar
+            value={input}
+            onChange={handleInputChange}
+            onKeyDown={handleKeyDown}
+            disabled={!isOnline}
+          />
         </div>
         <div className={StreamStyles.hintRowStyles}>
           <span>

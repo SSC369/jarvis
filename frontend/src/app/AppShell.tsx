@@ -2,6 +2,9 @@ import { Command, List, Settings } from "lucide-react";
 import type { ReactElement } from "react";
 import { NavLink, Outlet } from "react-router";
 
+import InstallPrompt from "../components/InstallPrompt";
+import OfflineBanner from "../components/OfflineBanner";
+import UpdateBanner from "../components/UpdateBanner";
 import { cn } from "../utils/cn";
 import * as Styles from "./styles";
 
@@ -55,8 +58,11 @@ const AppShell = (): ReactElement => {
         </div>
       </div>
       <div className={Styles.mainStyles}>
+        <OfflineBanner />
+        <UpdateBanner />
         <Outlet />
       </div>
+      <InstallPrompt />
     </div>
   );
 };

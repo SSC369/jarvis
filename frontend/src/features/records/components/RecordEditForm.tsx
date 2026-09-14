@@ -3,7 +3,7 @@ import type { ChangeEvent, ReactElement } from "react";
 
 import Button from "../../../design-system/components/Button";
 import { cn } from "../../../utils/cn";
-import { formatLongDate } from "../utils/formatDate";
+import { formatLongDate } from "../../../utils/formatDate";
 import * as Styles from "./styles";
 
 export type EditableStatus = "PENDING" | "DONE";

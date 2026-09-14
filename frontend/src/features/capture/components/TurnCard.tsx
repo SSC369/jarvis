@@ -3,7 +3,7 @@ import type { ReactElement } from "react";
 
 import Button from "../../../design-system/components/Button";
 import type { CaptureTurn } from "../../../stores/CaptureStore";
-import { formatDueDate } from "../utils/formatDueDate";
+import { formatShortDate as formatDueDate } from "../../../utils/formatDate";
 import * as Styles from "./styles";
 
 interface TurnCardProps {

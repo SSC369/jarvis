@@ -2,16 +2,60 @@ import type { ReactElement } from "react";
 
 import type { TaskFieldsFragment } from "../../../fragments/TaskFields.generated";
 import { cn } from "../../../utils/cn";
-import { formatShortDate } from "../utils/formatDate";
+import { formatShortDate } from "../../../utils/formatDate";
 import * as Styles from "./styles";
 
 interface RecordTableProps {
   records: TaskFieldsFragment[];
   onOpenRecord: (id: string) => void;
+  isLoading?: boolean;
 }
 
+const SKELETON_ROW_COUNT = 4;
+
 const RecordTable = (props: RecordTableProps): ReactElement => {
-  const { records, onOpenRecord } = props;
+  const { records, onOpenRecord, isLoading = false } = props;
+
+  if (isLoading) {
+    return (
+      <div className={Styles.cardStyles}>
+        <table className={Styles.tableStyles}>
+          <thead>
+            <tr className={Styles.theadRowStyles}>
+              <th className={Styles.thStyles} style={{ width: 112 }}>
+                Type
+              </th>
+              <th className={Styles.thStyles}>Title</th>
+              <th className={Styles.thStyles} style={{ width: 180 }}>
+                Date
+              </th>
+              <th className={Styles.thStyles} style={{ width: 150 }}>
+                Status
+              </th>
+            </tr>
+          </thead>
+          <tbody>
+            {Array.from({ length: SKELETON_ROW_COUNT }, (_, index) => (
+              <tr key={index} className={Styles.rowStyles}>
+                <td className={Styles.tdStyles}>
+                  <div className={Styles.skeletonBlockStyles} style={{ width: "60%" }} />
+                </td>
+                <td className={Styles.tdStyles}>
+                  <div className={Styles.skeletonBlockStyles} style={{ width: "45%" }} />
+                </td>
+                <td className={Styles.tdStyles}>
+                  <div className={Styles.skeletonBlockStyles} style={{ width: "70%" }} />
+                </td>
+                <td className={Styles.tdStyles}>
+                  <div className={Styles.skeletonBlockStyles} style={{ width: "55%" }} />
+                </td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
+      </div>
+    );
+  }
 
   return (
     <div className={Styles.cardStyles}>
