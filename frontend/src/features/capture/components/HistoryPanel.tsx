@@ -84,6 +84,31 @@ export const HistoryPanel = (props: HistoryPanelProps): ReactElement | null => {
   const hasFailed = apiStatus === API_FAILED;
   const isEmpty = apiStatus === API_SUCCESS && items.length === 0;
 
+  // One row per thread, not per write (design §4, "One row per thread, not
+  // per write"): a question_asked row's own resultingPendingCaptureId is the
+  // pending capture IT created, not its own turn id. The row that later
+  // resolves that same pending capture carries the same
+  // resultingPendingCaptureId value, not the question's turn id — so the
+  // correlation is "do two loaded rows share a resultingPendingCaptureId",
+  // not "does another row's resultingPendingCaptureId equal this row's id".
+  // Only correlates within what is loaded so far; a thread split across a
+  // "Load more" page keeps its still-open-looking row on the older page, an
+  // accepted edge case.
+  const resolvedPendingCaptureIds = new Set(
+    items
+      .filter((turn) => turn.outcome !== "QUESTION_ASKED")
+      .map((turn) => turn.resultingPendingCaptureId)
+      .filter((id): id is string => id !== null),
+  );
+  const visibleItems = items.filter(
+    (turn) =>
+      !(
+        turn.outcome === "QUESTION_ASKED" &&
+        turn.resultingPendingCaptureId !== null &&
+        resolvedPendingCaptureIds.has(turn.resultingPendingCaptureId)
+      ),
+  );
+
   return (
     <>
       <div className={Styles.historyOverlayStyles} onClick={onClose} />
@@ -119,7 +144,7 @@ export const HistoryPanel = (props: HistoryPanelProps): ReactElement | null => {
             </div>
           )}
 
-          {items.map((turn) => (
+          {visibleItems.map((turn) => (
             <HistoryRow key={turn.id} turn={turn} />
           ))}
 

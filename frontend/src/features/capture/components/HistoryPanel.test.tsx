@@ -102,4 +102,74 @@ describe("HistoryPanel", () => {
     expect(screen.getByText("/add-task buy milk")).toBeInTheDocument();
     expect(screen.getByText("Task created")).toBeInTheDocument();
   });
+
+  it("one row per thread: a resolved question's earlier row is not shown separately", () => {
+    mockUseGetCaptureHistory.mockReturnValue({
+      triggerAPI: mockTriggerAPI,
+      data: {
+        captureHistory: {
+          items: [
+            {
+              id: "turn-2",
+              inputText: "/add-task",
+              outcome: "TASK_CREATED",
+              resultingTaskId: "task-1",
+              resultingPendingCaptureId: "pending-1",
+              questionText: "What should the task be called?",
+              answerText: "Buy milk",
+              createdAt: new Date().toISOString(),
+            },
+            {
+              id: "turn-1",
+              inputText: "/add-task",
+              outcome: "QUESTION_ASKED",
+              resultingTaskId: null,
+              resultingPendingCaptureId: "pending-1",
+              questionText: "What should the task be called?",
+              answerText: null,
+              createdAt: new Date().toISOString(),
+            },
+          ],
+          nextCursor: null,
+        },
+      },
+      apiStatus: API_SUCCESS,
+      apiError: null,
+    });
+
+    render(<HistoryPanel isOpen onClose={vi.fn()} />);
+
+    expect(screen.getByText("Task created")).toBeInTheDocument();
+    expect(screen.queryByText("Question asked")).not.toBeInTheDocument();
+    expect(screen.getAllByText(/What should the task be called\?/)).toHaveLength(1);
+  });
+
+  it("a still-open question keeps its own row", () => {
+    mockUseGetCaptureHistory.mockReturnValue({
+      triggerAPI: mockTriggerAPI,
+      data: {
+        captureHistory: {
+          items: [
+            {
+              id: "turn-3",
+              inputText: "/add-task",
+              outcome: "QUESTION_ASKED",
+              resultingTaskId: null,
+              resultingPendingCaptureId: "pending-2",
+              questionText: "What should the task be called?",
+              answerText: null,
+              createdAt: new Date().toISOString(),
+            },
+          ],
+          nextCursor: null,
+        },
+      },
+      apiStatus: API_SUCCESS,
+      apiError: null,
+    });
+
+    render(<HistoryPanel isOpen onClose={vi.fn()} />);
+
+    expect(screen.getByText("Question asked")).toBeInTheDocument();
+  });
 });
