@@ -23,7 +23,13 @@ from app.domains.capture.interactors.answer_pending_capture import (
 from app.domains.capture.interactors.discard_pending_capture import (
     DiscardPendingCaptureInteractor,
 )
+from app.domains.capture.interactors.list_capture_history import (
+    ListCaptureHistoryInteractor,
+)
 from app.domains.capture.interactors.submit_capture import SubmitCaptureInteractor
+from app.domains.capture.repositories.capture_turn_repository import (
+    SqlCaptureTurnRepository,
+)
 from app.domains.capture.repositories.pending_capture_repository import (
     SqlPendingCaptureRepository,
 )
@@ -115,6 +121,7 @@ def build_submit_capture_interactor(context: Context) -> SubmitCaptureInteractor
     """
     return SubmitCaptureInteractor(
         pending_capture_repository=SqlPendingCaptureRepository(context.session),
+        capture_turn_repository=SqlCaptureTurnRepository(context.session),
         task_port=_build_task_port(context=context),
         extraction=_build_extraction_port(context=context),
     )
@@ -125,6 +132,7 @@ def build_answer_pending_capture_interactor(
 ) -> AnswerPendingCaptureInteractor:
     return AnswerPendingCaptureInteractor(
         pending_capture_repository=SqlPendingCaptureRepository(context.session),
+        capture_turn_repository=SqlCaptureTurnRepository(context.session),
         task_port=_build_task_port(context=context),
         extraction=_build_extraction_port(context=context),
     )
@@ -134,7 +142,16 @@ def build_discard_pending_capture_interactor(
     context: Context,
 ) -> DiscardPendingCaptureInteractor:
     return DiscardPendingCaptureInteractor(
-        pending_capture_repository=SqlPendingCaptureRepository(context.session)
+        pending_capture_repository=SqlPendingCaptureRepository(context.session),
+        capture_turn_repository=SqlCaptureTurnRepository(context.session),
+    )
+
+
+def build_list_capture_history_interactor(
+    context: Context,
+) -> ListCaptureHistoryInteractor:
+    return ListCaptureHistoryInteractor(
+        capture_turn_repository=SqlCaptureTurnRepository(context.session)
     )
 
 

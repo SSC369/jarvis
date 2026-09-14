@@ -47,3 +47,6 @@ DUE_AT_ONLY_SCHEMA: Final[dict[str, Any]] = {
 DUE_AT_ONLY_INSTRUCTION: Final = (
     'The input answers "when is this due". Resolve it to an absolute ISO 8601 datetime.'
 )
+
+# FR-45. One page of capture_turns at a time, newest first.
+CAPTURE_HISTORY_PAGE_SIZE: Final = 20

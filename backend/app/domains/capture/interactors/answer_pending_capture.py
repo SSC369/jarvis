@@ -4,11 +4,18 @@ from datetime import datetime
 from typing import Any, cast
 from uuid import UUID
 
+import structlog
+
 from app.domains.capture.constants import DUE_AT_ONLY_INSTRUCTION, DUE_AT_ONLY_SCHEMA
 from app.domains.capture.interfaces.ports import ExtractionPort, TaskPort
-from app.domains.capture.interfaces.repositories import PendingCaptureRepository
+from app.domains.capture.interfaces.repositories import (
+    CaptureTurnRepository,
+    PendingCaptureRepository,
+)
 from app.domains.gateway.public import Extraction
 from app.domains.records.public import TaskDTO
+
+logger = structlog.get_logger(__name__)
 
 
 class PendingCaptureNotFoundError(Exception):
@@ -28,10 +35,12 @@ class AnswerPendingCaptureInteractor:
         self,
         *,
         pending_capture_repository: PendingCaptureRepository,
+        capture_turn_repository: CaptureTurnRepository,
         task_port: TaskPort,
         extraction: ExtractionPort,
     ) -> None:
         self.pending_capture_repository = pending_capture_repository
+        self.capture_turn_repository = capture_turn_repository
         self.task_port = task_port
         self.extraction = extraction
 
@@ -75,10 +84,44 @@ class AnswerPendingCaptureInteractor:
             # capture was made, not the moment it was answered.
             original_input=pending_capture.original_input,
         )
+        await self._record_turn(
+            user_id=user_id,
+            input_text=pending_capture.original_input,
+            resulting_task_id=task.id,
+            pending_capture_id=pending_capture_id,
+            question_text=pending_capture.question_text,
+            answer_text=answer_text,
+        )
         await self.pending_capture_repository.delete_pending_capture(
             user_id=user_id, pending_capture_id=pending_capture_id
         )
         return task
+
+    async def _record_turn(
+        self,
+        *,
+        user_id: UUID,
+        input_text: str,
+        resulting_task_id: UUID,
+        pending_capture_id: UUID,
+        question_text: str,
+        answer_text: str,
+    ) -> None:
+        """FR-44. A capture-turn write failure never undoes the task already
+        created: NFR-9's "no capture is lost" binds the task, not the log of
+        it, per the 04.4 sub-plan section 9."""
+        try:
+            await self.capture_turn_repository.record_turn(
+                user_id=user_id,
+                input_text=input_text,
+                outcome="task_created",
+                resulting_task_id=resulting_task_id,
+                resulting_pending_capture_id=pending_capture_id,
+                question_text=question_text,
+                answer_text=answer_text,
+            )
+        except Exception:
+            logger.exception("capture_turn.record_failed", user_id=str(user_id))
 
     async def _resolve_due_at(
         self, *, user_id: UUID, answer_text: str

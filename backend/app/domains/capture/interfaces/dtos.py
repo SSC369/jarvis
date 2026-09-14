@@ -31,3 +31,27 @@ class NonCommandGuidanceDTO:
 class UnrecognisedCommandDTO:
     attempted_name: str
     closest_matches: list[str]
+
+
+CaptureTurnOutcome = Literal["task_created", "question_asked", "discarded", "refused"]
+
+
+@dataclass(frozen=True)
+class CaptureTurnDTO:
+    """A logged capture attempt. FR-44: retained after its outcome, so this
+    outlives the PendingCaptureDTO it may reference."""
+
+    id: UUID
+    input_text: str
+    outcome: CaptureTurnOutcome
+    resulting_task_id: UUID | None
+    resulting_pending_capture_id: UUID | None
+    question_text: str | None
+    answer_text: str | None
+    created_at: datetime
+
+
+@dataclass(frozen=True)
+class CaptureHistoryPageDTO:
+    items: list[CaptureTurnDTO]
+    next_cursor: str | None

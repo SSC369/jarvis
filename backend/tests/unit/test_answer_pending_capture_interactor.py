@@ -9,13 +9,15 @@ from app.domains.capture.interactors.answer_pending_capture import (
     AnswerPendingCaptureInteractor,
     PendingCaptureNotFoundError,
 )
+from tests.fakes.fake_capture_turn_repository import FakeCaptureTurnRepository
 from tests.fakes.fake_extraction_port import FakeExtractionPort, extraction
 from tests.fakes.fake_pending_capture_repository import FakePendingCaptureRepository
 from tests.fakes.fake_task_port import FakeTaskPort
 
 
 async def test_answering_a_title_question_creates_the_task() -> None:
-    """T-1.7: FR-37."""
+    """T-1.7: FR-37. T-4.5: writes one task_created turn, correlated to the
+    pending capture it resolved."""
     task_port = FakeTaskPort()
     pending_repo = FakePendingCaptureRepository()
     user_id = uuid.uuid4()
@@ -27,8 +29,10 @@ async def test_answering_a_title_question_creates_the_task() -> None:
         question_text="What should the task be called?",
         original_input="/add-task",
     )
+    turn_repo = FakeCaptureTurnRepository()
     interactor = AnswerPendingCaptureInteractor(
         pending_capture_repository=pending_repo,
+        capture_turn_repository=turn_repo,
         task_port=task_port,
         extraction=FakeExtractionPort(result=extraction()),
     )
@@ -39,6 +43,15 @@ async def test_answering_a_title_question_creates_the_task() -> None:
 
     assert task.title == "Buy milk"
     assert pending.id not in pending_repo.rows
+
+    assert len(turn_repo.rows) == 1
+    turn = turn_repo.rows[0]
+    assert turn.outcome == "task_created"
+    assert turn.resulting_task_id == task.id
+    assert turn.resulting_pending_capture_id == pending.id
+    assert turn.question_text == "What should the task be called?"
+    assert turn.answer_text == "Buy milk"
+    assert turn.input_text == "/add-task"
 
 
 async def test_answering_a_due_date_question_resolves_it_and_creates_the_task() -> None:
@@ -58,8 +71,10 @@ async def test_answering_a_due_date_question_resolves_it_and_creates_the_task() 
     extraction_port = FakeExtractionPort(
         result=extraction(due_at="2026-09-18T00:00:00+00:00")
     )
+    turn_repo = FakeCaptureTurnRepository()
     interactor = AnswerPendingCaptureInteractor(
         pending_capture_repository=pending_repo,
+        capture_turn_repository=turn_repo,
         task_port=task_port,
         extraction=extraction_port,
     )
@@ -71,9 +86,11 @@ async def test_answering_a_due_date_question_resolves_it_and_creates_the_task() 
     assert task.title == "Buy milk"
     assert task.due_at is not None
     assert task.original_input == "/add-task buy milk"
+    assert turn_repo.rows[0].answer_text == "Friday"
 
 
 async def test_unresolvable_due_date_answer_raises() -> None:
+    """T-4.5: the raised-exception path writes no turn."""
     pending_repo = FakePendingCaptureRepository()
     user_id = uuid.uuid4()
     pending = await pending_repo.create_pending_capture(
@@ -84,8 +101,10 @@ async def test_unresolvable_due_date_answer_raises() -> None:
         question_text='When is "Buy milk" due?',
         original_input="/add-task buy milk",
     )
+    turn_repo = FakeCaptureTurnRepository()
     interactor = AnswerPendingCaptureInteractor(
         pending_capture_repository=pending_repo,
+        capture_turn_repository=turn_repo,
         task_port=FakeTaskPort(),
         extraction=FakeExtractionPort(result=extraction()),  # no due_at
     )
@@ -95,11 +114,14 @@ async def test_unresolvable_due_date_answer_raises() -> None:
             user_id=user_id, pending_capture_id=pending.id, answer="whenever"
         )
 
+    assert turn_repo.rows == []
+
 
 async def test_answering_a_pending_capture_that_does_not_exist_raises() -> None:
     """T-1.11: not found is a plain error, not a screen."""
     interactor = AnswerPendingCaptureInteractor(
         pending_capture_repository=FakePendingCaptureRepository(),
+        capture_turn_repository=FakeCaptureTurnRepository(),
         task_port=FakeTaskPort(),
         extraction=FakeExtractionPort(result=extraction()),
     )
@@ -124,6 +146,7 @@ async def test_answering_another_users_pending_capture_raises_not_found() -> Non
     )
     interactor = AnswerPendingCaptureInteractor(
         pending_capture_repository=pending_repo,
+        capture_turn_repository=FakeCaptureTurnRepository(),
         task_port=FakeTaskPort(),
         extraction=FakeExtractionPort(result=extraction()),
     )

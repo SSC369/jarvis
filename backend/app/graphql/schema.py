@@ -12,6 +12,7 @@ from strawberry.types import Info
 
 from app.core.context import Context
 from app.domains.capture.graphql.mutations import CaptureMutations
+from app.domains.capture.graphql.queries import CaptureQueries
 from app.domains.identity.graphql.mutations import IdentityMutations
 from app.domains.identity.graphql.queries import IdentityQueries
 from app.domains.records.graphql.mutations import RecordMutations
@@ -20,7 +21,7 @@ from app.graphql.permissions import IsAuthenticated
 
 
 @strawberry.type
-class Query(RecordQueries, IdentityQueries):
+class Query(CaptureQueries, RecordQueries, IdentityQueries):
     """Root query. Each domain's queries class becomes a base here as it
     lands, per section 11: never a hand-maintained field-by-field import."""
 

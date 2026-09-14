@@ -16,6 +16,8 @@ from datetime import datetime
 from typing import Any, cast
 from uuid import UUID
 
+import structlog
+
 from app.domains.capture.constants import (
     KNOWN_COMMANDS,
     MAX_INPUT_LENGTH,
@@ -23,13 +25,17 @@ from app.domains.capture.constants import (
     TASK_EXTRACTION_SCHEMA,
 )
 from app.domains.capture.interfaces.dtos import (
+    CaptureTurnOutcome,
     MissingField,
     NonCommandGuidanceDTO,
     PendingCaptureDTO,
     UnrecognisedCommandDTO,
 )
 from app.domains.capture.interfaces.ports import ExtractionPort, TaskPort
-from app.domains.capture.interfaces.repositories import PendingCaptureRepository
+from app.domains.capture.interfaces.repositories import (
+    CaptureTurnRepository,
+    PendingCaptureRepository,
+)
 from app.domains.gateway.public import (
     Extraction,
     ExtractionResult,
@@ -40,6 +46,8 @@ from app.domains.gateway.public import (
     UserLimitReached,
 )
 from app.domains.records.public import TaskDTO
+
+logger = structlog.get_logger(__name__)
 
 CaptureOutcome = (
     TaskDTO
@@ -60,10 +68,12 @@ class SubmitCaptureInteractor:
         self,
         *,
         pending_capture_repository: PendingCaptureRepository,
+        capture_turn_repository: CaptureTurnRepository,
         task_port: TaskPort,
         extraction: ExtractionPort,
     ) -> None:
         self.pending_capture_repository = pending_capture_repository
+        self.capture_turn_repository = capture_turn_repository
         self.task_port = task_port
         self.extraction = extraction
 
@@ -130,6 +140,9 @@ class SubmitCaptureInteractor:
         if not isinstance(extraction_result, Extraction):
             # One of the gateway's five failure members. Returned unmapped,
             # straight through, per build plan section 7.
+            await self._record_turn(
+                user_id=user_id, input_text=original_input, outcome="refused"
+            )
             return extraction_result
 
         extracted_fields = cast(dict[str, Any], extraction_result.data)
@@ -158,12 +171,19 @@ class SubmitCaptureInteractor:
                 original_input=original_input,
             )
 
-        return await self.task_port.create_task(
+        task = await self.task_port.create_task(
             user_id=user_id,
             title=str(title),
             due_at=due_at,
             original_input=original_input,
         )
+        await self._record_turn(
+            user_id=user_id,
+            input_text=original_input,
+            outcome="task_created",
+            resulting_task_id=task.id,
+        )
+        return task
 
     def _parse_due_at(self, *, raw_due_at: object) -> datetime | None:
         if not isinstance(raw_due_at, str) or not raw_due_at:
@@ -183,7 +203,7 @@ class SubmitCaptureInteractor:
         question_text: str,
         original_input: str,
     ) -> PendingCaptureDTO:
-        return await self.pending_capture_repository.create_pending_capture(
+        pending_capture = await self.pending_capture_repository.create_pending_capture(
             user_id=user_id,
             command_name=command_name,
             known_title=known_title,
@@ -191,3 +211,39 @@ class SubmitCaptureInteractor:
             question_text=question_text,
             original_input=original_input,
         )
+        await self._record_turn(
+            user_id=user_id,
+            input_text=original_input,
+            outcome="question_asked",
+            resulting_pending_capture_id=pending_capture.id,
+            question_text=question_text,
+        )
+        return pending_capture
+
+    async def _record_turn(
+        self,
+        *,
+        user_id: UUID,
+        input_text: str,
+        outcome: CaptureTurnOutcome,
+        resulting_task_id: UUID | None = None,
+        resulting_pending_capture_id: UUID | None = None,
+        question_text: str | None = None,
+    ) -> None:
+        """FR-44. A capture-turn write failure never undoes an otherwise
+        successful capture: NFR-9's "no capture is lost" binds the task or
+        question, not the log of it, per the 04.4 sub-plan section 9."""
+        try:
+            await self.capture_turn_repository.record_turn(
+                user_id=user_id,
+                input_text=input_text,
+                outcome=outcome,
+                resulting_task_id=resulting_task_id,
+                resulting_pending_capture_id=resulting_pending_capture_id,
+                question_text=question_text,
+                answer_text=None,
+            )
+        except Exception:
+            logger.exception(
+                "capture_turn.record_failed", user_id=str(user_id), outcome=outcome
+            )
