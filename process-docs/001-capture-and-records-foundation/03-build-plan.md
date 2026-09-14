@@ -224,6 +224,7 @@ gateway's to own.
 
 | Date | Change | Why | Approved by |
 |---|---|---|---|
+| 2026-09-14 | `updateTask`'s "field edits" (§4) now includes `dueAt`, closing a gap `04.2` had explicitly deferred. No row change needed here since the row already read generically; noted for the record | User asked to complete the due-date control | user |
 | 2026-09-14 | `Tables touched` section added at the top, per the new doc rule in `process-docs/CLAUDE.md` | User asked that any feature touching tables name them at the top of the doc | user |
 | 2026-09-14 | `capture_turns` table added to §3, `captureHistory` query added to §4, per FR-44/FR-45 | User asked for a history action on the Capture page, argued in `00-epic.md`'s 2026-09-14 addendum | user |
 | 2026-09-13 | §7 corrected: the union has nine members, not ten, and capture reuses the gateway's five outcome types directly (they cross via `public.py`, not `graphql/`) instead of mirroring them. No architecture change: same members, same behaviour, only which file defines five of the types | Found while drafting `04.1-capture-core.md` against the real epic 000 code | user |

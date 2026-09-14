@@ -172,13 +172,13 @@ covered there, not repeated per sub-plan.
 
 Only cases spanning slices.
 
-| id | Level | Case | Covers |
-|---|---|---|---|
-| T-X.1 | e2e | A task created in slice 1's flow appears in slice 2's Records view without a reload | FR-13, build plan §4 |
-| T-X.2 | e2e | Editing a task's title in Records (slice 2) and reopening it shows the edit, origin still reads "command" | FR-19, FR-22 |
-| T-X.3 | integration | User A's task, pending capture and settings are all invisible to user B | FR-6, T7, one case per table |
-| T-X.4 | e2e | With the network disabled, Records (slice 3's offline cache) still shows every task from the last online load | FR-40 |
-| T-X.5 | e2e | The app opened with the OS in dark mode renders every slice 1 and slice 2 surface in dark tokens, no light-only element | proposed FR-42 baseline, product.md §10 |
+| id | Level | Case | Covers | Verified |
+|---|---|---|---|---|
+| T-X.1 | e2e | A task created in slice 1's flow appears in slice 2's Records view without a reload | FR-13, build plan §4 | 2026-09-14, live browser: captured a task, switched to Records by clicking the nav item (no F5), it was there. "Without a reload" reads as no hard refresh — `RecordsController` fetches `network-only` on every mount, so ordinary client-side navigation already satisfies it |
+| T-X.2 | e2e | Editing a task's title in Records (slice 2) and reopening it shows the edit, origin still reads "command" | FR-19, FR-22 | 2026-09-14, live browser: edited a title, saved, navigated away and back (fresh fetch), edit persisted, origin still "Command" |
+| T-X.3 | integration | User A's task, pending capture and settings are all invisible to user B | FR-6, T7, one case per table | Covered, as four separate tests rather than one: `test_capture_boundary.py::test_user_sees_only_their_own_tasks`, `::test_user_sees_only_their_own_pending_captures`, `test_identity_graphql.py::test_user_a_and_user_b_each_get_their_own_settings_row`, `test_capture_history_graphql.py::test_user_a_never_sees_user_bs_history` (capture_turns, added slice 4). `test_rls_boundary.py::test_every_user_table_is_locked_down` is the structural half, sweeping every table including new ones automatically |
+| T-X.4 | e2e | With the network disabled, Records (slice 3's offline cache) still shows every task from the last online load | FR-40 | Verified in slice 3's own dev log entry (backend stopped outright, not just `navigator.onLine` toggled) |
+| T-X.5 | e2e | The app opened with the OS in dark mode renders every slice 1 and slice 2 surface in dark tokens, no light-only element | proposed FR-42 baseline, product.md §10 | Verified in slice 3's own dev log entry (T-3.6) |
 
 ## 9. Rollout
 
@@ -198,17 +198,22 @@ Moved to the sub-plans. Slice order is section 2.
 
 The feature is done when every sub-plan is done and:
 
-- [ ] All tasks shipped or explicitly dropped in the dev log, by id.
-- [ ] The five cross-slice cases in section 8 pass.
-- [ ] All three migrations applied, each table RLS-enabled with a policy.
-- [ ] Implementation matches the approved design, or a change record explains why not.
-- [ ] The metrics named in PRD §8 are instrumented.
-- [ ] `index.md` updated to `shipped`.
+- [x] All tasks shipped or explicitly dropped in the dev log, by id.
+- [x] The five cross-slice cases in section 8 pass. Checked 2026-09-14; see the Verified column above.
+- [x] All migrations applied, each table RLS-enabled with a policy. Four now, not three: `0006_capture_turns` (slice 4) added since this line was written.
+- [x] Implementation matches the approved design, or a change record explains why not. `RecordEditForm`'s due-date gap (04.2's own deferral) closed 2026-09-14, D-43.
+- [ ] **The metrics named in PRD §8 are instrumented. Not true — checked honestly 2026-09-14, not assumed:**
+  - Covered today, no new work: captures per active user per week and captures by command name (`tasks.created_at`/`user_id`/`original_input`); captures refused for a cap or outage (`ai_usage.outcome`, epic 000's table — `success`/`user_limit_reached`/`shared_quota_exhausted`/`provider_unavailable`/`provider_timeout`/`malformed_result`, all queryable by user and week).
+  - Partial: corrections within five minutes of creation. An edit is derivable from `tasks.updated_at` vs `created_at`; a deletion is not, since `deleteTask` hard-deletes with no audit trail.
+  - Not covered, buildable within this feature: sessions where the user typed without a command (FR-9). `submit_capture.py` deliberately writes no `capture_turns` row for `NonCommandGuidanceDTO`, reasoned in `00-epic.md`'s 2026-09-14 addendum as "nothing was attempted" — true for FR-44's history purpose, but it also means this metric has no data source at all right now. Weekly actives opening a records view has no view-event log anywhere in the app.
+  - Not covered, blocked outside this feature: week-four retention by signup cohort needs a signup date, which needs accounts — epic 002 (Authentication), not yet built.
+- [ ] `index.md` updated to `shipped`. Left as `in-review`: the metrics box above is genuinely open, not a formality, and rule 3 says not to mark something done that is not done. Say the word on how to treat the three real metric gaps (build the two buildable ones, drop them with a reason, or something else) and this closes.
 
 ## Change log
 
 | Date | Change | Why | Approved by |
 |---|---|---|---|
+| 2026-09-14 | §8's five cross-slice cases checked against reality and recorded, all pass (T-X.1/T-X.2 live in a browser, T-X.3 cross-referenced to four existing boundary tests plus the standing RLS sweep, T-X.4/T-X.5 cross-referenced to slice 3's dev log). §11's Definition of Done updated to match: migrations and cross-slice cases checked off; the metrics box audited honestly against PRD §8's seven named metrics — 3 already covered by existing tables (`tasks`, `ai_usage`), 1 partial (edits yes, deletes no audit trail), 3 not covered (2 buildable, 1 blocked on epic 002's accounts). Feature left `in-review`, not `shipped`, until the three real metric gaps are resolved one way or another | User asked to record the two open Definition-of-Done items | user |
 | 2026-09-14 | Slice 4 marked approved | User approved `04.4` | user |
 | 2026-09-14 | `Tables touched` section added at the top, per the new doc rule in `process-docs/CLAUDE.md` | User asked that any feature touching tables name them at the top of the doc | user |
 | 2026-09-14 | Slice 4, `04.4-chat-history-and-loading-feedback.md`, added to §2's slice list, depending on 1 and 2. `0006_capture_turns` added to §5 | User asked for a history action on the Capture page and loading feedback on in-flight edits, added as a fourth slice per FR-44 to FR-46 | pending |
