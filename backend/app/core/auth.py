@@ -104,3 +104,23 @@ def verify_token(token: str, settings: Settings) -> UUID:
     except (ValueError, TypeError) as exc:
         logger.warning("auth.subject_not_a_uuid")
         raise AuthenticationError("Not authenticated") from exc
+
+
+def decode_email_claim(token: str) -> str | None:
+    """Read the ``email`` claim out of a token ``verify_token`` already
+    accepted.
+
+    Added for 002-authentication slice 1's ``me`` query (``Me.email``).
+    Deliberately a second, unverified decode rather than a change to
+    ``verify_token``'s return type: every other caller of ``verify_token``
+    depends only on the user id it returns, and email is a display value,
+    not a security decision, so it does not belong in that function's
+    contract. Calling this before ``verify_token`` has succeeded for the
+    same token would be a mistake — it does not check the signature.
+    """
+    try:
+        claims = jwt.decode(token, options={"verify_signature": False})
+    except jwt.PyJWTError:
+        return None
+    email = claims.get("email")
+    return email if isinstance(email, str) and email else None

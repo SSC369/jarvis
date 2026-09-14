@@ -41,3 +41,10 @@ pyjwt[crypto]==2.14.0
 # in requirements-ai.txt and is never installed into the image.
 langchain-core==1.6.3
 langchain-google-genai==4.4.0
+
+# --- Added by 002-authentication, slice 1 (04.1 task T-1.6), 2026-09-14 ---
+
+# Background jobs. Rule T2 of the tech stack names Procrastinate; this is its
+# first real use. PsycopgConnector needs psycopg[pool] and croniter, both
+# pulled in as its own dependencies.
+procrastinate==3.9.0

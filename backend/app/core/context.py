@@ -28,6 +28,12 @@ class Context(BaseContext):
     """
 
     user_id: UUID | None
+    # Added in 002-authentication slice 1: the `me` query's `Me.email` comes
+    # from the verified token, never from a stored row (see identity's
+    # graphql/queries.py), so it is carried here the same way user_id is.
+    # None whenever user_id is None, and also when a token verified but its
+    # payload carried no `email` claim.
+    email: str | None
     session: AsyncSession
     request_id: str
     # Added in epic 001 slice 1: a domain whose composition needs its own,

@@ -5,8 +5,13 @@ import strawberry
 from strawberry.types import Info
 
 from app.core.context import Context
-from app.core.deps import build_get_settings_interactor
-from app.domains.identity.graphql.types import Settings, settings_dto_to_type
+from app.core.deps import build_get_profile_interactor, build_get_settings_interactor
+from app.domains.identity.graphql.types import (
+    Me,
+    Settings,
+    profile_dto_to_type,
+    settings_dto_to_type,
+)
 from app.domains.identity.interactors.dtos import GetSettingsInputDTO
 from app.graphql.permissions import IsAuthenticated
 
@@ -26,3 +31,13 @@ class IdentityQueries:
             )
         )
         return settings_dto_to_type(settings=settings)
+
+    @strawberry.field(permission_classes=[IsAuthenticated])  # type: ignore[untyped-decorator]
+    async def me(self, info: Info) -> Me:
+        context = cast(Context, info.context)
+        user_id = cast(UUID, context.user_id)
+        if context.email is None:  # pragma: no cover — every verified token carries it
+            raise RuntimeError("Verified token carried no email claim")
+        interactor = build_get_profile_interactor(context)
+        profile = await interactor.get_profile(user_id=user_id)
+        return profile_dto_to_type(profile=profile, email=context.email)

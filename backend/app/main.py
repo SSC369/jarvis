@@ -18,8 +18,14 @@ from strawberry.fastapi import GraphQLRouter
 from app.core.context import Context
 from app.core.db import check_connection, create_engine, create_session_factory
 from app.core.deps import build_context
+from app.core.jobs import procrastinate_app
 from app.core.logging import configure_logging
 from app.core.settings import Settings, get_settings
+
+# Imported for its side effect: decorating `purge_unverified_accounts` with
+# `@procrastinate_app.task`/`@procrastinate_app.periodic` registers it on
+# `procrastinate_app`. Nothing in this module calls the name directly.
+from app.domains.identity import jobs as identity_jobs  # noqa: F401
 from app.graphql.schema import schema
 
 REQUEST_ID_HEADER = "X-Request-ID"
@@ -43,10 +49,12 @@ async def lifespan(app: FastAPI) -> AsyncIterator[None]:
     engine = create_engine(settings)
     app.state.engine = engine
     app.state.session_factory = create_session_factory(engine)
+    await procrastinate_app.open_async()
     structlog.get_logger().info("application.started", environment=settings.environment)
     try:
         yield
     finally:
+        await procrastinate_app.close_async()
         await engine.dispose()
 
 

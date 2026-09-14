@@ -9,7 +9,7 @@ import uuid
 
 from sqlalchemy.ext.asyncio import AsyncSession, async_sessionmaker
 
-from app.core.auth import extract_bearer_token, verify_token
+from app.core.auth import decode_email_claim, extract_bearer_token, verify_token
 from app.core.context import Context
 from app.core.errors import AuthenticationError
 from app.core.settings import Settings, get_settings
@@ -37,8 +37,16 @@ from app.domains.gateway.interactors.extract import ExtractInteractor
 from app.domains.gateway.repositories.usage_repository import SqlUsageRepository
 from app.domains.gateway.services.allowance_service import AllowanceService
 from app.domains.gateway.services.langchain_provider import LangChainGeminiProvider
+from app.domains.identity.interactors.get_profile import GetProfileInteractor
 from app.domains.identity.interactors.get_settings import GetSettingsInteractor
+from app.domains.identity.interactors.purge_unverified_accounts import (
+    PurgeUnverifiedAccountsInteractor,
+)
 from app.domains.identity.interactors.update_timezone import UpdateTimezoneInteractor
+from app.domains.identity.repositories.auth_account_repository import (
+    SqlAuthAccountRepository,
+)
+from app.domains.identity.repositories.profile_repository import SqlProfileRepository
 from app.domains.identity.repositories.settings_repository import SqlSettingsRepository
 from app.domains.records.interactors.delete_tasks import DeleteTasksInteractor
 from app.domains.records.interactors.get_record_detail import GetRecordDetailInteractor
@@ -63,15 +71,18 @@ async def build_context(
     field is closed by ``IsAuthenticated``.
     """
     user_id: uuid.UUID | None = None
+    email: str | None = None
     token = extract_bearer_token(authorization_header)
     if token is not None:
         try:
             user_id = verify_token(token, settings)
+            email = decode_email_claim(token)
         except AuthenticationError:
             user_id = None
 
     return Context(
         user_id=user_id,
+        email=email,
         session=session_factory(),
         request_id=request_id,
         session_factory=session_factory,
@@ -188,4 +199,22 @@ def build_get_settings_interactor(context: Context) -> GetSettingsInteractor:
 def build_update_timezone_interactor(context: Context) -> UpdateTimezoneInteractor:
     return UpdateTimezoneInteractor(
         settings_repository=SqlSettingsRepository(context.session)
+    )
+
+
+def build_get_profile_interactor(context: Context) -> GetProfileInteractor:
+    return GetProfileInteractor(
+        profile_repository=SqlProfileRepository(context.session)
+    )
+
+
+def build_purge_unverified_accounts_interactor(
+    session: AsyncSession,
+) -> PurgeUnverifiedAccountsInteractor:
+    """Wired outside a request `Context`: `identity/jobs.py` calls this with
+    a session it opened for itself against the service-role connection,
+    since a Procrastinate task has no per-request `Context` to draw one
+    from."""
+    return PurgeUnverifiedAccountsInteractor(
+        auth_account_repository=SqlAuthAccountRepository(session)
     )

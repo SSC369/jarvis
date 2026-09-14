@@ -2,7 +2,7 @@
 
 from httpx import AsyncClient
 
-ME_QUERY = {"query": "{ me }"}
+ME_QUERY = {"query": "{ me { id } }"}
 PUBLIC_QUERY = {"query": "{ apiVersion }"}
 
 
